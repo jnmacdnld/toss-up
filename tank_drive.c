@@ -3,10 +3,8 @@
 
 task main()
 {
-	wait1Msec(2000);
-
 	while (true) {
-		leftDrive = vexRT[Ch3];
-		rightDrive = vexRT[Ch2];
+		motor[leftDrive] = vexRT[Ch3];
+		motor[rightDrive] = -vexRT[Ch2];
 	}
 }
