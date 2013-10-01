@@ -4,11 +4,14 @@
 #pragma config(Motor, port5, rightSpinner, tmotorNormal, openLoop)
 #pragma config(Motor, port6, leftArm,      tmotorNormal, openLoop, reversed)
 #pragma config(Motor, port7, rightArm,     tmotorNormal, openLoop)
+// Add a line to config the pot here
 
 #define SPINNER_OUT_PWR 127
 #define SPINNER_IN_PWR -127
 
 #define MAX_POWER 127
+
+#include "PidLib.c"
 
 void setSpinners(int value) {
 	motor[leftSpinner] = value;
@@ -42,7 +45,7 @@ task main()
 		} else if (vexRT[Btn5U]) {
 			setArm(MAX_POWER);
 		} else {
-			setArm(0);
+			// Maintain current position via pid
 		}
 	}
 }
