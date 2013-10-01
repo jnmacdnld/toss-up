@@ -1,28 +1,18 @@
-#pragma config(Motor,  port4,           leftSpinner,    tmotorNormal, openLoop, reversed)
-#pragma config(Motor,  port5,           rightSpinner,   tmotorNormal, openLoop)
-#pragma config(Motor,  port2,           leftDrive,      tmotorNormal, openLoop)
-#pragma config(Motor,  port3,           rightDrive,     tmotorNormal, openLoop)
-#pragma config(Motor,  port6,           leftArm,      tmotorNormal, openLoop, reversed)
-#pragma config(Motor,  port7,           rightArm,     tmotorNormal, openLoop)
+#pragma config(Motor, port2, leftDrive,    tmotorNormal, openLoop)
+#pragma config(Motor, port3, rightDrive,   tmotorNormal, openLoop)
+#pragma config(Motor, port4, leftSpinner,  tmotorNormal, openLoop, reversed)
+#pragma config(Motor, port5, rightSpinner, tmotorNormal, openLoop)
+#pragma config(Motor, port6, leftArm,      tmotorNormal, openLoop, reversed)
+#pragma config(Motor, port7, rightArm,     tmotorNormal, openLoop)
 
-#define SPINNER_OUT_PWR  127
-#define SPINNER_IN_PWR  -127
+#define SPINNER_OUT_PWR 127
+#define SPINNER_IN_PWR -127
 
 #define MAX_POWER 127
 
-void setSpinnersIn() {
-	motor[leftSpinner]  = SPINNER_IN_PWR;
-	motor[rightSpinner] = SPINNER_IN_PWR;
-}
-
-void setSpinnersOut() {
-	motor[leftSpinner]  = SPINNER_OUT_PWR;
-	motor[rightSpinner] = SPINNER_OUT_PWR;
-}
-
-void setSpinnersIdle() {
-	motor[leftSpinner]  = 0;
-	motor[rightSpinner] = 0;
+void setSpinners(int value) {
+	motor[leftSpinner] = value;
+	motor[rightSpinner] = value;
 }
 
 void setArm(int value) {
@@ -35,11 +25,11 @@ task main()
 	while (true) {
 		// Spinners
 		if (vexRT[Btn6D]) {
-			setSpinnersIn();
+			setSpinners(SPINNER_IN_PWR);
 		} else if (vexRT[Btn6U]) {
-			setSpinnersOut();
+			setSpinners(SPINNER_OUT_PWR);
 		} else {
-			setSpinnersIdle();
+			setSpinners(0);
 		}
 
 		// Drive
