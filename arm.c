@@ -1,43 +1,30 @@
-#define MAX_POWER 127
-#define HALF_POWER 64
-
-#define ARM_UP_POS   0 // Give this an actual value
+#define ARM_UP_POS   3060
 #define ARM_DOWN_POS 1400
 
-pidController* armPid;
+#define ARM_UP_PWR    MAX_PWR
+#define ARM_DOWN_PWR -(MAX_PWR / 3)
 
-void setArm(int value) {
+void setArmPwr(int value) {
 	motor[leftArm] = value;
 	motor[rightArm] = value;
 }
 
-void setArmUp() {
-	setArm(MAX_POWER);
+bool armIsDown() {
+	return (SensorValue[armPot] <= ARM_DOWN_POS);
 }
 
-void setArmDown() {
-	setArm(-HALF_POWER);
+bool armIsUp() {
+	return (SensorValue[armPot] >= ARM_UP_POS);
 }
-
-bool armCanMoveDown() {
-	return (SensorValue[armPot] > ARM_DOWN_POS);
-}
-
-bool armCanMoveUp() {
-	return (SensorValue[armPot] < ARM_UP_POS);
-}
-
-int lastDesiredPos = 0;
 
 void updateArm() {
-	if ( vexRT[Btn5U] /*&& armCanMoveUp()*/ )
-		setArmUp();
-	else if ( vexRT[Btn5D] && armCanMoveDown() )
-		setArmDown();
+	if ( vexRT[Btn5U] && !armIsUp() )
+		setArmPwr(ARM_UP_PWR);
+	else if ( vexRT[Btn5D] && !armIsDown() )
+		setArmPwr(ARM_DOWN_PWR);
 	else
-		if (SensorValue[armPot] < 1400) // If the arm is all the way down, it
-			setArm(0);										// doesn't need to be held up
-		else	
-			setArm(20); // Hold up the arm so it doesn't fall
-  }
+		if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
+			setArmPwr(0);
+		else
+			setArmPwr(20); // Hold up the arm so it doesn't fall
 }

@@ -8,5 +8,4 @@ task main()
 	while (true) {
 		val = SensorValue[armPot];
 	}
-
 }
