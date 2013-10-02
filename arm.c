@@ -1,11 +1,10 @@
 #define MAX_POWER 127
+#define HALF_POWER 64
 
-#define ARM_UP_POS   // Need to be defined
-#define ARM_DOWN_POS //
+#define ARM_UP_POS   0 // Give this an actual value
+#define ARM_DOWN_POS 1400
 
-#include "PidLib.c"
-
-
+pidController* armPid;
 
 void setArm(int value) {
 	motor[leftArm] = value;
@@ -17,34 +16,28 @@ void setArmUp() {
 }
 
 void setArmDown() {
-	setArm(-MAX_POWER);
+	setArm(-HALF_POWER);
 }
 
 bool armCanMoveDown() {
-	return SensorValue[armPot] > ARM_DOWN_POS;
+	return (SensorValue[armPot] > ARM_DOWN_POS);
 }
 
 bool armCanMoveUp() {
-	return SensorValue[armPot] < ARM_UP_POS;
+	return (SensorValue[armPot] < ARM_UP_POS);
 }
 
+int lastDesiredPos = 0;
+
 void updateArm() {
-		if ( vexRT[Btn5D] && armCanMoveDown() ) {
-		SetArmDown();
-		lastDesiredPos = SensorValue[armPot];
-	} else if ( vexRT[Btn5U] && armCanMoveUp() ) {
-		SetArmUp();
-		lastDesiredPos = SensorValue[armPot]; 
-	} else {
-		// Don't let the arm fall
-
-		// The target is the position just before the driver stopped moving the arm
-		armPid->target_value = lastDesiredPos;
-
-		// update pid control
-    PidControllerUpdate(armPid);  
-    
-    // Send command to arm
-    setArm(arm_pid->drive_cmd);
+	if ( vexRT[Btn5U] /*&& armCanMoveUp()*/ )
+		setArmUp();
+	else if ( vexRT[Btn5D] /*&& armCanMoveDown()*/ )
+		setArmDown();
+	else
+		if (SensorValue[armPot] < 1400) // If the arm is all the way down, it
+			setArm(0);										// doesn't need to be held up
+		else	
+			setArm(20); // Hold up the arm so it doesn't fall
   }
 }
