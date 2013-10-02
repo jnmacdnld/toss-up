@@ -32,7 +32,7 @@ int lastDesiredPos = 0;
 void updateArm() {
 	if ( vexRT[Btn5U] /*&& armCanMoveUp()*/ )
 		setArmUp();
-	else if ( vexRT[Btn5D] /*&& armCanMoveDown()*/ )
+	else if ( vexRT[Btn5D] && armCanMoveDown() )
 		setArmDown();
 	else
 		if (SensorValue[armPot] < 1400) // If the arm is all the way down, it
