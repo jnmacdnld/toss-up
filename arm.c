@@ -6,6 +6,7 @@
 #define ARM_HOLD_PWR  20
 
 bool armUpMacroActive = false;
+bool armDownMacroActive = false;
 
 void setArmPwr(int value) {
 	motor[leftArm] = value;
@@ -43,6 +44,13 @@ void stepArmUpMacro() {
 		armUpMacroActive = false;
 }
 
+void stepArmDownMacro() {
+	if ( !armIsDown() )
+		setArm(ARM_DOWN_PWR);
+	else
+		armDownMacroActive = false;
+}
+
 void holdArmPos() {
 	if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
 			setArmPwr(0);
@@ -52,11 +60,14 @@ void holdArmPos() {
 
 void resetMacros() {
 	armUpMacroActive = false;
+	armDownMacroActive = false;
 }
 
 void updateArm() {
-	if (/* the arm up macro button is pressed */ && !armUpMacroActive)
+	if (/* arm up macro button pressed */ && !armUpMacroActive)
 		armUpMacroActive = true;
+	else if (/*arm down macro button pressed */ && !armDownMacroActive)
+		armDownMacroActive = true;
 	
 	if (vexRT[Btn5U])
 		armUpRequested();
@@ -64,6 +75,8 @@ void updateArm() {
 		armDownRequested();
 	else if (armUpMacroActive)
 		stepArmUpMacro();
+	else if (armDownMacroActive)
+		stepArmDownActive();
 	else
 		holdArmPos();
 }
