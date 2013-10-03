@@ -10,18 +10,8 @@
 #define MAX_PWR  127
 #define HALF_PWR MAX_PWR / 2
 
-#include "drive.c"
-#include "intake.c"
-#include "arm.c"
-
-int armPotVal;
+#include "user_control.c"
 
 task main() {
-	while (true) {
-		updateIntake();
-		updateDrive();
-		updateArm();
-
-		armPotVal = SensorValue[armPot]; // For debugging
-	}
+	userControlLoop();
 }
