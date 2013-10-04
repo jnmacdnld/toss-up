@@ -37,10 +37,17 @@ void armDownRequested() {
 	resetMacros();
 }
 
-void stepArmToPos(int pos) {
-	if (SensorValue[armPot] < pos)
+void stepArmUpMacro() {
+	if ( armIsUp() )
+		armUpMacroActive = false;
+	else
 		setArm(ARM_UP_PWR);
-	else if (SensorValue[armPot] > pos)
+}
+
+void stepArmDownMacro() {
+	if ( armIsDown() )
+		armDownMacroActive = false;
+	else
 		setArm(ARM_DOWN_PWR);
 }
 
@@ -52,41 +59,24 @@ void holdArmPos() {
 }
 
 void resetMacros() {
-	armMacroTarget = -1;
+	armUpMacroActive = false;
+	armDownMacroActive = false;
 }
-
-void armMacroActive() {
-	return armMacroTarget > -1;
-}
-
-void setArmMacroTarget(int pos) {
-	int armMacroTarget = pos;
-	if (SensorValue[armPot] > pos)
-		armMacroDir = DOWN;
-	else
-		armMacroDir = UP;
-}
-
-typedef enum {
-	UP,
-	DOWN
-} Dir;
-
-int armMoveTarget = -1;
-Dir armMoveDir = UP;
 
 void updateArm() {
 	if (/* arm up macro button pressed */ && !armUpMacroActive)
-		setArmMoveTarget(ARM_UP_POS);
+		armUpMacroActive = true;
 	else if (/*arm down macro button pressed */ && !armDownMacroActive)
-		setArmMoveTarget(ARM_DOWN_POS);
+		armDownMacroActive = true;
 	
 	if (vexRT[Btn5U])
 		armUpRequested();
 	else if (vexRT[Btn5D])
 		armDownRequested();
-	else if ( armMacroActive() )
-		stepArmMacro(armMacroTarget);
+	else if (armUpMacroActive)
+		stepArmUpMacro();
+	else if (armDownMacroActive)
+		stepArmDownActive();
 	else
 		holdArmPos();
 }
