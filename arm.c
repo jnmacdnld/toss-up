@@ -38,17 +38,17 @@ void armDownRequested() {
 }
 
 void stepArmUpMacro() {
-	if ( !armIsUp() )
-		setArm(ARM_UP_PWR);
-	else
+	if ( armIsUp() )
 		armUpMacroActive = false;
+	else
+		setArm(ARM_UP_PWR);
 }
 
 void stepArmDownMacro() {
-	if ( !armIsDown() )
-		setArm(ARM_DOWN_PWR);
-	else
+	if ( armIsDown() )
 		armDownMacroActive = false;
+	else
+		setArm(ARM_DOWN_PWR);
 }
 
 void holdArmPos() {

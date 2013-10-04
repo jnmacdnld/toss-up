@@ -1,4 +1,4 @@
 void updateDrive() {
-	motor[leftDrive]  =  vexRT[Ch3];
-	motor[rightDrive] = -vexRT[Ch2];
+	motor[leftDrive]  =  vexRT[Ch2];
+	motor[rightDrive] = vexRT[Ch3];
 }

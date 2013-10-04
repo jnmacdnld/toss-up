@@ -12,7 +12,7 @@ void pre_autonomous() {
 }
 
 task autonomous() {
-	AutonomousCodePlaceholderForTesting(); 
+
 }
 
 task usercontrol() {
