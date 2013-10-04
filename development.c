@@ -1,5 +1,5 @@
 #pragma config(Sensor, in1,    armPot,         sensorPotentiometer)
-#pragma config(Motor,  port2,           leftDrive,     tmotorServoContinuousRotation, openLoop)
+#pragma config(Motor,  port2,           leftDrive,     tmotorServoContinuousRotation, openLoop, reversed)
 #pragma config(Motor,  port3,           rightDrive,    tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port4,           leftSpinner,   tmotorServoContinuousRotation, openLoop, reversed)
 #pragma config(Motor,  port5,           rightSpinner,  tmotorServoContinuousRotation, openLoop)
