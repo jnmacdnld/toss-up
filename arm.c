@@ -5,6 +5,10 @@
 #define ARM_DOWN_PWR -MAX_PWR / 3
 #define ARM_HOLD_PWR  20
 
+#define armPos         SensorValue[armPot]
+#define armDownPressed vexRT[Btn5D]
+#define armUpPressed   vexRT[Btn5U]
+
 bool armUpMacroActive = false;
 bool armDownMacroActive = false;
 
@@ -14,41 +18,49 @@ void setArmPwr(int value) {
 }
 
 bool armIsDown() {
-	return (SensorValue[armPot] <= ARM_DOWN_POS);
+	return (armPos <= ARM_DOWN_POS);
 }
 
 bool armIsUp() {
-	return (SensorValue[armPot] >= ARM_UP_POS);
+	return (armPos >= ARM_UP_POS);
 }
 
-void armUpRequested() {
+void armUpPressed() {
 	if ( armIsUp() )
 		return;
 	
 	setArmPwr(ARM_UP_PWR);
-	resetMacros();
+	armControlActive = false;
 }
 
-void armDownRequested() {
+void armDownPressed() {
 	if ( armIsDown() )
 		return;
 	
 	setArmPwr(ARM_DOWN_PWR);
-	resetMacros();
+	armControlActive = false;
 }
 
-void stepArmUpMacro() {
-	if ( armIsUp() )
-		armUpMacroActive = false;
+int armControlTarget = -1;
+int armControlPwr = 0;
+bool armControlActive = false;
+
+void armControlSetTarget(int target) {
+	if (armPos < target)
+		armControlPwr = ARM_UP_PWR;
 	else
-		setArm(ARM_UP_PWR);
+		armControlPwr = ARM_DOWN_PWR;
+
+	armControlTarget = target;
+	armControlActive = true;
 }
 
-void stepArmDownMacro() {
-	if ( armIsDown() )
-		armDownMacroActive = false;
+void armControlStep() {
+	if (armControlPwr > 0 && armPos < armControlTarget || 
+			armControlPwr < 0 && armPos > armControlTarget)
+		setArmPwr(armControlPwr);
 	else
-		setArm(ARM_DOWN_PWR);
+		armControlActive = false;
 }
 
 void holdArmPos() {
@@ -58,25 +70,18 @@ void holdArmPos() {
 		setArmPwr(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
 }
 
-void resetMacros() {
-	armUpMacroActive = false;
-	armDownMacroActive = false;
-}
-
 void updateArm() {
-	if (/* arm up macro button pressed */ && !armUpMacroActive)
-		armUpMacroActive = true;
-	else if (/*arm down macro button pressed */ && !armDownMacroActive)
-		armDownMacroActive = true;
+	if (/* arm up macro button pressed */) {
+		armControlSetTarget(ARM_UP_POS);
+	else if (/*arm down macro button pressed */) {
+		armControlSetTarget(ARM_DOWN_POS);
 	
-	if (vexRT[Btn5U])
-		armUpRequested();
-	else if (vexRT[Btn5D])
-		armDownRequested();
-	else if (armUpMacroActive)
-		stepArmUpMacro();
-	else if (armDownMacroActive)
-		stepArmDownActive();
+	if (armUpPressed)
+		armUpPressed();
+	else if (armDownPressed)
+		armDownPressed();
+	else if (armControlActive)
+		armControlStep();
 	else
 		holdArmPos();
 }
