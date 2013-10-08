@@ -3,14 +3,18 @@
 
 #define ARM_UP_PWR    MAX_PWR
 #define ARM_DOWN_PWR -MAX_PWR / 3
-#define ARM_HOLD_PWR  20
+#define ARM_HOLD_PWR  10
 
 #define armPos         SensorValue[armPot]
-#define armDownPressed vexRT[Btn5D]
-#define armUpPressed   vexRT[Btn5U]
 
-bool armUpMacroActive = false;
-bool armDownMacroActive = false;
+#define armDownPressed    vexRT[Btn6D]
+#define armUpPressed      vexRT[Btn6U]
+#define armUpMacroPressed vexRT[Btn7U]
+#define armDownMacroPressed vexRT[Btn7D]
+
+int armControlTarget = -1;
+int armControlPwr = 0;
+bool armControlActive = false;
 
 void setArmPwr(int value) {
 	motor[leftArm] = value;
@@ -25,25 +29,21 @@ bool armIsUp() {
 	return (armPos >= ARM_UP_POS);
 }
 
-void armUpPressed() {
+void armUpPressedCb() {
 	if ( armIsUp() )
 		return;
-	
+
 	setArmPwr(ARM_UP_PWR);
 	armControlActive = false;
 }
 
-void armDownPressed() {
+void armDownPressedCb() {
 	if ( armIsDown() )
 		return;
-	
+
 	setArmPwr(ARM_DOWN_PWR);
 	armControlActive = false;
 }
-
-int armControlTarget = -1;
-int armControlPwr = 0;
-bool armControlActive = false;
 
 void armControlSetTarget(int target) {
 	if (armPos < target)
@@ -56,7 +56,7 @@ void armControlSetTarget(int target) {
 }
 
 void armControlStep() {
-	if (armControlPwr > 0 && armPos < armControlTarget || 
+	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
 		setArmPwr(armControlPwr);
 	else
@@ -71,15 +71,15 @@ void holdArmPos() {
 }
 
 void updateArm() {
-	if (/* arm up macro button pressed */) {
+	if (armUpMacroPressed)
 		armControlSetTarget(ARM_UP_POS);
-	else if (/*arm down macro button pressed */) {
+	else if (armDownMacroPressed)
 		armControlSetTarget(ARM_DOWN_POS);
-	
+
 	if (armUpPressed)
-		armUpPressed();
+		armUpPressedCb();
 	else if (armDownPressed)
-		armDownPressed();
+		armDownPressedCb();
 	else if (armControlActive)
 		armControlStep();
 	else
