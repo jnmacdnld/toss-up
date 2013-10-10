@@ -1,3 +1,5 @@
+#include "arm.h"
+
 void updateArm() {
 	if (armUpMacroPressed)
 		armControlSetTarget(ARM_UP_POS);
