@@ -5,7 +5,7 @@ void updateArm() {
 		armControlSetTarget(ARM_UP_POS);
 	else if (armDownMacroPressed)
 		armControlSetTarget(ARM_DOWN_POS);
-
+	
 	if (armUpPressed)
 		armUpPressedCb();
 	else if (armDownPressed)
@@ -30,16 +30,20 @@ bool armIsUp() {
 }
 
 void armUpPressedCb() {
-	if ( armIsUp() )
+	if ( armIsUp() ) {
+		holdArmPos();
 		return;
-
+	}
+	
 	setArmPwr(ARM_UP_PWR);
 	armControlActive = false;
 }
 
 void armDownPressedCb() {
-	if ( armIsDown() )
+	if ( armIsDown() ) {
+		holdArmPos();
 		return;
+	}
 
 	setArmPwr(ARM_DOWN_PWR);
 	armControlActive = false;
@@ -59,8 +63,8 @@ void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
 		setArmPwr(armControlPwr);
-	else
-		armControlActive = false;
+	// else
+	//   armControlActive = false;
 }
 
 void holdArmPos() {
