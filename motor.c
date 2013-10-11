@@ -1,6 +1,9 @@
 #ifndef MOTOR_C
 #define MOTOR_C
 
+#define FULL_PWR 127
+#define HALF_PWR FULL_PWR / 2
+
 // Lookup table for power values, taken from http://www.vexforum.com/showthread.php?t=76943
 const unsigned int powerLut[128] =
 {
@@ -16,10 +19,15 @@ const unsigned int powerLut[128] =
  61, 62, 63, 64, 65, 66, 67, 67, 68, 70,
  71, 72, 72, 73, 74, 76, 77, 78, 79, 79,
  80, 81, 83, 84, 84, 86, 86, 87, 87, 88,
- 88, 89, 89, 90, 90,127,127,127
+ 88, 89, 89, 90, 90, 127,127,127
 };
  
-void setMotor(tMotor _motor, int pwr) {
+void setMotorLinear(tMotor _motor, int pwr) {
+	if (pwr > 127)
+		pwr = 127;
+	else if (pwr < -127)
+		pwr = -127;
+	
   motor[_motor] = powerLut[pwr];
 }
 

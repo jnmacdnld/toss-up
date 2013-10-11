@@ -1,10 +1,44 @@
-#include "arm.h"
+#define ARM_UP_POS   3080
+#define ARM_DOWN_POS 1400
+#define ARM_MIDDLE_POS 1500
+
+#define ARM_UP_PWR    FULL_PWR
+#define ARM_DOWN_PWR -FULL_PWR / 3
+#define ARM_HOLD_PWR  10
+
+#define armPos         SensorValue[armPot]
+
+#define armDownPressed    vexRT[Btn6D]
+#define armUpPressed      vexRT[Btn6U]
+#define armUpMacroPressed vexRT[Btn8U]
+#define armDownMacroPressed vexRT[Btn8D]
+#define armMiddleMacroPresed vexRT[Btn8L]
+
+int armControlTarget = -1;
+int armControlPwr = 0;
+bool armControlActive = false;
+
+void setArmPwr(int value);
+
+bool armIsDown();
+bool armIsUp();
+
+void armUpPressedCb();
+void armDownPressedCb();
+
+void armControlSetTarget(int target);
+void armControlStep();
+
+void holdArmPos();
+void updateArm();
 
 void updateArm() {
-	if (armUpMacroPressed)
+	if (armUpMacroPressed && !armIsUp() )
 		armControlSetTarget(ARM_UP_POS);
-	else if (armDownMacroPressed)
+	else if (armDownMacroPressed && !armIsDown() )
 		armControlSetTarget(ARM_DOWN_POS);
+	else if (armMiddleMacroPresed)
+		armControlSetTarget(ARM_MIDDLE_POS)
 	
 	if (armUpPressed)
 		armUpPressedCb();
@@ -63,8 +97,8 @@ void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
 		setArmPwr(armControlPwr);
-	// else
-	//   armControlActive = false;
+	else
+	   armControlActive = false;
 }
 
 void holdArmPos() {

@@ -1,23 +1,27 @@
-// #include "PidLib.c"
-
-// PidControllerMakeLut();
 #include "motor.c"
 
-void updateDrive() {
-	//motor[leftDrive]  = _LinearizeDrive(vexRT[Ch2]);
-	//motor[rightDrive] = _LinearizeDrive(vexRT[Ch3]);
-	setMotor(leftDrive,  vexRT[Ch2]);
-	setMotor(rightDrive, vexRt[Ch3]);
+void updateDriveTankDrive();
+void setDrivePwr(int pwr);
+void driveDistance(int d);
+
+void updateDriveTankDrive() {
+	setMotorLinear(leftDrive,  vexRT[Ch3]);
+	setMotorLinear(rightDrive, vexRT[Ch2]);
 }
 
-void setDrivePwr(int pwr) {
-	setMotor(leftDrive,  pwr);
-	setMotor(rightDrive, pwr);
+void updateDriveArcadeDrive() {
+	setMotorLinear(leftDrive, vexRT[Ch3] + vexRT[Ch1]);
+	setMotorLinear(rightDrive, vexRT[Ch3] - vexRT[Ch1]);
 }
 
 void driveDistance(int d) {
 	int intial = SensorValue[leftDriveEncoder];
 	
 	while ( SensorValue[leftDriveEncoder] < (initial + d) )
-		setDrivePwr(MAX_PWR);
+		setDrivePwr(FULL_PWR);
+}
+
+void setDrivePwr(int pwr) {
+	motor[leftDrive]  = pwr;
+	motor[rightDrive] = pwr;
 }
