@@ -7,7 +7,7 @@ void userControlLoop() {
 	
 	while (true) {
 		updateIntake();
-		updateDrive();
+		updateDriveTankDrive();
 		updateArm();
 
 		armPotVal = SensorValue[armPot]; // For debugging
