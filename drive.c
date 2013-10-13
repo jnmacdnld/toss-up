@@ -39,6 +39,8 @@ void updateDriveArcadeDrive() {
 //}
 
 void setDrivePwr(int pwr) {
-	motor[leftDrive]  = pwr;
+	int left_pwr = (int) (0.9166 * pwr);
+
+	motor[leftDrive]  = left_pwr;
 	motor[rightDrive] = pwr;
 }

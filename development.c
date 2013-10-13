@@ -12,31 +12,32 @@
 
 #include "user_control.c"
 #include "PidLib.c"
+#include "profiling.c"
 
 #define ENCODER_TICKS_PER_INCH 49.94
 
-int max_val = 0;
-
 task main() {
-	pidController* drivePid = PidControllerInit(0.0025, 0.0, 0.02, I2C_2);
+	profileMotor(leftDrive);
 
-	int d = 30;
+	//pidController* drivePid = PidControllerInit(0.0025, 0.0, 0.02, I2C_2);
 
-	int initial = nMotorEncoder[leftDrive];
-  int ticks = d * ENCODER_TICKS_PER_INCH;
-  int target = initial + ticks;
+	//int d = 30;
 
-  drivePid->target_value = target;
+	//int initial = nMotorEncoder[leftDrive];
+ // int ticks = d * ENCODER_TICKS_PER_INCH;
+ // int target = initial + ticks;
 
-  while (true) {
-  	int motor_cmd = PidControllerUpdate(drivePid);
-    setDrivePwr(motor_cmd);
+ // drivePid->target_value = target;
 
-    if (motor_cmd > max_val) {
-  		max_val = motor_cmd;
-  		writeDebugStreamLine("%d", max_val);
-  	}
+ // while (true) {
+ // 	int motor_cmd = PidControllerUpdate(drivePid);
+ //   setDrivePwr(motor_cmd);
 
-    wait1Msec(15);
-	}
+ //   if (motor_cmd > max_val) {
+ // 		max_val = motor_cmd;
+ // 		writeDebugStreamLine("%d", max_val);
+ // 	}
+
+ //   wait1Msec(15);
+	//}
 }
