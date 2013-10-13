@@ -2,14 +2,18 @@
 #include "intake.c"
 #include "arm.c"
 
+int armPotVal;
+int leftDriveEncoder;
+int rightDriveEncoder;
+
 void userControlLoop() {
-	int armPotVal;
-	
 	while (true) {
 		updateIntake();
 		updateDriveTankDrive();
 		updateArm();
 
 		armPotVal = SensorValue[armPot]; // For debugging
+    leftDriveEncoder = nMotorEncoder[leftDrive];
+    rightDriveEncoder = nMotorEncoder[rightDrive];
 	}
 }

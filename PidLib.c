@@ -99,10 +99,13 @@ void    PidControllerMakeLut();
 pidController *
 PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_reverse = 0 )
 {
+		writeDebugStreamLine("started init");
     pidController   *p;
 
-    if( nextPidControllerPtr == MAX_PID )
+    if( nextPidControllerPtr == MAX_PID ) {
+    	  writeDebugStreamLine("returning null");
         return(NULL);
+  }
 
     p = (pidController *)&_pidControllers[ nextPidControllerPtr++ ];
 

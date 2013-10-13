@@ -21,16 +21,17 @@ const unsigned int powerLut[128] =
  80, 81, 83, 84, 84, 86, 86, 87, 87, 88,
  88, 89, 89, 90, 90, 127,127,127
 };
- 
+
 void setMotorLinear(tMotor _motor, int pwr) {
 	if (pwr > 127)
 		pwr = 127;
 	else if (pwr < -127)
 		pwr = -127;
-	
-  motor[_motor] = powerLut[pwr];
+
+	if (pwr < 0)
+		motor[_motor] = -powerLut[-pwr];
+  else
+    motor[_motor] = powerLut[pwr];
 }
 
 #endif /* MOTOR_H */
-
-

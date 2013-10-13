@@ -5,8 +5,8 @@
 #define intakeOutPressed vexRT[Btn5D]
 
 void setIntakePwr(int value) {
-	motor[leftSpinner] = value;
-	motor[rightSpinner] = value;
+	motor[leftIntake] = value;
+	motor[rightIntake] = value;
 }
 
 void updateIntake() {
