@@ -17,27 +17,27 @@
 #define ENCODER_TICKS_PER_INCH 49.94
 
 task main() {
-	profileMotor(leftDrive);
+	//profileMotor(leftDrive);
 
-	//pidController* drivePid = PidControllerInit(0.0025, 0.0, 0.02, I2C_2);
+	pidController* drivePid = PidControllerInit(0.0025, 0.0, 0.02, I2C_2);
 
-	//int d = 30;
+	int d = 30;
 
-	//int initial = nMotorEncoder[leftDrive];
- // int ticks = d * ENCODER_TICKS_PER_INCH;
- // int target = initial + ticks;
+	int initial = nMotorEncoder[leftDrive];
+  int ticks = d * ENCODER_TICKS_PER_INCH;
+  int target = initial + ticks;
 
- // drivePid->target_value = target;
+  drivePid->target_value = target;
 
- // while (true) {
- // 	int motor_cmd = PidControllerUpdate(drivePid);
- //   setDrivePwr(motor_cmd);
+  while (true) {
+  	int motor_cmd = PidControllerUpdate(drivePid);
+    setDrivePwr(motor_cmd);
 
- //   if (motor_cmd > max_val) {
- // 		max_val = motor_cmd;
- // 		writeDebugStreamLine("%d", max_val);
- // 	}
+   // if (motor_cmd > max_val) {
+  	//	max_val = motor_cmd;
+  	//	writeDebugStreamLine("%d", max_val);
+  	//}
 
- //   wait1Msec(15);
-	//}
+    wait1Msec(15);
+	}
 }
