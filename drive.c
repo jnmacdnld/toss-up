@@ -1,6 +1,9 @@
 #include "motor.c"
 #include "PidLib.c"
 
+#define speed_axis vexRT[Ch3]
+#define turn_axis vexRT[Ch1]
+
 void updateDriveTankDrive();
 void setDrivePwr(int pwr);
 //void driveDistanceInches(int d);
@@ -8,11 +11,6 @@ void setDrivePwr(int pwr);
 void updateDriveTankDrive() {
 	setMotorLinear(leftDrive,  vexRT[Ch3]);
 	setMotorLinear(rightDrive, vexRT[Ch2]);
-}
-
-void updateDriveArcadeDrive() {
-	setMotorLinear(leftDrive, vexRT[Ch3] + vexRT[Ch1]);
-	setMotorLinear(rightDrive, vexRT[Ch3] - vexRT[Ch1]);
 }
 
 // void driveDistanceInches(int d) {
