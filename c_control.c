@@ -2,24 +2,37 @@
 #define C_CONTROL
 
 typedef struct {
-	int original;
-	int target;
+	short original;
+	short target;
 	bool reachedTarget;
-	int posCorrection;
-	int negCorrection;
-} cController;
+	short posCorrection;
+	short negCorrection;
+} CController;
 
-int cControllerUpdate(cController* c, int actual) {
+int cControllerUpdate(CController* c, short actual) {
 	if (c->target < c->original && actual > c->target) {
 		c->reachedTarget = false;
 		return c->negCorrection;
 	} else if (c->target > c->original && actual < c->target) {
 		c->reachedTarget = false;
-		return c->posCorrection;
+		return (int) c->posCorrection;
 	} else {
 		c->reachedTarget = true;
 		return 0;
 	}
+}
+
+void cControllerSetTarget(CController* c, short target, short actual) {
+	c->target = target;
+	c->original = actual;
+}
+
+*CController cControllerInit(short posCorrection, short nedCorrection) {
+	CController c;
+	c.posCorrection = posCorrection;
+	c.negCorrection = negCorrection;
+	
+	return &c;
 }
 
 #endif /* C_CONTROL */
