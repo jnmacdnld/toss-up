@@ -1,47 +1,70 @@
-void profileMotorAtSetting(tMotor mtr, int setting) {
+getActualMotorSpeedAtSetting(tMotor mtr, int setting);
+fillActualSpeedsArr(tMotor mtr, float* actualSpeeds);
+fillMotorSettingLut(tMotor mtr, int* motorSettingLut, float* actualSpeeds);
+getIdealSpeed(int setting, float* actualSpeeds);
+
+float getActualMotorSpeedAtSetting(tMotor mtr, int setting) {
+	int num_samples = 50;
+	
 	motor[mtr] = setting;
-	wait1Msec(1000);
+	wait1Msec(1000); // Wait until the motor reached the speed
 
-	int last_sample;
-	int v;
-	float avg;
+	int final_pos;
+	int initial_pos;
+	int s;
+	float avg_s;
 
-	for (int i = 0; i < 50; i++) {
-		last_sample = nMotorEncoder[mtr];
-
+	for (int i = 0; i < num_samples; i++) {
+		initial_pos = nMotorEncoder[mtr];
 		wait1Msec(25);
+		final_pos = nMotorEncoder[mtr];
+		s = abs(final_pos - initial_pos);
 
-		v = nMotorEncoder[mtr] - last_sample;
-
-		avg += v;
+		avg_s += s;
 	}
 
-	avg /= 50.0;
+	avg_s /= num_samples;
 
-	writeDebugStreamLine("%f", avg);
+	return avg_s;
 }
 
-	//motor[leftDrive] = 75;
-	//motor[rightDrive] = 127;
+void fillActualSpeedsArr(tMotor mtr, float* actualSpeeds) {
+	for (short s = 0; s <= 127; s++) {
+		actualSpeeds[s] = getActualMotorSpeedAtSetting(mtr, s);
+	}
+}
 
-	//int last_sample_right;
-	//int last_sample_left;
 
-	//int left_v;
-	//int right_v;
+void fillMotorSettingLut(tMotor mtr, int* motorSettingLut, float* actualSpeeds) {
+	float least_diff = 0;
+	int best_match = 0;
+	float diff = 0;
+	
+	// Calculate the best power setting to re-map each power setting to
+  // so that acceleration is constant when the joystick is moved forward 
+	for (short s = 0; s <= 127; s++) {
+		least_diff = abs(getIdealSpeed(s) - actualSpeeds[0];
+		best_match = 0;
+		
+		for (short k = 0; k <= 127; k++) {
+			diff = abs(getIdealSpeed(s) - actualSpeeds[k]);
+			
+			// The power setting that gives a speed closest to the speed we want 
+			// (the speed that makes the acceleration constant) is the best match
+			if (diff < least_diff) { 
+				best_match = k;
+				least_diff = diff;
+			}
+		}
+		
+		motorSettingLut[i] = best_match;
+	}
+}
 
-	//for (int i = 0; i < 50; i++) {
-	//	last_sample_left = nMotorEncoder[leftDrive];
-	//	last_sample_right = nMotorEncoder[rightDrive];
-
-	//	wait1Msec(500);
-
-	//	left_v = nMotorEncoder[leftDrive] - last_sample_left;
-	//	right_v = nMotorEncoder[rightDrive] - last_sample_right;
-
-	//	left_avg += left_v;
-	//	right_avg += right_v;
-	//}
-
-	//left_avg /= 50.0;
-	//right_avg /= 50.0;
+void getIdealSpeed(int setting, float* actualSpeeds) {
+	float max_speed = actualSpeeds[127];
+	float max_setting = 127.0
+	
+	// An equation in point-slope form with the x1 term moved to the right side
+	return (max_speed / max_setting) * (setting - max_setting) + max_speed;
+}
