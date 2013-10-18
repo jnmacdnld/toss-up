@@ -1,3 +1,6 @@
+#ifndef ARCADE_DRIVE_C
+#define ARCADE_DRIVE_C
+
 typedef struct {
 	short sign;
 	short raw;
@@ -54,3 +57,5 @@ void normalizeDrive(DriveMotor* left, DriveMotor* right) {
 	greater->cmd = FULL_PWR * greater->sign;
 	lesser->cmd = (short) ( (lesser->mag / greater->mag) * FULL_PWR * lesser->sign );
 }
+
+#endif

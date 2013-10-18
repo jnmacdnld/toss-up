@@ -1,3 +1,6 @@
+#ifndef DRIVE_C
+#define DRIVE_C
+
 #include "motor.c"
 #include "PidLib.c"
 #include "arcade_drive.c"
@@ -15,3 +18,5 @@ void setDrivePwr(int pwr) {
   motor[leftDrive]  = pwr;
   motor[rightDrive] = pwr;
 }
+
+#endif

@@ -12,8 +12,6 @@
 
 #include "user_control.c"
 
-int max_val = 0;
-
 task main() {
 	userControlLoop();
 }

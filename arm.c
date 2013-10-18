@@ -1,3 +1,6 @@
+#ifndef ARM_C
+#define ARM_C
+
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
 #define ARM_MIDDLE_POS 1500
@@ -18,7 +21,7 @@ int armControlTarget = -1;
 int armControlPwr = 0;
 bool armControlActive = false;
 
-void setArmPwr(int value);
+void armSetPower(int value);
 
 bool armIsDown();
 bool armIsUp();
@@ -50,7 +53,7 @@ void updateArm() {
 		holdArmPos();
 }
 
-void setArmPwr(int value) {
+void armSetPower(int value) {
 	motor[leftArm] = value;
 	motor[rightArm] = value;
 }
@@ -69,7 +72,7 @@ void armUpPressedCb() {
 		return;
 	}
 
-	setArmPwr(ARM_UP_PWR);
+	armSetPower(ARM_UP_PWR);
 	armControlActive = false;
 }
 
@@ -79,7 +82,7 @@ void armDownPressedCb() {
 		return;
 	}
 
-	setArmPwr(ARM_DOWN_PWR);
+	armSetPower(ARM_DOWN_PWR);
 	armControlActive = false;
 }
 
@@ -99,14 +102,16 @@ void armControlSetTarget(int target) {
 void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
-		setArmPwr(armControlPwr);
+		armSetPower(armControlPwr);
 	else
 	   armControlActive = false;
 }
 
 void holdArmPos() {
 	if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
-			setArmPwr(0);
+			armSetPower(0);
 	else
-		setArmPwr(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
+		armSetPower(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
 }
+
+#endif
