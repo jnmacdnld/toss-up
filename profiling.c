@@ -1,3 +1,6 @@
+#ifndef PROFILING_C
+#define PROFILING_C
+ 
 getActualMotorSpeedAtSetting(tMotor mtr, int setting);
 fillActualSpeedsArr(tMotor mtr, float* actualSpeeds);
 fillMotorSettingLut(tMotor mtr, int* motorSettingLut, float* actualSpeeds);
@@ -68,3 +71,6 @@ void getIdealSpeed(int setting, float* actualSpeeds) {
 	// An equation in point-slope form with the x1 term moved to the right side
 	return (max_speed / max_setting) * (setting - max_setting) + max_speed;
 }
+
+ 
+#endif /* PROFILING_C */
