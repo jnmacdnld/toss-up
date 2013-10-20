@@ -1,3 +1,6 @@
+#ifndef INTAKE_C
+#define INTAKE_C
+
 #define INTAKE_OUT_PWR -50
 #define INTAKE_IN_PWR   127
 
@@ -17,3 +20,5 @@ void updateIntake() {
 	else
 		setIntakePwr(0);
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef USER_CONTROL_C
+#define USER_CONTROL_C
+
 #include "drive.c"
 #include "intake.c"
 #include "arm.c"
@@ -12,8 +15,10 @@ void userControlLoop() {
 		updateDriveTankDrive();
 		updateArm();
 
-		armPotVal = SensorValue[armPot]; // For debugging
-    leftDriveEncoder = nMotorEncoder[leftDrive];
-    rightDriveEncoder = nMotorEncoder[rightDrive];
+		armPotVal = SensorValue[armPot];              	// For debugging
+    leftDriveEncoder = nMotorEncoder[leftDrive];		//
+    rightDriveEncoder = nMotorEncoder[rightDrive];	//
 	}
 }
+
+#endif
