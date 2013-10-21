@@ -23,8 +23,9 @@ void armControlDisable() {
 	armPid->enabled = 0;
 }
 
-void initArmControl() {
-	armPid = PidControllerInit(0.003, 0.0, 0.02, 0.23, armPot);
+void startArmControl() {
+	armPid = PidControllerInit(0.04, 0.0, 0.02, 0.48, armPot);
+	StartTask(ArmControl);
 }
 
 #endif
