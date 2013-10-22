@@ -13,6 +13,7 @@
 #include "user_control.c"
 
 task main() {
+	startArmControl();
 	StartTask(UserControl);
 	
 	while (true)
