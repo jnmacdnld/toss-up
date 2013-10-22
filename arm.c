@@ -9,8 +9,6 @@
 
 #define armPos         SensorValue[armPot]
 
-#define armDownPressed    vexRT[Btn6D]
-#define armUpPressed      vexRT[Btn6U]
 #define armUpMacroPressed vexRT[Btn8U]
 #define armDownMacroPressed vexRT[Btn8D]
 #define armMiddleMacroPresed vexRT[Btn8L]
