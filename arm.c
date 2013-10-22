@@ -1,7 +1,13 @@
 #ifndef ARM_C
 #define ARM_C
 
+void armSetPowerRaw(int value);
+
+bool armIsDown();
+bool armIsUp();
+
 #include "motor.c"
+#include "arm_control.c"
 
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
@@ -13,17 +19,12 @@
 #define armDownMacroPressed vexRT[Btn8D]
 #define armMiddleMacroPresed vexRT[Btn8L]
 
-void armSetPowerRaw(int value);
-
-bool armIsDown();
-bool armIsUp();
-
 void updateArm() {
 	if (armUpMacroPressed) {
 		armControlMoveToPos(ARM_UP_POS);
 	} else if (armDownMacroPressed) {
 		armControlDisable();
-		armSetPwrRaw(0);
+		armSetPowerRaw(0);
 	} else if (armMiddleMacroPresed) {
 		armControlMoveToPos(ARM_MIDDLE_POS);
 	}

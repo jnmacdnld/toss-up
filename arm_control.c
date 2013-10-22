@@ -1,6 +1,9 @@
 #ifndef ARM_CONTROL_C
 #define ARM_CONTROL_C
 
+void armControlMoveToPos(int pos);
+void armControlDisable();
+
 #include "arm.c"
 #include "PidLib.c"
 
