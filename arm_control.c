@@ -16,6 +16,7 @@ task ArmControl() {
 }
 
 void armControlMoveToPos(int pos) {
+	armPid->enabled = 1;
 	armPid->target_value = pos;
 }
 
