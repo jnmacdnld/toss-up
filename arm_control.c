@@ -1,6 +1,9 @@
 #ifndef ARM_CONTROL
 #define ARM_CONTROL
 
+void armControlMoveToPos(int pos);
+void armControlDisable();
+
 #include "arm.c"
 #include "PidLib.c"
 
@@ -21,6 +24,7 @@ task ArmControl() {
 }
 
 void armControlMoveToPos(int pos) {
+	armPid->enabled = 1;
 	armPid->target_value = pos;
 }
 

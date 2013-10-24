@@ -1,6 +1,9 @@
 #ifndef ARCADE_DRIVE_C
 #define ARCADE_DRIVE_C
 
+#include "drive.c"
+#include "motor.c"
+
 typedef struct {
 	short sign;
 	short raw;
@@ -32,7 +35,7 @@ void updateDriveArcadeDrive() {
 		normalizeDrive(&left, &right);
 	} else {
 		left.cmd = (int) left.raw;
-		right.cmd = (int) right.raw
+		right.cmd = (int) right.raw;
 	}
 
 	setMotorLinear(leftDrive, left.cmd);

@@ -5,19 +5,21 @@
 #include "intake.c"
 #include "arm.c"
 
-int armPotVal;
-int leftDriveEncoder;
-int rightDriveEncoder;
+int armPotVal;					// FIXME: move to another task in another file
+int leftDriveEncoder;		//
+int rightDriveEncoder;	//
 
-void userControlLoop() {
+task UserControl() {
 	while (true) {
 		updateIntake();
 		updateDriveTankDrive();
 		updateArm();
 
-		armPotVal = SensorValue[armPot];              	// For debugging
+		armPotVal = SensorValue[armPot];              	// FIXME: move to another task in another file
     leftDriveEncoder = nMotorEncoder[leftDrive];		//
     rightDriveEncoder = nMotorEncoder[rightDrive];	//
+    
+    wait1Msec(25);
 	}
 }
 
