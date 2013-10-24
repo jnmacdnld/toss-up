@@ -14,7 +14,7 @@
 #include "arm_control.c"
 
 task main() {
-	startArmControl();
+	armControlStart();
 	StartTask(UserControl);
 
 	while (true)

@@ -5,6 +5,9 @@
 #include "drive.c"
 #include "PidLib.c"
 
+#define PID 1
+#define CONST 0
+
 pidController* drivePid;
 pidController* driveSonarPid;
 pidController* driveEncoderPid;
@@ -14,15 +17,23 @@ bool driveControlEnabled = false;
 bool driveControlErrorStable = false;
 short driveControlErrorStableTimeout = 500;
 
-bool waiting;
+void updatePid();
+
+bool waiting = false;
 
 void driveControlEnable();
 void driveControlDisable();
 
 task DriveControl() {
   while (true) {
-    if (driveControlEnabled) {
-      int motor_cmd = PidControllerUpdate(drivePid);
+    updatePid();
+
+    wait1Msec(25);
+  }
+}
+
+void updatePid() {
+  int motor_cmd = PidControllerUpdate(drivePid);
 
       /* Deciding whether the error is stable */
       // If the error just became stable, start a timer
@@ -46,10 +57,6 @@ task DriveControl() {
       
       driveSetPowerUnadjusted(motor_cmd);
       // setDrivePwr(drivePid->drive_raw);
-    }
-
-    wait1Msec(25);
-  }
 }
 
 void driveControlStart() {
