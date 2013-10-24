@@ -4,6 +4,9 @@
 void armControlMoveToPos(int pos);
 void armControlDisable();
 
+void armControlMoveToPos(int pos);
+void armControlDisable();
+
 #include "arm.c"
 #include "PidLib.c"
 
