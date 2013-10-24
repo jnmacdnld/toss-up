@@ -24,7 +24,7 @@ int armControlTarget = -1;
 int armControlPwr = 0;
 bool armControlActive = false;
 
-void armSetPowerRaw(int value);
+void armSetPowerUnadjusted(int value);
 
 bool armIsDown();
 bool armIsUp();
@@ -56,7 +56,7 @@ void updateArm() {
 		holdArmPos();
 }
 
-void armSetPowerRaw(int value) {
+void armSetPowerUnadjusted(int value) {
 	motor[leftArm] = value;
 	motor[rightArm] = value;
 }
@@ -75,7 +75,7 @@ void armUpPressedCb() {
 		return;
 	}
 
-	armSetPowerRaw(ARM_UP_PWR);
+	armSetPowerUnadjusted(ARM_UP_PWR);
 	armControlActive = false;
 }
 
@@ -85,7 +85,7 @@ void armDownPressedCb() {
 		return;
 	}
 
-	armSetPowerRaw(ARM_DOWN_PWR);
+	armSetPowerUnadjusted(ARM_DOWN_PWR);
 	armControlActive = false;
 }
 
@@ -105,16 +105,16 @@ void armControlSetTarget(int target) {
 void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
-		armSetPowerRaw(armControlPwr);
+		armSetPowerUnadjusted(armControlPwr);
 	else
 	   armControlActive = false;
 }
 
 void holdArmPos() {
 	if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
-			armSetPowerRaw(0);
+			armSetPowerUnadjusted(0);
 	else
-		armSetPowerRaw(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
+		armSetPowerUnadjusted(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
 }
 
 #endif

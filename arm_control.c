@@ -1,15 +1,20 @@
-#ifndef ARM_CONTROL_C
-#define ARM_CONTROL_C
+#ifndef ARM_CONTROL
+#define ARM_CONTROL
 
 #include "arm.c"
 #include "PidLib.c"
 
 pidController* armPid;
+bool armControlEnabled;
+
+void armControlEnable();
 
 task ArmControl() {
 	while (true) {
-		int cmd = PidControllerUpdate(armPid);
-		armSetPowerRaw(cmd);
+		if (armControlEnabled) {
+			int cmd = PidControllerUpdate(armPid);
+			armSetPowerUnadjusted(cmd);
+		}
 
 		wait1Msec(25);
 	}
@@ -19,13 +24,18 @@ void armControlMoveToPos(int pos) {
 	armPid->target_value = pos;
 }
 
-void armControlDisable() {
-	armPid->enabled = 0;
+void armControlStart() {
+	armPid = PidControllerInit(0.04, 0.0, 0.02, 0.48, armPot);
+	armControlEnable();
+	StartTask(ArmControl);
 }
 
-void startArmControl() {
-	armPid = PidControllerInit(0.04, 0.0, 0.02, 0.48, armPot);
-	StartTask(ArmControl);
+void armControlDisable() {
+	armControlEnabled = false;
+}
+
+void armControlEnable() {
+	armControlEnabled = true;
 }
 
 #endif

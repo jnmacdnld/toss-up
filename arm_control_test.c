@@ -15,8 +15,7 @@
 // #define ARM_UP_POS   3030
 
 task main() {
-  startArmControl();
-
+  armControlStart();
   armControlMoveToPos(ARM_UP_POS);
 
   while (true)

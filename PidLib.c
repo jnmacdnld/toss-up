@@ -99,11 +99,9 @@ void    PidControllerMakeLut();
 pidController *
 PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_reverse = 0 )
 {
-		writeDebugStreamLine("started init");
     pidController   *p;
 
     if( nextPidControllerPtr == MAX_PID ) {
-    	  writeDebugStreamLine("returning null");
         return(NULL);
   }
 
@@ -140,7 +138,8 @@ PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_rev
     // We need a valid sensor for pid control, pot or encoder
     if( ( p->sensor_type == sensorPotentiometer ) ||
         ( p->sensor_type == sensorQuadEncoder ) ||
-        ( p->sensor_type == sensorQuadEncoderOnI2CPort )
+        ( p->sensor_type == sensorQuadEncoderOnI2CPort ||
+          p->sensor_type == sensorSONAR_TwoPins_mm)
       )
         p->enabled    = 1;
     else
@@ -158,7 +157,7 @@ PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_rev
 /*-----------------------------------------------------------------------------*/
 
 pidController *
-PidControllerInit( float Kp, float Ki, float Kd, float Kbias, tSensors port, short sensor_reverse = 0 )
+PidControllerInit( float Kp, float Ki, float Kd, float Kbias, tSensors port, short sensor_reverse = 0)
 {
     pidController   *p;
     p = PidControllerInit( Kp, Ki, Kd, port, sensor_reverse );
@@ -190,7 +189,7 @@ PidControllerUpdate( pidController *p )
             int inc = p->drive_cmd / 8;
             p->sensor_value += inc;
 #else
-            // Get raw position value, may be pot or encoder
+            // Get raw position value, may be pot or encoder or range
             p->sensor_value = SensorValue[ p->sensor_port ];
 #endif
 
@@ -207,6 +206,14 @@ PidControllerUpdate( pidController *p )
 
             p->error = p->target_value - p->sensor_value;
             }
+
+        // sonar sensor
+        if (p->sensor_type == sensorSONAR_TwoPins_mm) {
+            p->error *= -1;
+
+            // if (p->error < 0)
+            //     p->error = 0;
+        }
 
         // force error to 0 if below threshold
         if( abs(p->error) < p->error_threshold )
