@@ -7,7 +7,7 @@
 
 #define ARM_UP_PWR    FULL_PWR
 #define ARM_DOWN_PWR -FULL_PWR / 3
-#define ARM_HOLD_PWR  10
+#define ARM_HOLD_PWR  40
 
 #define armPos         SensorValue[armPot]
 
