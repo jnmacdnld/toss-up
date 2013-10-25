@@ -15,7 +15,7 @@ void updateDriveArcadeDrive() {
 	DriveMotor right;
 
 	short speed_axis = (short) vexRT[Ch3];
-	short turn_axis = (short) vexRT[Ch4];
+	short turn_axis = (short) vexRT[Ch1];
 
 	if (speed_axis < -50) {
 		left.raw = speed_axis - turn_axis;
