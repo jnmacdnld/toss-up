@@ -18,30 +18,20 @@ void updateDriveArcadeDrive() {
 	if ( abs(turn_axis) < 10 )
 		turn_axis = 0;
 
-	// If no joysticks have been moved, do nothing
-	if (speed_axis == 0 && turn_axis == 0) {
-		setLeftDrive(0);
-		setRightDrive(0);
-
-	// If only the turn joystick has been moved, pivot
-	} else if (speed_axis == 0 && turn_axis != 0) {
+	// If the speed joystick has not been moved,
+	// pivot according to the turn joystick
+	if (speed_axis == 0) {
 		setLeftDrive(turn_axis);
 		setRightDrive(-turn_axis);
 
-	// If only the speed joystick has been moved (no turn), move straight
-	} else if (speed_axis != 0 && turn_axis == 0) {
-		setLeftDrive(speed_axis);
-		setRightDrive(speed_axis);
-
-	// If the speed joystick and turn joystick have been moved,
-	// slow one of the wheels to turn the robot
-	} else if (speed_axis != 0 && turn_axis != 0) {
+	// If the speed joystick has been moved, curve accoring to the turn joystick
+	} else {
 		int left = speed_axis;
 		int right = speed_axis;
 
 		if (turn_axis > 0)
 			slowDrive(right, turn_axis);
-		else
+		else if (turn_axis < 0)
 			slowDrive(left, turn_axis);
 
 		setLeftDrive(left);
