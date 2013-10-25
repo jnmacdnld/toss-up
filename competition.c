@@ -19,12 +19,12 @@
 
 #include "user_control.c"
 
-void pre_autonomous() {
- 
+void pre_auton() {
+	bStopTasksBetweenModes = true;
 }
 
 task autonomous() {
-	
+	AutonomousCodePlaceholderForTesting();
 }
 
 task usercontrol() {
