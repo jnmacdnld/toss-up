@@ -35,12 +35,4 @@ void armSetPowerUnadjusted(int value) {
 	motor[rightArm] = value;
 }
 
-bool armIsDown() {
-	return (armPos <= ARM_DOWN_POS);
-}
-
-bool armIsUp() {
-	return (armPos >= ARM_UP_POS);
-}
-
 #endif
