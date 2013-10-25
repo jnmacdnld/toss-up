@@ -7,9 +7,9 @@ typedef struct {
 	bool reachedTarget;
 	short posCorrection;
 	short negCorrection;
-} CController;
+} cController;
 
-int cControllerUpdate(CController* c, short actual) {
+int cControllerUpdate(cController* c, short actual) {
 	if (c->target < c->original && actual > c->target) {
 		c->reachedTarget = false;
 		return c->negCorrection;
@@ -22,13 +22,13 @@ int cControllerUpdate(CController* c, short actual) {
 	}
 }
 
-void cControllerSetTarget(CController* c, short target, short actual) {
+void cControllerSetTarget(cController* c, short target, short actual) {
 	c->target = target;
 	c->original = actual;
 }
 
-CController* cControllerInit(short posCorrection, short negCorrection) {
-	CController c;
+cController* cControllerInit(short posCorrection, short negCorrection) {
+	cController c;
 	c.posCorrection = posCorrection;
 	c.negCorrection = negCorrection;
 
