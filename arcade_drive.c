@@ -25,8 +25,8 @@ void updateDriveArcadeDrive() {
 
 	// If only the turn joystick has been moved, pivot
 	} else if (speed_axis == 0 && turn_axis != 0) {
-		setLeftDrive(speed_axis);
-		setRightDrive(-speed_axis);
+		setLeftDrive(turn_axis);
+		setRightDrive(-turn_axis);
 
 	// If only the speed joystick has been moved (no turn), move straight
 	} else if (speed_axis != 0 && turn_axis == 0) {
@@ -51,10 +51,10 @@ void updateDriveArcadeDrive() {
 
 void slowDrive(int& drive, int turn) {
 	float drive_f = drive;
-	float turn_f = turn;
+	float turn_f = abs(turn);
 
-	drive_f *= 1.0 - (turn_f / MAX_TURN);
-
+	drive_f *= 1.0 - (turn_f  / MAX_TURN);
+ 
 	drive = (int) drive_f;
 }
 
