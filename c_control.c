@@ -27,11 +27,11 @@ void cControllerSetTarget(CController* c, short target, short actual) {
 	c->original = actual;
 }
 
-*CController cControllerInit(short posCorrection, short nedCorrection) {
+CController* cControllerInit(short posCorrection, short negCorrection) {
 	CController c;
 	c.posCorrection = posCorrection;
 	c.negCorrection = negCorrection;
-	
+
 	return &c;
 }
 
