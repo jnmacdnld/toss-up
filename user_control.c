@@ -4,21 +4,22 @@
 #include "drive.c"
 #include "intake.c"
 #include "arm.c"
+#include "arcade_drive.c"
 
 int armPotVal;
 int leftDriveEncoder;
 int rightDriveEncoder;
 
 void userControlLoop() {
-	while (true) {
-		updateIntake();
-		updateDriveTankDrive();
-		updateArm();
+  while (true) {
+    updateIntake();
+    updateDriveArcadeDrive();
+    updateArm();
 
-		armPotVal = SensorValue[armPot];              	// For debugging
-    leftDriveEncoder = nMotorEncoder[leftDrive];		//
-    rightDriveEncoder = nMotorEncoder[rightDrive];	//
-	}
+    armPotVal = SensorValue[armPot];                // For debugging
+    leftDriveEncoder = nMotorEncoder[leftDrive];    //
+    rightDriveEncoder = nMotorEncoder[rightDrive];  //
+  }
 }
 
 #endif
