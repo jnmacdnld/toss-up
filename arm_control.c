@@ -8,7 +8,7 @@ void armControlDisable();
 #include "PidLib.c"
 
 pidController* armPid;
-bool armControlEnabled;
+bool armControlEnabled = false;
 
 void armControlEnable();
 
