@@ -50,8 +50,12 @@ void updateDriveArcadeDrive() {
 }
 
 void slowDrive(int& drive, int turn) {
-	float fraction = 1.0 - ( (float) abs(turn) / MAX_TURN );
-	drive = (int) ( (float) drive * fraction);
+	float drive_f = drive;
+	float turn_f = turn;
+
+	drive_f *= 1.0 - (turn_f / MAX_TURN);
+
+	drive = (int) drive_f;
 }
 
 #endif
