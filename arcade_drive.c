@@ -4,19 +4,13 @@
 #define MAX_TURN 127.0
 
 #include "drive.c"
+#include "joystick.c"
 
 void slowDrive(int& drive, int turn);
 
 void updateDriveArcadeDrive() {
-	int speed_axis = vexRT[Ch3];
-	int turn_axis = vexRT[Ch1];
-
-	// If the joysticks have been moved very very little, ignore it
-	if ( abs(speed_axis) < 10)
-		speed_axis = 0;
-	
-	if ( abs(turn_axis) < 10 )
-		turn_axis = 0;
+	int speed_axis = getJoystickAxis(Ch3);
+	int turn_axis = getJoystickAxis(Ch1);
 
 	// If the speed joystick has not been moved,
 	// pivot according to the turn joystick
