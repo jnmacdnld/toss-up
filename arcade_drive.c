@@ -33,7 +33,7 @@ void updateDriveArcadeDrive() {
 		setLeftDrive(speed_axis);
 		setRightDrive(speed_axis);
 
-	// If the speed joystick and turn joystick has been moved,
+	// If the speed joystick and turn joystick have been moved,
 	// slow one of the wheels to turn the robot
 	} else if (speed_axis != 0 && turn_axis != 0) {
 		int left = speed_axis;
