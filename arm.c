@@ -87,9 +87,6 @@ void armDownPressedCb() {
 }
 
 void armControlSetTarget(int target) {
-	if (armControlTarget == target)
-		return;
-
 	if (armPos < target)
 		armControlPwr = ARM_UP_PWR;
 	else
