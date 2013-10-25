@@ -2,13 +2,12 @@
 #define ARCADE_DRIVE_C
 
 #include "drive.c"
-#include "motor.c"
 
 typedef struct {
 	short sign;
 	short raw;
 	float mag;
-	short cmd;
+	int cmd;
 } DriveMotor;
 
 void normalizeDrive(DriveMotor* left, DriveMotor* right);
@@ -18,7 +17,13 @@ void updateDriveArcadeDrive() {
 	DriveMotor right;
 
 	short speed_axis = (short) vexRT[Ch3];
-	short turn_axis = (short) vexRT[Ch4];
+	short turn_axis = (short) vexRT[Ch1];
+
+	if (abs(speed_axis) < 10)
+		speed_axis = 0;
+	
+	if (abs(turn_axis) < 10 )
+		turn_axis = 0;
 
 	if (speed_axis < -50) {
 		left.raw = speed_axis - turn_axis;
@@ -38,8 +43,8 @@ void updateDriveArcadeDrive() {
 		right.cmd = (int) right.raw;
 	}
 
-	setMotorLinear(leftDrive, left.cmd);
-	setMotorLinear(rightDrive, right.cmd);
+	setLeftDrive(left.cmd);
+	setRightDrive(right.cmd);
 }
 
 void normalizeDrive(DriveMotor* left, DriveMotor* right) {
