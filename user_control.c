@@ -4,6 +4,7 @@
 #include "drive.c"
 #include "intake.c"
 #include "arm.c"
+#include "arcade_drive.c"
 
 int armPotVal;					// FIXME: move to another task in another file
 int leftDriveEncoder;		//
@@ -12,7 +13,7 @@ int rightDriveEncoder;	//
 task UserControl() {
 	while (true) {
 		updateIntake();
-		updateDriveTankDrive();
+		updateDriveArcadeDrive();
 		updateArm();
 
 		armPotVal = SensorValue[armPot];              	// FIXME: move to another task in another file
