@@ -39,7 +39,7 @@ void updateArm() {
 	if (armUpMacroPressed && !armIsUp() )
 		armControlSetTarget(ARM_UP_POS);
 	else if (armDownMacroPressed && !armIsDown() )
-		armControlSetTarget(1310);
+		armControlSetTarget(ARM_DOWN_POS - 90); // Go a little past the down position so we know it gets there
 	else if (armMiddleMacroPresed)
 		armControlSetTarget(ARM_MIDDLE_POS);
 
