@@ -2,7 +2,6 @@
 #define DRIVE_C
 
 #include "motor.c"
-// #include "PidLib.c"
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);
@@ -27,7 +26,7 @@ int leftDriveSettingLut[128] =
 };
 
 // LUT that goes from 20 10 100 rpm linearly
-// Computer for right drive
+// Computed for right drive
 int rightDriveSettingLut[128] =
 {
 0, 31, 31, 31, 32, 32, 32, 32, 33, 33,
@@ -46,8 +45,7 @@ int rightDriveSettingLut[128] =
 };
 
 void updateDriveTankDrive();
-void setDrivePwr(int pwr);
-//void driveDistanceInches(int d);
+void driveSetPower(int pwr);
 
 void updateDriveTankDrive() {
   setLeftDrive(vexRT[Ch3]);
@@ -59,7 +57,7 @@ void driveSetPowerUnadjusted(int pwr) {
   motor[rightDrive] = pwr;
 }
 
-void setDrivePwr(int pwr) {
+void driveSetPower(int pwr) {
   setLeftDrive(pwr);
   setRightDrive(pwr);
 }

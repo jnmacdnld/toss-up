@@ -9,8 +9,8 @@
 void slowDrive(int& drive, int turn);
 
 void updateDriveArcadeDrive() {
-	int speed_axis = joystickGetAxis(Ch3);
-	int turn_axis = joystickGetAxis(Ch1);
+	int speed_axis = joystickGetYAxis(LEFT_JOYSTICK);
+	int turn_axis = joystickGetXAxis(RIGHT_JOYSTICK);
 
 	// If the speed joystick has not been moved,
 	// pivot according to the turn joystick
