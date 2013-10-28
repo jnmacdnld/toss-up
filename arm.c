@@ -3,7 +3,6 @@
 
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
-#define ARM_MIDDLE_POS 1500
 
 #define ARM_UP_PWR    FULL_PWR
 #define ARM_DOWN_PWR -FULL_PWR / 3
@@ -40,8 +39,6 @@ void updateArm() {
 		armControlSetTarget(ARM_UP_POS);
 	else if (armDownMacroPressed && !armIsDown() )
 		armControlSetTarget(ARM_DOWN_POS - 90); // Go a little past the down position so we know it gets there
-	else if (armMiddleMacroPresed)
-		armControlSetTarget(ARM_MIDDLE_POS);
 
 	if (armUpPressed)
 		armUpPressedCb();
