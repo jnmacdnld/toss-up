@@ -29,7 +29,7 @@ void armControlMoveToPos(int pos) {
 }
 
 void armControlStart() {
-	armPid = PidControllerInit(0.04, 0.0, 0.02, 0.48, armPot);
+	armPid = PidControllerInit(0.001682, 0.0, 0.00, 0.48, armPot);
 	armControlEnable();
 	StartTask(ArmControl);
 }
