@@ -72,4 +72,18 @@ int joystickGetMagnitude(Joystick j) {
   return (int) sqrt( (x * x) + (y * y) );
 }
 
+void testJoysticks() {
+  while (true) {
+    writeDebugStreamLine("Left")
+    writeDebugStreamLine("  Angle:     %d", joystickGetAngle(LEFT_JOYSTICK));
+    writeDebugStreamLine("  Magnitude: %d", joystickGetMagnitude(LEFT_JOYSTICK));
+    writeDebugStreamLine("Right")
+    writeDebugStreamLine("  Angle:     %d", joystickGetAngle(RIGHT_JOYSTICK));
+    writeDebugStreamLine("  Magnitude: %d", joystickGetMagnitude(RIGHT_JOYSTICK));
+    writeDebugStreamLine("");
+
+    wait1Msec(1000);
+  }
+}
+
 #endif
