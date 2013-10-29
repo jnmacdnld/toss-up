@@ -19,7 +19,7 @@
 
 #include "user_control.c"
 
-void pre_autonomous() {
+void pre_auton() {
 
 }
 
@@ -28,5 +28,9 @@ task autonomous() {
 }
 
 task usercontrol() {
-	userControlLoop();
+	armControlStart();
+	StartTask(UserControl);
+
+	while (true)
+		wait1Msec(25);
 }
