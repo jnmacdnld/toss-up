@@ -1,37 +1,17 @@
 #ifndef MOTOR_C
 #define MOTOR_C
 
-#define FULL_PWR 127
-#define HALF_PWR FULL_PWR / 2
+#include "motor_luts.c"
 
-// Lookup table for power values, taken from http://www.vexforum.com/showthread.php?t=76943
-const unsigned int powerLut[128] =
-{
-  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  0, 21, 21, 21, 22, 22, 22, 23, 24, 24,
- 25, 25, 25, 25, 26, 27, 27, 28, 28, 28,
- 28, 29, 30, 30, 30, 31, 31, 32, 32, 32,
- 33, 33, 34, 34, 35, 35, 35, 36, 36, 37,
- 37, 37, 37, 38, 38, 39, 39, 39, 40, 40,
- 41, 41, 42, 42, 43, 44, 44, 45, 45, 46,
- 46, 47, 47, 48, 48, 49, 50, 50, 51, 52,
- 52, 53, 54, 55, 56, 57, 57, 58, 59, 60,
- 61, 62, 63, 64, 65, 66, 67, 67, 68, 70,
- 71, 72, 72, 73, 74, 76, 77, 78, 79, 79,
- 80, 81, 83, 84, 84, 86, 86, 87, 87, 88,
- 88, 89, 89, 90, 90, 127,127,127
-};
+#define FULL_POWER 127
+#define FULL_PWR FULL_POWER
+#define HALF_POWER FULL_POWER / 2
 
-void setMotorLinear(tMotor _motor, int pwr) {
-	if (pwr > 127)
-		pwr = 127;
-	else if (pwr < -127)
-		pwr = -127;
+void setMotorAdjusted(tMotor _motor, int power) {
+	if (abs(power) > FULL_POWER)
+    power = FULL_POWER * sgn(power);
 
-	if (pwr < 0)
-		motor[_motor] = -powerLut[-pwr];
-  else
-    motor[_motor] = powerLut[pwr];
+  motor[_motor] = sgn(power) * motorLuts[_motor][sgn(power) * power];
 }
 
 #endif /* MOTOR_H */

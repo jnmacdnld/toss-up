@@ -7,8 +7,8 @@
 #include "arcade_drive.c"
 
 int armPotVal;
-int leftDriveEncoder;
-int rightDriveEncoder;
+int _backLeftDriveEncoder;
+int _backRightDriveEncoder;
 
 void userControlLoop() {
   while (true) {
@@ -16,9 +16,10 @@ void userControlLoop() {
     updateDriveArcadeDrive();
     updateArm();
 
-    armPotVal = SensorValue[armPot];                // For debugging
-    leftDriveEncoder = nMotorEncoder[leftDrive];    //
-    rightDriveEncoder = nMotorEncoder[rightDrive];  //
+    // For debugging
+    armPotVal = SensorValue[armPot];
+    _backLeftDriveEncoder = nMotorEncoder[backLeftDrive];
+    _backRightDriveEncoder = nMotorEncoder[backRightDrive];
   }
 }
 

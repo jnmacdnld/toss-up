@@ -4,8 +4,8 @@
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
 
-#define ARM_UP_PWR    FULL_PWR
-#define ARM_DOWN_PWR -FULL_PWR / 3
+#define ARM_UP_PWR    FULL_POWER
+#define ARM_DOWN_PWR -FULL_POWER / 3
 #define ARM_HOLD_PWR  30
 
 #define armPos         SensorValue[armPot]
