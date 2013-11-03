@@ -21,12 +21,14 @@ void driveSetPower(int power) {
 }
 
 void setRightDrive(int setting) {
-  setMotorAdjusted(frontRightDrive, setting);
+  // setMotorAdjusted(frontRightDrive, setting);
+  motor[frontRightDrive] = setting;
   setMotorAdjusted(backRightDrive, setting);
 }
 
 void setLeftDrive(int setting) {
-  setMotorAdjusted(frontLeftDrive, setting);
+  // setMotorAdjusted(frontLeftDrive, setting);
+  motor[frontLeftDrive] = setting;
   setMotorAdjusted(backLeftDrive, setting);
 }
 
