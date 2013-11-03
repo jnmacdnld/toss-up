@@ -14,4 +14,21 @@ void setMotorAdjusted(tMotor _motor, int power) {
   motor[_motor] = sgn(power) * motorLuts[_motor][sgn(power) * power];
 }
 
+/*float getEncoderTicksPerRev(tMotor _motor) {
+  tSensors encoder = getEncoderForMotor(_motor);
+  TSensorTypes encoder_type = SensorType[encoder];
+  word motor_type = motorType[_motor];
+
+  if (encoder_type == sensorQuadEncoder)
+    return 360.0;
+  else if (encoder_type == sensorQuadEncoderOnI2CPort)
+    if (motor_type == tmotorVex393)
+      return 627.2;
+    else if (motor_type == tmotorVex393HighSpeed)
+      return 392.0;
+
+  writeDebugStream("getEncoderTicksPerRev: Invalid encoder or motor");
+  return 0.0;
+}*/
+
 #endif /* MOTOR_H */
