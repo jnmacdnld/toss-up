@@ -99,7 +99,7 @@ void fillMotorSettingLut() {
 		best_match = 0;
 
 		for (short k = 0; k <= 127; k++) {
-			diff = abs(getIdealSpeed(s, 100.0) - motorSpeeds[k]);
+			diff = abs(getIdealSpeed(s, 160.0) - motorSpeeds[k]);
 
 			// The power setting that gives a speed closest to the speed we want
 			// (the speed that makes the acceleration constant) is the best match
