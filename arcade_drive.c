@@ -1,5 +1,5 @@
-#ifndef ARCADE_DRIVE_C
-#define ARCADE_DRIVE_C
+#ifndef ARCADE_DRIVE
+#define ARCADE_DRIVE
 
 #define MAX_TURN 127.0
 

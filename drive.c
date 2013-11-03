@@ -1,5 +1,5 @@
-#ifndef DRIVE_C
-#define DRIVE_C
+#ifndef DRIVE
+#define DRIVE
 
 #include "motor.c"
 
