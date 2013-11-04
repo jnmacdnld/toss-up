@@ -20,20 +20,9 @@
 #define RED_ENCODER 360.0
 
 task main() {
-  fillMotorSpeedsArrWithUnadjusted(backRightDrive, HIGH_SPEED_AND_IME);
+  tuneMotor(frontLeftDrive, RED_ENCODER);
+  tuneMotor(backLeftDrive, HIGH_SPEED_AND_IME);
 
-  wait1Msec(1000);
-
-  writeDebugStreamLine("Unadjusted motor speed data:");
-  printMotorSpeedsGraphable();
-
-  fillMotorSettingLut();
-  fillMotorSpeedsArrWithAdjusted(backRightDrive, HIGH_SPEED_AND_IME);
-
-  wait1Msec(1000);
-
-  writeDebugStreamLine("Adjusted motor speed data:");
-  printMotorSpeedsGraphable();
-
-  printSettingLut();
+  tuneMotor(frontRightDrive, RED_ENCODER);
+  tuneMotor(backRightDrive, HIGH_SPEED_AND_IME);
 }

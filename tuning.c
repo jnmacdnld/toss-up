@@ -151,5 +151,23 @@ void printSettingLut() {
 	writeDebugStream("%d \n};", motorSettingLut[127]);
 }
 
+void tuneMotor(tMotor _motor, float ticks_per_rev) {
+	fillMotorSpeedsArrWithUnadjusted(_motor, ticks_per_rev);
+
+  wait1Msec(1000);
+
+  writeDebugStreamLine("Unadjusted motor speed data:");
+  printMotorSpeedsGraphable();
+
+  fillMotorSettingLut();
+  fillMotorSpeedsArrWithAdjusted(_motor, ticks_per_rev);
+
+  wait1Msec(1000);
+
+  writeDebugStreamLine("Adjusted motor speed data:");
+  printMotorSpeedsGraphable();
+
+  printSettingLut();
+}
 
 #endif /* TUNING_C */
