@@ -1,6 +1,8 @@
 #ifndef ARM_C
 #define ARM_C
 
+#include "SmartMotorLib.c"
+
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
 
@@ -51,8 +53,8 @@ void updateArm() {
 }
 
 void armSetPower(int value) {
-	motor[leftArm] = value;
-	motor[rightArm] = value;
+	SetMotor(leftArm, value);
+	SetMotor(rightArm, value);
 }
 
 bool armIsDown() {

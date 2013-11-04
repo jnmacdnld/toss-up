@@ -1,6 +1,8 @@
 #ifndef INTAKE_C
 #define INTAKE_C
 
+#include "SmartMotorLib.c"
+
 #define INTAKE_OUT_PWR -50
 #define INTAKE_IN_PWR   127
 
@@ -8,8 +10,8 @@
 #define intakeOutPressed vexRT[Btn5D]
 
 void setIntakePwr(int value) {
-	motor[leftIntake] = value;
-	motor[rightIntake] = value;
+	SetMotor(leftIntake, value);
+	SetMotor(rightIntake, value);
 }
 
 void updateIntake() {

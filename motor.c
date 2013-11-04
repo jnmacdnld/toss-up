@@ -2,6 +2,7 @@
 #define MOTOR_C
 
 #include "motor_luts.c"
+#include "SmartMotorLib.c"
 
 #define FULL_POWER 127
 #define FULL_PWR FULL_POWER
@@ -11,7 +12,7 @@ void setMotorAdjusted(tMotor _motor, int power) {
 	if (abs(power) > FULL_POWER)
     power = FULL_POWER * sgn(power);
 
-  motor[_motor] = sgn(power) * motorLuts[_motor][sgn(power) * power];
+  SetMotor(_motor, sgn(power) * motorLuts[_motor][sgn(power) * power]);
 }
 
 /*float getEncoderTicksPerRev(tMotor _motor) {

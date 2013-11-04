@@ -23,11 +23,24 @@
 
 #include "user_control.c"
 #include "motor_luts.c"
+#include "SmartMotorLib.c"
 
 void pre_auton() {
   bStopTasksBetweenModes = true;
 
   InitMotorLuts();
+
+  // Initialize the Smart Motor Library
+  SmartMotorsInit();
+  // Limit current based on default motor current threshold
+  SmartMotorCurrentMonitorEnable();
+
+  // Use 1 encoder for each side of the drive
+  SmartMotorLinkMotors(backLeftDrive, frontLeftDrive);
+  SmartMotorLinkMotors(backRightDrive, frontRightDrive);
+
+  // Run smart motors
+  SmartMotorRun();
 }
 
 task autonomous() {
