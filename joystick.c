@@ -20,9 +20,9 @@ int joystickGetXAxis(Joystick j) {
       break;
   }
 
-  // Ignore values less than 10 to compensate for
+  // Ignore values less than 20 to compensate for
   // imperfectly centered joysticks
-  if (abs(x) < 10)
+  if (abs(x) < 20)
     x = 0;
 
   return x;
@@ -40,9 +40,9 @@ int joystickGetYAxis(Joystick j) {
       break;
   }
 
-  // Ignore values less than 10 to compensate for
+  // Ignore values less than 20 to compensate for
   // imperfectly centered joysticks
-  if (abs(y) < 10)
+  if (abs(y) < 20)
     y = 0;
 
   return y;
