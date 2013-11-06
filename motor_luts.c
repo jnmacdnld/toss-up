@@ -48,7 +48,7 @@ void InitMotorLuts() {
 
   // Fixme: make luts for these motors
   motorLuts[frontLeftDrive] = &backRightDriveSettingLut; 
-  motorLuts[frontRight] = &backRightDriveSettingLut;
+  motorLuts[frontRightDrive] = &backRightDriveSettingLut;
 }
  
 #endif /* MOTOR_LUTS */
