@@ -39,7 +39,9 @@ void pre_auton() {
 
   // Use 1 encoder for each side of the drive
   SmartMotorLinkMotors(backLeftDrive, frontLeftDrive);
+  SmartMotorLinkMotors(backLeftDrive, middleLeftDrive);
   SmartMotorLinkMotors(backRightDrive, frontRightDrive);
+  SmartMotorLinkMotors(backRightDrive, middleRightDrive);
 
   // Run smart motors
   SmartMotorRun();
