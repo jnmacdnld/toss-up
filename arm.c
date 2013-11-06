@@ -5,6 +5,7 @@
 
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
+#define ARM_ALL_DOWN_POS 1310 // Define me to something better
 
 #define ARM_UP_PWR    FULL_POWER
 #define ARM_DOWN_PWR -FULL_POWER / 3
@@ -16,7 +17,6 @@
 #define armUpPressed      vexRT[Btn6U]
 #define armUpMacroPressed vexRT[Btn8U]
 #define armDownMacroPressed vexRT[Btn8D]
-#define armMiddleMacroPresed vexRT[Btn8L]
 
 int armControlTarget = -1;
 int armControlPwr = 0;
@@ -40,7 +40,7 @@ void updateArm() {
 	if (armUpMacroPressed && !armIsUp() )
 		armControlSetTarget(ARM_UP_POS);
 	else if (armDownMacroPressed && !armIsDown() )
-		armControlSetTarget(ARM_DOWN_POS - 90); // Go a little past the down position so we know it gets there
+		armControlSetTarget(ARM_ALL_DOWN_POS); // Go a little past the down position so we know it gets there
 
 	if (armUpPressed)
 		armUpPressedCb();
@@ -99,8 +99,10 @@ void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget)
 		armSetPower(armControlPwr);
-	else
-	   armControlActive = false;
+	else {
+		writeDebugStreamLine("armControlTarget = %d, armPos = %d, deactivating arm control", armControlTarget, armPos);
+		armControlActive = false;
+	}
 }
 
 void holdArmPos() {

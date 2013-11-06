@@ -12,7 +12,27 @@
 /*                                                                             */
 /*    Revisions:                                                               */
 /*                V1.00  21 Oct 2012 - Initial release                         */
-/*                                                                             */
+/*                V1.01   7 Dec 2012                                           */
+/*                       small bug in SmartMotorLinkMotors                     */
+/*                       fix for High Speed 393 Ke constant                    */
+/*                       kNumbOfTotalMotors replaced with kNumbOfRealMotors    */
+/*                       _Target_Emulator_ defined for versions of ROBOTC      */
+/*                       prior to 3.55                                         */
+/*                       change to motor enums for V3.60 ROBOTC compatibility  */
+/*               V1.02  27 Jan 2013                                            */
+/*                      Linking an encoded and non-encoded motor was not       */
+/*                      working correctly, added new field to the structure    */
+/*                      eport to allow one motor to access the encoder for     */
+/*                      another correctly.                                     */
+/*               V1.03  10 March 2013                                          */
+/*                      Due to new version of ROBOTC (V3.60) detection of PID  */
+/*                      version changed. V3.60 was originally planned to have  */
+/*                      different motor definitions.                           */
+/*                      Added the ability to assign any sensor to be used      */
+/*                      for rpm calculation, a bit of a kludge as I didn't     */
+/*                      want to add a new variable so reused encoder_id        */
+/*               V1.04  27 June 2013                                           */
+/*                      Change license (added) to the Apache License           */
 /*-----------------------------------------------------------------------------*/
 /*                                                                             */
 /*    The author is supplying this software for use with the VEX cortex        */
@@ -22,20 +42,26 @@
 /*    forum.  Please acknowledge the work of the authors when appropriate.     */
 /*    Thanks.                                                                  */
 /*                                                                             */
-/*    THIS SOFTWARE IS PROVIDED "AS IS". NO WARRANTIES, WHETHER EXPRESS,       */
-/*    IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES  */
-/*    OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS    */
-/*    SOFTWARE.  THE AUTHORS SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR    */
-/*    SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.*/
+/*    Licensed under the Apache License, Version 2.0 (the "License");          */
+/*    you may not use this file except in compliance with the License.         */
+/*    You may obtain a copy of the License at                                  */
+/*                                                                             */
+/*      http://www.apache.org/licenses/LICENSE-2.0                             */
+/*                                                                             */
+/*    Unless required by applicable law or agreed to in writing, software      */
+/*    distributed under the License is distributed on an "AS IS" BASIS,        */
+/*    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. */
+/*    See the License for the specific language governing permissions and      */
+/*    limitations under the License.                                           */
 /*                                                                             */
 /*    Portions of this code are based on work by Chris Siegert aka vamfun on   */
 /*    the Vex forums.                                                          */
 /*    blog:  vamfun.wordpress.com for model details and vex forum threads      */
-/*    email: vamfun@yahoo.com                                                  */
+/*    email: vamfun_at_yahoo_dot_com                                           */
 /*    Mentor for team 599 Robodox and team 1508 Lancer Bots                    */
 /*                                                                             */
 /*    The author can be contacted on the vex forums as jpearman                */
-/*    email: jbpearman@mac.com                                                 */
+/*    email: jbpearman_at_mac_dot_com                                          */
 /*    Mentor for team 8888 RoboLancers, Pasadena CA.                           */
 /*                                                                             */
 /*-----------------------------------------------------------------------------*/
@@ -60,10 +86,10 @@
 /*    http://www.vexforum.com/showthread.php?t=73960                           */
 /*    http://www.vexforum.com/showthread.php?t=74594                           */
 /*                                                                             */
-/*    Global Memory use for V1.00 is 1388 bytes                                */
-/*      1200 for motor data                                                    */
+/*    Global Memory use for V1.02 is 1404 bytes                                */
+/*      1240 for motor data                                                    */
 /*       156 for controller data                                               */
-/*        32 misc                                                              */
+/*         8 misc                                                              */
 /*                                                                             */
 /*    CPU time for SmartMotorTask                                              */
 /*    Motor calculations ~ 530uS,  approx 5% cpu bandwidth                     */
@@ -78,14 +104,32 @@
 #ifndef __SMARTMOTORLIB__
 #define __SMARTMOTORLIB__
 
-// Version 1.00
-#define kSmartMotorLibVersion   100
+// Version 1.03
+#define kSmartMotorLibVersion   104
 
 // We make extensive use of pointers so need recent versions of ROBOTC
 #include "FirmwareVersion.h"
 #if kRobotCVersionNumeric < 351
 #error "SmartMotorLib requires ROBOTC Version 3.51 or newer"
 #endif
+
+// _Target_Emulator_ is new for 3.55, define for older versions
+#if kRobotCVersionNumeric < 355
+ #if (_TARGET == "Emulator")
+  #ifndef _Target_Emulator_
+   #define _Target_Emulator_   1
+  #endif
+ #endif
+#endif
+
+
+// ROBOTC with PID changed motor definitions - I used to use version number
+// but 3.60 broke that and we don't know what version it will be now
+// This will have to do for now until it's released after worlds
+#ifdef bSmartMotorsWithEncoders
+#define kRobotCHasPid
+#endif
+
 
 // System parameters - don't change
 #define SMLIB_R_SYS             0.3
@@ -121,6 +165,7 @@
 #define SMLIB_TPR_393S          392
 #define SMLIB_TPR_393T          627.2
 #define SMLIB_TPR_QUAD          360.0
+#define SMLIB_TPR_POT           6000.0 // estimate
 
 // Initial ambient temp 72deg F in deg C
 #define SMLIB_TEMP_AMBIENT      (( 72.0-32.0) * 5 / 9)
@@ -179,13 +224,16 @@ typedef struct  smartController;
 /*  speed, current and temperature.  some of these are stored for debug        */
 /*  purposes                                                                   */
 /*                                                                             */
-/*  V1.00 code uses 120 bytes (a couple are wasted due to word alignment)      */
-/*  so 1200 bytes in all for the 10 motors.                                    */
+/*  V1.02 code uses 124 bytes (a couple are wasted due to word alignment)      */
+/*  so 1240 bytes in all for the 10 motors.                                    */
 /*-----------------------------------------------------------------------------*/
 
 typedef struct {
     // the motor port
     tMotor      port;
+
+    // the motor encoder port
+    tMotor      eport;
 
     // copy of the system motor type
     TMotorTypes type;
@@ -253,7 +301,7 @@ typedef struct {
     } smartMotor;
 
 // storage for all motors
-static smartMotor sMotors[ kNumbOfTotalMotors ];
+static smartMotor sMotors[ kNumbOfRealMotors ];
 // We have no inline so use a macro as shortcut to get ptr
 #define _SmartMotorGetPtr( index ) ((smartMotor *)&sMotors[ index ])
 
@@ -333,7 +381,7 @@ static short    PtcLimitEnabled = false;
 
 // flag to hold global status to enable or disable the current limiter
 // based on preset threshold - defaults to on
-static short    CurrentLimitEnabled = true;
+static short    CurrentLimitEnabled = false;
 
 /*-----------------------------------------------------------------------------*/
 /*  External debug function called once per loop with smartMotor ptr           */
@@ -357,7 +405,7 @@ smartMotor *
 SmartMotorGetPtr( tMotor index )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( NULL );
 
     return( &sMotors[ index ] );
@@ -372,7 +420,7 @@ smartController *
 SmartMotorControllerGetPtr( short index )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( NULL );
 
     return( &sPorts[ index ] );
@@ -386,7 +434,7 @@ float
 SmartMotorGetSpeed( tMotor index )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( 0 );
 
     return( sMotors[ index ].rpm );
@@ -400,7 +448,7 @@ float
 SmartMotorGetCurrent( tMotor index, int s = 0 )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( 0 );
 
     // normally return absolute current, s != 0 for signed
@@ -418,7 +466,7 @@ float
 SmartMotorGetTemperature( tMotor index )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( 0 );
 
     return( sMotors[ index ].temperature );
@@ -432,7 +480,7 @@ int
 SmartMotorGetLimitCmd( tMotor index )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return( 0 );
 
     return( sMotors[ index ].limit_cmd );
@@ -446,7 +494,7 @@ void
 SmartMotorSetLimitCurent( tMotor index, float current = 1.0 )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return;
 
     sMotors[ index ].limit_current = current;
@@ -460,7 +508,7 @@ void
 SmartMotorSetFreeRpm( tMotor index, short max_rpm )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return;
 
     smartMotor *m = _SmartMotorGetPtr( index );
@@ -483,7 +531,7 @@ void
 SmartMotorSetSlewRate( tMotor index, int slew_rate = 10 )
 {
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return;
 
     // negative or 0 is invalid
@@ -682,12 +730,12 @@ SmartMotorDebugStatus()
 /*-----------------------------------------------------------------------------*/
 
 void
-SetMotor( int index, int value = 0 )
+SetMotor( int index, int value = 0, bool immeadiate = false )
 {
     smartMotor  *m;
 
     // bounds check index
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return;
 
     // get motor
@@ -704,6 +752,10 @@ SetMotor( int index, int value = 0 )
         m->motor_cmd = value;
     else
         m->motor_cmd = 0;
+
+    // new - for hard stop
+    if(immeadiate)
+        motor[ index ] = value;
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -787,16 +839,22 @@ SmartMotorsInit()
     sMotors[8].encoder_id = getEncoderForMotor( port9  );
     sMotors[9].encoder_id = getEncoderForMotor( port10 );
 
-    for(i=0;i<kNumbOfTotalMotors;i++)
+    for(i=0;i<kNumbOfRealMotors;i++)
         {
         m = _SmartMotorGetPtr( i );
-        m->port = (tMotor)i;
-        m->type = (TMotorTypes)motorType[ m->port ];
+        m->port  = (tMotor)i;
+        m->eport = (tMotor)i;
+        m->type  = (TMotorTypes)motorType[ m->port ];
 
         switch( m->type )
             {
             // 393 set for high torque
+#ifndef kRobotCHasPid
             case    tmotorVex393:
+#else
+            case    tmotorVex393_HBridge:
+            case    tmotorVex393_MC29:
+#endif
                 m->i_free   = SMLIB_I_FREE_393;
                 m->i_stall  = SMLIB_I_STALL_393;
                 m->r_motor  = SMLIB_R_393;
@@ -813,12 +871,17 @@ SmartMotorsInit()
                 break;
 
             // 393 set for high speed
+#ifndef kRobotCHasPid
             case    tmotorVex393HighSpeed:
+#else
+            case    tmotorVex393HighSpeed_HBridge:
+            case    tmotorVex393HighSpeed_MC29:
+#endif
                 m->i_free   = SMLIB_I_FREE_393;
                 m->i_stall  = SMLIB_I_STALL_393;
                 m->r_motor  = SMLIB_R_393;
                 m->l_motor  = SMLIB_L_393;
-                m->ke_motor = SMLIB_Ke_393;
+                m->ke_motor = SMLIB_Ke_393/1.6;
                 m->rpm_free = SMLIB_RPM_FREE_393 * 1.6;
 
                 m->ticks_per_rev = SMLIB_TPR_393S;
@@ -830,7 +893,12 @@ SmartMotorsInit()
                 break;
 
             // 269 and 3wire set the same
+#ifndef kRobotCHasPid
             case    tmotorVex269:
+#else
+            case    tmotorVex269_HBridge:
+            case    tmotorVex269_MC29:
+#endif
             case    tmotorServoContinuousRotation:
                 m->i_free   = SMLIB_I_FREE_269;
                 m->i_stall  = SMLIB_I_STALL_269;
@@ -852,12 +920,12 @@ SmartMotorsInit()
                 // Servos, flashlights etc. not considered.
                 m->type = tmotorNone;
                 break;
-	        }
+            }
 
-	    // Override encoder ticks if not an IME
-	    if( m->encoder_id < 0 )
-	        {
-	        // No encoder
+        // Override encoder ticks if not an IME
+        if( m->encoder_id < 0 )
+            {
+            // No encoder
             m->ticks_per_rev = -1;
             m->enc    = 0;
             m->oldenc = 0;
@@ -866,13 +934,13 @@ SmartMotorsInit()
         if( m->encoder_id < 20 ) {
             // quad encoder
             m->ticks_per_rev = SMLIB_TPR_QUAD;
-            m->enc    = nMotorEncoder[ m->port ];
-        	m->oldenc = nMotorEncoder[ m->port ];
+            m->enc    = nMotorEncoder[ m->eport ];
+            m->oldenc = nMotorEncoder[ m->eport ];
             }
         else
             {
-            m->enc    = nMotorEncoder[ m->port ];
-        	m->oldenc = nMotorEncoder[ m->port ];
+            m->enc    = nMotorEncoder[ m->eport ];
+            m->oldenc = nMotorEncoder[ m->eport ];
             }
 
         // use until overidden by user
@@ -912,7 +980,7 @@ SmartMotorsInit()
 
         // we have never run
         m->lastPgmTime = -1;
-	    }
+        }
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -928,11 +996,11 @@ void
 SmartMotorLinkMotors( tMotor master, tMotor slave )
 {
     // bounds check master
-    if((master < 0) || (master >= kNumbOfTotalMotors))
+    if((master < 0) || (master >= kNumbOfRealMotors))
         return;
 
     // bounds check master
-    if((slave  < 0) || (slave  >= kNumbOfTotalMotors))
+    if((slave  < 0) || (slave  >= kNumbOfRealMotors))
         return;
 
     // get motor pointers for master ans slave
@@ -943,11 +1011,14 @@ SmartMotorLinkMotors( tMotor master, tMotor slave )
     if( m->encoder_id == (-1) )
         return;
 
+    // encoder port is the master port
+    s->eport         = m->port;
+
     // link, assume 1:1 gearing
     s->ticks_per_rev = m->ticks_per_rev;
     s->encoder_id    = m->encoder_id;
     s->enc           = m->enc;
-    s->oldenc        = s->oldenc;
+    s->oldenc        = m->oldenc;
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -963,7 +1034,7 @@ void
 SmartMotorsSetEncoderGearing( tMotor index, float ratio )
 {
     // bounds check master
-    if((index < 0) || (index >= kNumbOfTotalMotors))
+    if((index < 0) || (index >= kNumbOfRealMotors))
         return;
 
     smartMotor  *m = _SmartMotorGetPtr( index );
@@ -987,7 +1058,7 @@ SmartMotorsAddPowerExtender( int p0, int p1 = (-1), int p2 = (-1), int p3 = (-1)
     int     p = 0;
     smartMotor  *m;
 
-    for(i=0;i<kNumbOfTotalMotors;i++)
+    for(i=0;i<kNumbOfRealMotors;i++)
         {
         m = _SmartMotorGetPtr( i );
 
@@ -1013,6 +1084,38 @@ SmartMotorsAddPowerExtender( int p0, int p1 = (-1), int p2 = (-1), int p3 = (-1)
         }
 }
 
+/*-----------------------------------------------------------------------------*/
+/*                                                                             */
+/*  Assign a sensor to be used to calculate rpm for a motor                    */
+/*  This is a special case and is used for, example, when a pot is geared      */
+/*  to a lift motor                                                            */
+/*                                                                             */
+/*  ticks_per_rev for a pot geared 1:1 would be about 6000                     */
+/*-----------------------------------------------------------------------------*/
+
+#define ENCODER_ID_SENSOR   0x800
+
+void
+SmartMotorSetRpmSensor( tMotor index, tSensors port, float ticks_per_rev, bool reversed = false )
+{
+    // bounds check master
+    if((index < 0) || (index >= kNumbOfRealMotors))
+        return;
+
+    smartMotor  *m = _SmartMotorGetPtr( index );
+
+    // This could be an analog port or (unlikely) an encoder
+    // that was not defined in the motors&sensors setup
+
+    if( (port >= in1) && (port <= dgtl12 ) )
+        {
+        m->encoder_id    = ENCODER_ID_SENSOR + (short)port;
+        m->ticks_per_rev = ticks_per_rev;
+        // use negative ticks per rev if reversed sensor
+        if( reversed )
+            m->ticks_per_rev = -m->ticks_per_rev;
+        }
+}
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -1029,14 +1132,14 @@ SmartMotorsAddPowerExtender( int p0, int p1 = (-1), int p2 = (-1), int p3 = (-1)
 /*                                                                             */
 /*-----------------------------------------------------------------------------*/
 
-#if (_TARGET == "Emulator")
+#ifdef _Target_Emulator_
     float   motordrag = 1.0;
 #endif
 
 static void
 SmartMotorSpeed( smartMotor *m, int deltaTime )
 {
-#if (_TARGET == "Emulator")
+#ifdef _Target_Emulator_
     // dummy increment based on speed
     int increment = m->ticks_per_rev * 0.2 * motordrag;
     // cap at 100 rpm
@@ -1046,7 +1149,7 @@ SmartMotorSpeed( smartMotor *m, int deltaTime )
     m->enc = m->enc += increment; // debug
 #else
     // Get encoder value
-    m->enc = nMotorEncoder[m->port];
+    m->enc = nMotorEncoder[m->eport];
 #endif
 
     // calculate encoder delta
@@ -1087,6 +1190,33 @@ SmartMotorSimulateSpeed( smartMotor *m )
     speed = spd_table[index] + (spd_table[index+1] - spd_table[index]) * f;
 
     m->rpm = sgn(cmd) * (speed * scale);
+}
+
+/*-----------------------------------------------------------------------------*/
+/*                                                                             */
+/*  Calculate speed using sensor rather than encoder for motor                 */
+/*                                                                             */
+/*-----------------------------------------------------------------------------*/
+
+static void
+SmartMotorSensorSpeed( smartMotor *m, int deltaTime )
+{
+    tSensors    port;
+
+    // get port from special encoder_id
+    port = (tSensors)(m->encoder_id - ENCODER_ID_SENSOR);
+    if( (port < in1) || (port > dgtl12 ) )
+        return;
+
+    // Get sensor value
+    m->enc = SensorValue[port];
+
+    // calculate encoder delta
+    m->delta  = m->enc - m->oldenc;
+    m->oldenc = m->enc;
+
+    // calculate the rpm for the motor
+    m->rpm = (1000.0/deltaTime) * m->delta * 60.0 / m->ticks_per_rev;
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -1541,7 +1671,12 @@ SmartMotorTask()
         if( m->type != tmotorNone )
             {
             if( m->encoder_id >= 0)
-                SmartMotorSpeed( m, delayTimeMs );
+                {
+                if( m->encoder_id < ENCODER_ID_SENSOR )
+                    SmartMotorSpeed( m, delayTimeMs );
+                else
+                    SmartMotorSensorSpeed( m, delayTimeMs );
+                }
             else
                 SmartMotorSimulateSpeed( m );
 
@@ -1575,7 +1710,7 @@ SmartMotorTask()
                 if( PtcLimitEnabled )
                     SmartMotorControllerMonitorPtc( s, v_battery );
 
-                // turn off status leds here, moe than one controller may
+                // turn off status leds here, more than one controller may
                 // share an led so we turn them off each loop
                 // and then any tripped controller may turn them on.
                 if( s->statusLed >= dgtl1 )
@@ -1632,7 +1767,7 @@ task SmartMotorSlewRateTask()
     smartMotor  *m;
 
     // Initialize stuff
-    for(motorIndex=0;motorIndex<kNumbOfTotalMotors;motorIndex++)
+    for(motorIndex=0;motorIndex<kNumbOfRealMotors;motorIndex++)
         {
         m = _SmartMotorGetPtr( motorIndex );
         m->motor_req  = 0;
@@ -1648,7 +1783,7 @@ task SmartMotorSlewRateTask()
         SensorValue[ _smTestPoint_2 ] = 1;
 #endif
         // run loop for every motor
-        for( motorIndex=0; motorIndex<kNumbOfTotalMotors; motorIndex++)
+        for( motorIndex=0; motorIndex<kNumbOfRealMotors; motorIndex++)
             {
             m = _SmartMotorGetPtr( motorIndex );
 

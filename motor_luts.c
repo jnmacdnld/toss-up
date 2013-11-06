@@ -45,6 +45,10 @@ int backRightDriveSettingLut[128] =
 void InitMotorLuts() {
   motorLuts[backLeftDrive] = &backLeftDriveSettingLut;
   motorLuts[backRightDrive] = &backRightDriveSettingLut;
+
+  // Fixme: make luts for these motors
+  motorLuts[frontLeftDrive] = &backRightDriveSettingLut; 
+  motorLuts[frontRight] = &backRightDriveSettingLut;
 }
  
 #endif /* MOTOR_LUTS */

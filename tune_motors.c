@@ -20,6 +20,8 @@
 #define RED_ENCODER 360.0
 
 task main() {
+  max_motor_speed = 170.0;
+
   tuneMotor(frontLeftDrive, RED_ENCODER);
   tuneMotor(backLeftDrive, HIGH_SPEED_AND_IME);
 
