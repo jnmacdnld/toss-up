@@ -3,11 +3,8 @@
 
 #include "motor.c"
 #include "SmartMotorLib.c"
-#include "PidLib.c"
 
 #define HIGH_SPEED_IME_TICKS_TO_INCHES 31.19
-
-pidController* turnPid;
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);

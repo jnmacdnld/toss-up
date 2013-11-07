@@ -19,10 +19,14 @@
 
 #include "tuning.c"
 #include "motor.c"
+#include "drive.c"
 
 task main() {
   float left_drive_top_speed = getLeftDriveSpeedAtSetting(FULL_POWER);
+  driveSetPower(0);
+
   float right_drive_top_speed = getRightDriveSpeedAtSetting(FULL_POWER);
+  driveSetPower(0);
 
   writeDebugStreamLine("left drive top speed: %d", left_drive_top_speed);
   writeDebugStreamLine("right drive top speed: %d", right_drive_top_speed);
