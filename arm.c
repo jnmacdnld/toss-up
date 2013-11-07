@@ -5,7 +5,8 @@
 
 #define ARM_UP_POS   3080
 #define ARM_DOWN_POS 1400
-#define ARM_ALL_DOWN_POS 1310 // Define me to something better
+#define ARM_ALL_DOWN_POS 1310 // Define me to an actual value
+#define ARM_BARRIER_POS 2240 // Define me to an actual value
 
 #define ARM_UP_PWR    FULL_POWER
 #define ARM_DOWN_PWR -FULL_POWER / 3
@@ -110,6 +111,15 @@ void holdArmPos() {
 			armSetPower(0);
 	else
 		armSetPower(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
+}
+
+void armMoveToPos(int pos) {
+	armControlSetTarget(ARM_BARRIER_POS);
+
+  while(armControlActive)
+  	armControlStep();
+
+  holdArmPos();
 }
 
 #endif

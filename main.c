@@ -2,6 +2,7 @@
 #pragma config(Sensor, in1,    armPot,         sensorPotentiometer)
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
+#pragma config(Sensor, dgtl7,  touch,          sensorTouch)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port1,           middleLeftDrive, tmotorVex393HighSpeed, openLoop)
@@ -27,10 +28,15 @@
 #include "motor_luts.c"
 #include "SmartMotorLib.c"
 
+#define START_TO_BARRIER_TICKS 880
+#define START_TO_SECOND_LARGE_BALL_TICKS 1244 // Check this
+
 void pre_auton() {
   bStopTasksBetweenModes = true;
 
   InitMotorLuts();
+
+  turnPid = PidControllerInit(0.729, 0.0, 0.0, I2C_2);
 
   // Initialize the Smart Motor Library
   SmartMotorsInit();
@@ -48,7 +54,15 @@ void pre_auton() {
 }
 
 task autonomous() {
-  AutonomousCodePlaceholderForTesting();
+  armMoveToPos(ARM_BARRIER_POS);
+
+  driveDistanceTicks(START_TO_BARRIER_TICKS);
+  driveDistanceTicks(-START_TO_BARRIER_TICKS);
+
+  while (!SensorValue[touch]) { wait1Msec(25); };
+
+  driveDistanceTicks(START_TO_SECOND_LARGE_BALL_TICKS);
+  driveDistanceTicks(-START_TO_SECOND_LARGE_BALL_TICKS);
 }
 
 task usercontrol() {

@@ -3,6 +3,11 @@
 
 #include "motor.c"
 #include "SmartMotorLib.c"
+#include "PidLib.c"
+
+#define HIGH_SPEED_IME_TICKS_TO_INCHES 31.19
+
+pidController* turnPid;
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);
@@ -35,4 +40,19 @@ void setLeftDrive(int setting) {
   setMotorAdjusted(middleLeftDrive, setting);
 }
 
+void driveDistanceTicks(int ticks) {
+  int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
+
+  while (sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target) {
+    driveSetPower(HALF_POWER);
+  }
+
+  driveSetPower(sgn(ticks) * -FULL_POWER);
+  wait1Msec(50);
+  driveSetPower(0);
+}
+
+void driveDistanceInches(int inches) {
+  driveDistanceTicks(HIGH_SPEED_IME_TICKS_TO_INCHES * inches);
+}
 #endif
