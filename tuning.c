@@ -199,6 +199,10 @@ void fillMotorSpeedsArrWithUnadjustedDrive(tMotor motor1, tMotor motor2, tMotor 
 		motorSpeeds[s] = getDriveSpeedAtSetting(motor1, motor2, motor3, s);
 		writeDebugStreamLine("drive speed at power setting %d is about %d rpm", s, (int) motorSpeeds[s]);
 	}
+
+	motor[motor1] = 0;
+	motor[motor2] = 0; 
+	motor[motor3] = 0;
 }
 
 void tuneDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
