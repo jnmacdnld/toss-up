@@ -8,6 +8,8 @@
 #define FULL_PWR FULL_POWER
 #define HALF_POWER FULL_POWER / 2
 
+#define NO_MOTOR 1000
+
 void setMotorAdjusted(tMotor _motor, int power) {
 	if (abs(power) > FULL_POWER)
     power = FULL_POWER * sgn(power);
@@ -30,6 +32,12 @@ void setMotorAdjusted(tMotor _motor, int power) {
 
   writeDebugStream("getEncoderTicksPerRev: Invalid encoder or motor");
   return 0.0;
+}*/
+
+/*void setMotors(tMotor motors[10], int power) {
+  for (int i = 0; i < 10 && motors[i] != NO_MOTOR; i++) {
+    motor[motors[i]] = power;
+  }
 }*/
 
 #endif /* MOTOR_H */

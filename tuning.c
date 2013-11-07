@@ -161,4 +161,57 @@ void tuneMotor(tMotor _motor, float ticks_per_rev) {
   printSettingLut();
 }
 
+// MESSY
+
+float getDriveSpeedAtSetting(tMotor motor1, tMotor motor2, tMotor motor3, int setting) {
+	float ticks_per_rev = 392.0;
+
+	int final_pos;
+	int initial_pos;
+	int speed;
+	float to_rpm = 60000.0 / (SAMPLE_PERIOD * ticks_per_rev);
+
+	motor[motor1] = setting;
+	motor[motor2] = setting;
+	motor[motor3] = setting;
+	wait1Msec(250); // Wait until the motor reached the speed
+
+	initial_pos = nMotorEncoder[motor1];
+	wait1Msec(SAMPLE_PERIOD);
+	final_pos = nMotorEncoder[motor1];
+	speed = abs(final_pos - initial_pos);
+
+	speed *= to_rpm;
+
+	return speed;
+}
+
+float getLeftDriveSpeedAtSetting(int setting) {
+	return getDriveSpeedAtSetting(backLeftDrive, middleLeftDrive, frontLeftDrive, setting);
+}
+
+float getRightDriveSpeedAtSetting(int setting) {
+	return getDriveSpeedAtSetting(backRightDrive, middleRightDrive, frontRightDrive, setting);
+}
+
+void fillMotorSpeedsArrWithUnadjustedDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
+	for (short s = 0; s < 128; s++) {
+		motorSpeeds[s] = getDriveSpeedAtSetting(motor1, motor2, motor3, s);
+		writeDebugStreamLine("drive speed at power setting %d is about %d rpm", s, (int) motorSpeeds[s]);
+	}
+}
+
+void tuneDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
+	fillMotorSpeedsArrWithUnadjustedDrive(motor1, motor2, motor3);
+
+  wait1Msec(1000);
+
+  writeDebugStreamLine("Unadjusted motor speed data:");
+  printMotorSpeedsGraphable();
+
+  fillMotorSettingLut();
+
+  printSettingLut();
+}
+
 #endif /* TUNING_C */
