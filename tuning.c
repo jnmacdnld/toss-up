@@ -174,7 +174,7 @@ float getDriveSpeedAtSetting(tMotor motor1, tMotor motor2, tMotor motor3, int se
 	motor[motor1] = setting;
 	motor[motor2] = setting;
 	motor[motor3] = setting;
-	wait1Msec(250); // Wait until the motor reached the speed
+	wait1Msec(1000); // Wait until the motors have reached the speed
 
 	initial_pos = nMotorEncoder[motor1];
 	wait1Msec(SAMPLE_PERIOD);

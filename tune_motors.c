@@ -34,5 +34,5 @@ task main() {
   writeDebugStreamLine("slower drive top speed: %d", max_motor_speed);
 
   tuneDrive(backRightDrive, middleRightDrive, frontRightDrive);
-  tuneDrive(backLeftDrive, frontLeftDrive, frontLeftDrive);
+  tuneDrive(backLeftDrive, middleLeftDrive, frontLeftDrive);
 }
