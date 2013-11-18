@@ -40,7 +40,7 @@ void driveDistanceTicks(int ticks) {
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
 
   while (sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target) {
-    driveSetPower(HALF_POWER);
+    driveSetPower(sgn(ticks) * HALF_POWER);
   }
 
   driveSetPower(sgn(ticks) * -FULL_POWER);
