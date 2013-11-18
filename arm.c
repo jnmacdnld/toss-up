@@ -1,9 +1,9 @@
 #ifndef ARM_C
 #define ARM_C
 
-#include "SmartMotorLib.c"
+#include "motor.c"
 
-#define ARM_UP_POS   3080
+#define ARM_UP_POS   3050
 #define ARM_DOWN_POS 1400
 #define ARM_ALL_DOWN_POS 1310 // Define me to an actual value
 #define ARM_BARRIER_POS 2240 // Define me to an actual value

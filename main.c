@@ -8,7 +8,7 @@
 #pragma config(Motor,  port1,           middleLeftDrive, tmotorVex393HighSpeed, openLoop)
 #pragma config(Motor,  port2,           backLeftDrive, tmotorVex393HighSpeed, openLoop, encoder, encoderPort, I2C_2, 1000)
 #pragma config(Motor,  port3,           frontLeftDrive, tmotorVex393HighSpeed, openLoop)
-#pragma config(Motor,  port4,           leftArm,       tmotorVex393, openLoop)
+#pragma config(Motor,  port4,           leftArm,       tmotorVex393, openLoop, reversed)
 #pragma config(Motor,  port5,           leftIntake,    tmotorVex393HighSpeed, openLoop, reversed)
 #pragma config(Motor,  port6,           backRightDrive, tmotorVex393HighSpeed, openLoop, reversed, encoder, encoderPort, I2C_1, 1000)
 #pragma config(Motor,  port7,           frontRightDrive, tmotorVex393HighSpeed, openLoop, reversed)
@@ -26,7 +26,6 @@
 
 #include "user_control.c"
 #include "motor_luts.c"
-#include "SmartMotorLib.c"
 
 #define START_TO_BARRIER_TICKS 880
 #define START_TO_SECOND_LARGE_BALL_TICKS 1244 // Check this
@@ -35,22 +34,6 @@ void pre_auton() {
   bStopTasksBetweenModes = true;
 
   InitMotorLuts();
-
-  turnPid = PidControllerInit(0.729, 0.0, 0.0, I2C_2);
-
-  // Initialize the Smart Motor Library
-  SmartMotorsInit();
-  // Limit current based on default motor current threshold
-  //SmartMotorCurrentMonitorEnable();
-
-  // Use 1 encoder for each side of the drive
-  SmartMotorLinkMotors(backLeftDrive, frontLeftDrive);
-  SmartMotorLinkMotors(backLeftDrive, middleLeftDrive);
-  SmartMotorLinkMotors(backRightDrive, frontRightDrive);
-  SmartMotorLinkMotors(backRightDrive, middleRightDrive);
-
-  // Run smart motors
-  SmartMotorRun();
 }
 
 task autonomous() {

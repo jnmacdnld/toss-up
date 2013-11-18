@@ -1,7 +1,7 @@
 #ifndef INTAKE_C
 #define INTAKE_C
 
-#include "SmartMotorLib.c"
+#include "motor.c"
 
 #define INTAKE_OUT_PWR -50
 #define INTAKE_IN_PWR   127

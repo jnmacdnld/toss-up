@@ -2,7 +2,6 @@
 #define DRIVE
 
 #include "motor.c"
-#include "SmartMotorLib.c"
 
 #define HIGH_SPEED_IME_TICKS_TO_INCHES 31.19
 

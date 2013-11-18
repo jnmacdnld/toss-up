@@ -2,13 +2,16 @@
 #define MOTOR_C
 
 #include "motor_luts.c"
-#include "SmartMotorLib.c"
 
 #define FULL_POWER 127
 #define FULL_PWR FULL_POWER
 #define HALF_POWER FULL_POWER / 2
 
 #define NO_MOTOR 1000
+
+void SetMotor(tMotor _motor, int power) {
+	motor[_motor] = power;
+}
 
 void setMotorAdjusted(tMotor _motor, int power) {
 	if (abs(power) > FULL_POWER)
