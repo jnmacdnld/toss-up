@@ -3,7 +3,7 @@
 
 #include "motor.c"
 
-#define INTAKE_OUT_PWR -50
+#define INTAKE_OUT_PWR -40
 #define INTAKE_IN_PWR   127
 
 #define intakeInPressed  vexRT[Btn5U]
