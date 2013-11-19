@@ -10,7 +10,7 @@
 
 #define ARM_UP_PWR    FULL_POWER
 #define ARM_DOWN_PWR -FULL_POWER / 3
-#define ARM_HOLD_PWR  25
+#define ARM_HOLD_PWR  25 // Meat for two rubber bands (double looped) on both sides of the arm
 
 #define armPos         SensorValue[armPot]
 
