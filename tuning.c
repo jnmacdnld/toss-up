@@ -218,4 +218,10 @@ void tuneDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
   printSettingLut();
 }
 
+void waitForTouch() {
+	writeDebugStreamLine("Press touch sensor to continue.");
+	while(!SensorValue[touch]) wait1Msec(25);
+	wait1Msec(250);
+}
+
 #endif /* TUNING_C */

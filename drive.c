@@ -51,4 +51,9 @@ void driveDistanceTicks(int ticks) {
 void driveDistanceInches(int inches) {
   driveDistanceTicks(HIGH_SPEED_IME_TICKS_TO_INCHES * inches);
 }
+
+void turnDegrees() {
+
+}
+
 #endif
