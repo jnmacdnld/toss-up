@@ -2,8 +2,10 @@
 #define INTAKE_C
 
 #include "motor.c"
+#include "arm.c"
 
-#define INTAKE_OUT_PWR -40
+#define INTAKE_OUT_SLOW_PWR -40
+#define INTAKE_OUT_FAST_PWR -127
 #define INTAKE_IN_PWR   127
 
 #define intakeInPressed  vexRT[Btn5U]
@@ -17,8 +19,13 @@ void setIntakePwr(int value) {
 void updateIntake() {
 	if (intakeInPressed)
 		setIntakePwr(INTAKE_IN_PWR);
-	else if (intakeOutPressed)
-		setIntakePwr(INTAKE_OUT_PWR);
+	else if (intakeOutPressed) {
+		if (armIsUp() )
+			setIntakePwr(INTAKE_OUT_SLOW_PWR);
+		else
+			setIntakePwr(INTAKE_OUT_FAST_PWR);
+
+}
 	else
 		setIntakePwr(0);
 }
