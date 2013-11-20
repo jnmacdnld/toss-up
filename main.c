@@ -33,7 +33,8 @@
 void pre_auton() {
   bStopTasksBetweenModes = true;
 
-  InitMotorLuts();
+  initMotorLuts();
+  initMotors();
 }
 
 task autonomous() {
@@ -49,5 +50,9 @@ task autonomous() {
 }
 
 task usercontrol() {
-  userControlLoop();
+  StartTask(userControl);
+  StartTask(updateMotors);
+
+  while(true)
+    wait1Msec(1000);
 }

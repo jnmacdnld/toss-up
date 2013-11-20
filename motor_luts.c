@@ -38,7 +38,7 @@ int leftDriveSettingLut[128] =
 };
 
 
-void InitMotorLuts() {
+void initMotorLuts() {
 	// Use the back right drive LUT for now since LUTs haven't been made for the other motors
   motorLuts[frontLeftDrive] = &leftDriveSettingLut;
   motorLuts[middleLeftDrive] = &leftDriveSettingLut;

@@ -10,7 +10,7 @@ int armPotVal;
 int _backLeftDriveEncoder;
 int _backRightDriveEncoder;
 
-void userControlLoop() {
+task userControl() {
   while (true) {
     updateIntake();
     updateDriveArcadeDrive();
@@ -20,6 +20,8 @@ void userControlLoop() {
     armPotVal = SensorValue[armPot];
     _backLeftDriveEncoder = nMotorEncoder[backLeftDrive];
     _backRightDriveEncoder = nMotorEncoder[backRightDrive];
+
+    wait1Msec(25);
   }
 }
 
