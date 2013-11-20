@@ -9,7 +9,7 @@
 #define ARM_BARRIER_POS 2240 // Define me to an actual value
 
 #define ARM_UP_PWR    FULL_POWER
-#define ARM_DOWN_PWR  FULL_POWER / 3
+#define ARM_DOWN_PWR  -FULL_POWER / 2
 #define ARM_HOLD_PWR  25 // Meant for two rubber bands (double looped) on both sides of the arm
 
 #define armPos         SensorValue[armPot]
@@ -20,8 +20,8 @@
 #define armDownMacroPressed vexRT[Btn8D]
 
 
-#define BEGIN_SLOWING_AT_DEG 30.0 
-#define ARM_KP (127.0 / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0) 
+#define BEGIN_SLOWING_AT_DEG 45.0
+#define ARM_KP (127.0 / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0)
 
 int armControlTarget = -1;
 int armControlPwr = 0;
@@ -76,7 +76,7 @@ void armUpPressedCb() {
 		return;
 	}
 
-	armSetPower(ARM_UP_PWR);
+	armSetPower(ARM_UP_PWR / 2);
 	armControlActive = false;
 }
 
@@ -86,7 +86,7 @@ void armDownPressedCb() {
 		return;
 	}
 
-	armSetPower(ARM_DOWN_PWR);
+	armSetPower(ARM_DOWN_PWR / 2);
 	armControlActive = false;
 }
 
@@ -106,7 +106,7 @@ void armControlStep() {
 		int power = (armControlTarget - armPos) * ARM_KP;
 
 		if (abs(power) > armControlPwr)
-			power = sgn(power) * armControlPwr;
+			power = sgn(power) * abs(armControlPwr);
 
 		armSetPower(power + ARM_HOLD_PWR);
 	}	else {

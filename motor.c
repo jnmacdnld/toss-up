@@ -7,7 +7,7 @@
 #define FULL_PWR FULL_POWER
 #define HALF_POWER FULL_POWER / 2
 
-#define DEFAULT_ACCEL_LIMIT 10
+#define DEFAULT_ACCEL_LIMIT 256
 
 typedef struct {
   int setting;
@@ -37,8 +37,8 @@ task updateMotors() {
       Motor* m = &motors[i];
 
       // Enforce acceleration limit
-      if ( abs(m->setting - m->request) > m->accel_limit )
-        m->setting += m->accel_limit * sgn(m->request);
+      if ( abs(m->request - m->setting) > m->accel_limit )
+        m->setting += m->accel_limit * sgn(m->request - m->setting);
       else
         m->setting = m->request;
 

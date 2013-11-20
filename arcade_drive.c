@@ -6,6 +6,8 @@
 #include "drive.c"
 #include "joystick.c"
 
+int left, right;
+
 void slowDrive(int& drive, int turn);
 
 void updateDriveArcadeDrive() {
@@ -15,13 +17,15 @@ void updateDriveArcadeDrive() {
 	// If the speed joystick has not been moved,
 	// pivot according to the turn joystick
 	if (speed_axis == 0) {
-		setLeftDrive(turn_axis);
-		setRightDrive(-turn_axis);
+		left = turn_axis;
+		right = -turn_axis;
+		setLeftDrive(left);
+		setRightDrive(right);
 
 	// If the speed joystick has been moved, curve accoring to the turn joystick
 	} else {
-		int left = speed_axis;
-		int right = speed_axis;
+		left = speed_axis;
+		right = speed_axis;
 
 		if (turn_axis > 0)
 			slowDrive(right, turn_axis);
@@ -38,7 +42,7 @@ void slowDrive(int& drive, int turn) {
 	float turn_f = abs(turn);
 
 	drive_f *= 1.0 - (turn_f  / MAX_TURN);
- 
+
 	drive = (int) drive_f;
 }
 
