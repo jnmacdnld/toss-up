@@ -19,7 +19,9 @@
 #define armUpMacroPressed vexRT[Btn8U]
 #define armDownMacroPressed vexRT[Btn8D]
 
-#define ARM_KP 0.213614
+
+#define BEGIN_SLOWING_AT_DEG 30.0 
+#define ARM_KP (127.0 / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0) 
 
 int armControlTarget = -1;
 int armControlPwr = 0;
@@ -106,7 +108,7 @@ void armControlStep() {
 		if (abs(power) > armControlPwr)
 			power = sgn(power) * armControlPwr;
 
-		armSetPower(power);
+		armSetPower(power + ARM_HOLD_PWR);
 	}	else {
 		writeDebugStreamLine("armControlTarget = %d, armPos = %d, deactivating arm control", armControlTarget, armPos);
 		armControlActive = false;
