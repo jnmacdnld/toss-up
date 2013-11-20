@@ -54,8 +54,8 @@ void updateArm() {
 }
 
 void armSetPower(int value) {
-	SetMotor(leftArm, value);
-	SetMotor(rightArm, value);
+	setMotor(leftArm, value);
+	setMotor(rightArm, value);
 }
 
 bool armIsDown() {

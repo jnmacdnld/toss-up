@@ -11,10 +11,10 @@ void setRightDrive(int setting);
 void driveSetPower(int power);
 
 void driveSetPowerUnadjusted(int power) {
-  SetMotor(frontLeftDrive, power);
-  SetMotor(backLeftDrive, power);
-  SetMotor(frontRightDrive, power);
-  SetMotor(backRightDrive, power);
+  setMotor(frontLeftDrive, power);
+  setMotor(backLeftDrive, power);
+  setMotor(frontRightDrive, power);
+  setMotor(backRightDrive, power);
 }
 
 void driveSetPower(int power) {

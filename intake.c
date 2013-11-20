@@ -10,8 +10,8 @@
 #define intakeOutPressed vexRT[Btn5D]
 
 void setIntakePwr(int value) {
-	SetMotor(leftIntake, value);
-	SetMotor(rightIntake, value);
+	setMotor(leftIntake, value);
+	setMotor(rightIntake, value);
 }
 
 void updateIntake() {
