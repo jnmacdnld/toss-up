@@ -35,6 +35,8 @@ void pre_auton() {
 
   initMotorLuts();
   initMotors();
+
+  initJoystickLuts();
 }
 
 task autonomous() {

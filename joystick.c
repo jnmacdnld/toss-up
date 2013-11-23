@@ -16,7 +16,7 @@ int joystickLuts[4][128];
 
 int getAdjustedJoystickValue(int value) {
   if ( abs(value) <= 117 )
-    return (int) (value * (70.0 / 117) ) * sgn(value);
+    return (int) (value * (80.0 / 117) ) * sgn(value);
   else
     return FULL_POWER * sgn(value);
 }
