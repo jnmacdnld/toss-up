@@ -17,16 +17,14 @@ void setIntakePwr(int value) {
 }
 
 void updateIntake() {
-	if (intakeInPressed)
+	if (intakeInPressed) 
 		setIntakePwr(INTAKE_IN_PWR);
 	else if (intakeOutPressed) {
 		if (armPos > ARM_UP_POS - 300 )
 			setIntakePwr(INTAKE_OUT_SLOW_PWR);
 		else
 			setIntakePwr(INTAKE_OUT_FAST_PWR);
-
-}
-	else
+  } else
 		setIntakePwr(0);
 }
 

@@ -21,7 +21,7 @@
 
 
 #define BEGIN_SLOWING_AT_DEG 45.0
-#define ARM_KP (127.0 / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0)
+#define ARM_KP ( (127.0 - ARM_HOLD_PWR) / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0)
 
 int armControlTarget = -1;
 int armControlPwr = 0;
