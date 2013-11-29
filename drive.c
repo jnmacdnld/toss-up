@@ -51,7 +51,7 @@ void driveMoveTicks(int ticks) {
 
 void driveMoveInches(float inches) {
   int ticks = (int) (inches * HIGH_SPEED_IME_TICKS_PER_INCH);
-  driveDistanceTicks(ticks);
+  driveMoveTicks(ticks);
 }
 
 void driveTurnToDegrees(float degrees) {

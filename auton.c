@@ -51,11 +51,11 @@ void AutonBlueHangingZone(float k_mirror = 1.0) {
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
   driveMoveInches(-FIELD_TILE_WIDTH_INCHES);
 
-  setIntakePwr(INTAKE_OUT_PWR_FAST);
+  setIntakePwr(INTAKE_OUT_FAST_PWR);
 }
 
 void AutonRedMiddleZone() {
-  AutonBlueMiddle(-1.0);
+  AutonBlueMiddleZone(-1.0);
 }
 
 void AutonRedHangingZone() {
