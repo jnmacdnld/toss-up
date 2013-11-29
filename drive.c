@@ -2,6 +2,7 @@
 #define DRIVE
 
 #include "motor.c"
+#include "GyroLib.c"
 
 #define HIGH_SPEED_IME_TICKS_TO_INCHES 31.19
 
@@ -52,8 +53,16 @@ void driveDistanceInches(int inches) {
   driveDistanceTicks(HIGH_SPEED_IME_TICKS_TO_INCHES * inches);
 }
 
-void turnDegrees() {
+void turnToDegrees(int target) {
+  while (true) {
+    int error = target - GyroGetAngle();
 
+    if ( abs(error) < 1 )
+      break;
+
+    setLeftDrive( sgn(error) * HALF_POWER);
+    setRightDrive( -sgn(error) * HALF_POWER);
+  }
 }
 
 #endif

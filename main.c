@@ -1,5 +1,6 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,    armPot,         sensorPotentiometer)
+#pragma config(Sensor, in2,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl7,  touch,          sensorTouch)
@@ -27,6 +28,8 @@
 #include "user_control.c"
 #include "motor_luts.c"
 
+#include "GyroLib.c"
+
 #define START_TO_BARRIER_TICKS 880
 #define START_TO_SECOND_LARGE_BALL_TICKS 1244 // Check this
 
@@ -37,6 +40,8 @@ void pre_auton() {
   initMotors();
 
   initJoystickLuts();
+
+  GyroInit(gyro);
 }
 
 task autonomous() {
