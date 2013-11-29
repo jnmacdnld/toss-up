@@ -30,6 +30,7 @@ void armControlMoveToPos(int pos) {
 
 void armControlStart() {
 	armPid = PidControllerInit(0.001682, 0.0, 0.00, 0.48, armPot);
+  armPid->error_threshold = 15.0; // 1 degree tolerance
 	armControlEnable();
 	StartTask(ArmControl);
 }
