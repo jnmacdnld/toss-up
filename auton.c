@@ -11,7 +11,7 @@
 
 #define FIELD_TILE_WIDTH_INCHES 23.42
 
-void AutonBlueMiddle() {
+void AutonBlueMiddleZone(float k_mirror = 1.0) {
   armMoveToPos(ARM_BARRIER_POS);
 
   // Knock the first big ball into the goal zone and return 3 inches from the starting position
@@ -19,7 +19,7 @@ void AutonBlueMiddle() {
   driveMoveInches( (START_TO_BARRIER_INCHES - 3) * -1 );
 
   // Turn left and move to the second large ball
-  driveTurnToDegrees(-90.0);
+  driveTurnToDegrees(-90.0 * k_mirror);
   driveMoveInches(FIRST_TO_SECOND_BIG_BALL_INCHES);
 
   // Turn towards the ball and knock it into the goal zone
@@ -27,14 +27,39 @@ void AutonBlueMiddle() {
   driveMoveInches( START_TO_BARRIER_INCHES - 3);
 }
  
-void AutonBlueHanging() {
+void AutonBlueHangingZone(float k_mirror = 1.0) {
   // Pick up the two buckies in front of the robot
   setIntakePwr(INTAKE_IN_PWR);
   driveMoveInches(21.5);
 
   // Drive to the first big ball
-  driveTurnToDegrees(90.0);
+  driveTurnToDegrees(90.0 * k_mirror);
+  driveMoveInches(FIELD_TILE_WIDTH_INCHES);
 
+  // Push the first big ball into the middle zone and return
+  driveTurnToDegrees(180.0 * k_mirror);
+  armMoveToPos(ARM_BIG_BALL_POS);
+  driveMoveInches(FIELD_TILE_WIDTH_INCHES);
+  driveMoveInches(-FIELD_TILE_WIDTH_INCHES);
+
+  // Drive to the second big ball
+  driveTurnToDegrees(90.0);
+  driveMoveInches(FIELD_TILE_WIDTH_INCHES);
+
+  // Push the second big ball into the middle zone
+  driveTurnToDegrees(180.0 * k_mirror);
+  driveMoveInches(FIELD_TILE_WIDTH_INCHES);
+  driveMoveInches(-FIELD_TILE_WIDTH_INCHES);
+
+  setIntakePwr(INTAKE_OUT_PWR_FAST);
+}
+
+void AutonRedMiddleZone() {
+  AutonBlueMiddle(-1.0);
+}
+
+void AutonRedHangingZone() {
+  AutonBlueHangingZone(-1.0);
 }
 
 #endif /* AUTONOMOUS */

@@ -6,7 +6,8 @@
 #define ARM_UP_POS   3050
 #define ARM_DOWN_POS 1400
 #define ARM_ALL_DOWN_POS 1310 // Define me to an actual value
-#define ARM_BARRIER_POS 2240 // Define me to an actual value
+#define ARM_BARRIER_POS 2240
+#define ARM_BIG_BALL_POS 1775 // Define me to an actual value
 
 #define ARM_UP_PWR    FULL_POWER
 #define ARM_DOWN_PWR  -FULL_POWER / 2

@@ -27,6 +27,7 @@
 
 #include "user_control.c"
 #include "motor_luts.c"
+#include "auton.c"
 
 #include "GyroLib.c"
 
@@ -42,7 +43,7 @@ void pre_auton() {
 }
 
 task autonomous() {
-  AutonBlueMiddle();
+  AutonBlueMiddleZone();
 }
 
 task usercontrol() {
