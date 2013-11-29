@@ -4,7 +4,7 @@
 #include "motor.c"
 #include "GyroLib.c"
 
-#define HIGH_SPEED_IME_TICKS_TO_INCHES 31.19
+#define HIGH_SPEED_IME_TICKS_PER_INCH 31.19
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);
@@ -37,7 +37,7 @@ void setLeftDrive(int setting) {
   setMotorAdjusted(middleLeftDrive, setting);
 }
 
-void driveDistanceTicks(int ticks) {
+void driveMoveTicks(int ticks) {
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
 
   while (sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target) {
@@ -49,15 +49,18 @@ void driveDistanceTicks(int ticks) {
   driveSetPower(0);
 }
 
-void driveDistanceInches(int inches) {
-  driveDistanceTicks(HIGH_SPEED_IME_TICKS_TO_INCHES * inches);
+void driveMoveInches(float inches) {
+  int ticks = (int) (inches * HIGH_SPEED_IME_TICKS_PER_INCH);
+  driveDistanceTicks(ticks);
 }
 
-void turnToDegrees(int target) {
+void driveTurnToDegrees(float degrees) {
+  int target = (int) (degrees * 10);
+
   while (true) {
     int error = target - GyroGetAngle();
 
-    if ( abs(error) < 1 )
+    if ( abs(error) < 10 )
       break;
 
     setLeftDrive( sgn(error) * HALF_POWER);

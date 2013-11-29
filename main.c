@@ -30,9 +30,6 @@
 
 #include "GyroLib.c"
 
-#define START_TO_BARRIER_TICKS 880
-#define START_TO_SECOND_LARGE_BALL_TICKS 1244 // Check this
-
 void pre_auton() {
   bStopTasksBetweenModes = true;
 
@@ -45,15 +42,7 @@ void pre_auton() {
 }
 
 task autonomous() {
-  armMoveToPos(ARM_BARRIER_POS);
-
-  driveDistanceTicks(START_TO_BARRIER_TICKS);
-  driveDistanceTicks(-START_TO_BARRIER_TICKS);
-
-  while (!SensorValue[touch]) { wait1Msec(25); };
-
-  driveDistanceTicks(START_TO_SECOND_LARGE_BALL_TICKS);
-  driveDistanceTicks(-START_TO_SECOND_LARGE_BALL_TICKS);
+  AutonBlueMiddle();
 }
 
 task usercontrol() {
