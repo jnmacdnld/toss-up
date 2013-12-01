@@ -3,6 +3,7 @@
 
 #include "motor.c"
 #include "GyroLib.c"
+#include "PidLib.c"
 
 #define HIGH_SPEED_IME_TICKS_PER_INCH 31.19
 
@@ -10,6 +11,9 @@ void setLeftDrive(int setting);
 void setRightDrive(int setting);
 
 void driveSetPower(int power);
+
+pidController* driveMovePid;
+pidController* driveTurnToPid;
 
 void driveSetPowerUnadjusted(int power) {
   setMotor(frontLeftDrive, power);
@@ -37,11 +41,19 @@ void setLeftDrive(int setting) {
   setMotorAdjusted(middleLeftDrive, setting);
 }
 
+void initDrive() {
+  driveMovePid = PidControllerInit(1.0, 0.0, 0.0, backLeftDriveEncoder);
+  driveTurnToPid = PidControllerInit(1.0, 0.0, 0.0, in1);
+  driveTurnToPid->error_threshold = 10;
+}
+
 void driveMoveTicks(int ticks) {
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
+  driveMovePid->target_value = target;
 
-  while (sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target) {
-    driveSetPower(sgn(ticks) * HALF_POWER);
+  while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
+    int cmd = PidControllerUpdate(driveMovePid);
+    driveSetPower(cmd * 0.5);
   }
 
   driveSetPower(sgn(ticks) * -FULL_POWER);
@@ -56,15 +68,14 @@ void driveMoveInches(float inches) {
 
 void driveTurnToDegrees(float degrees) {
   int target = (int) (degrees * 10);
+  driveTurnToPid->target_value = target;
 
-  while (true) {
-    int error = target - GyroGetAngle();
+  while ( sgn(degrees) * GyroGetAngle() < sgn(degrees) * target ) {
+    int gyro_value = GyroGetAngle();
+    int cmd = PidControllerUpdate(driveTurnToPid, gyro_value);
 
-    if ( abs(error) < 10 )
-      break;
-
-    setLeftDrive( sgn(error) * HALF_POWER);
-    setRightDrive( -sgn(error) * HALF_POWER);
+    setLeftDrive( cmd * 0.5 );
+    setRightDrive( cmd * 0.5 );
   }
 }
 

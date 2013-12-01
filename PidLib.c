@@ -103,7 +103,7 @@ PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_rev
 
     if( nextPidControllerPtr == MAX_PID ) {
         return(NULL);
-  }
+    }
 
     p = (pidController *)&_pidControllers[ nextPidControllerPtr++ ];
 
@@ -138,7 +138,8 @@ PidControllerInit( float Kp, float Ki, float Kd, tSensors port, short sensor_rev
     // We need a valid sensor for pid control, pot or encoder
     if( ( p->sensor_type == sensorPotentiometer ) ||
         ( p->sensor_type == sensorQuadEncoder ) ||
-        ( p->sensor_type == sensorQuadEncoderOnI2CPort )
+        ( p->sensor_type == sensorQuadEncoderOnI2CPort ) ||
+        ( p->sensor_type == sensorGyro )
       )
         p->enabled    = 1;
     else
@@ -205,6 +206,67 @@ PidControllerUpdate( pidController *p )
 
             p->error = p->target_value - p->sensor_value;
             }
+
+        // force error to 0 if below threshold
+        if( abs(p->error) < p->error_threshold )
+            p->error = 0;
+
+        // integral accumulation
+        if( p->Ki != 0 )
+            {
+            p->integral += p->error;
+
+            // limit to avoid windup
+            if( abs( p->integral ) > p->integral_limit )
+                p->integral = sgn(p->integral) * p->integral_limit;
+            }
+        else
+            p->integral = 0;
+
+        // derivative
+        p->derivative = p->error - p->last_error;
+        p->last_error = p->error;
+
+        // calculate drive - no delta T in this version
+        p->drive = (p->Kp * p->error) + (p->Ki * p->integral) + (p->Kd * p->derivative) + p->Kbias;
+
+        // drive should be in the range +/- 1.0
+        if( abs( p->drive ) > 1.0 )
+            p->drive = sgn(p->drive);
+
+        // final motor output
+        p->drive_raw = p->drive * 127.0;
+        }
+
+    else
+        {
+        // Disabled - all 0
+        p->error      = 0;
+        p->last_error = 0;
+        p->integral   = 0;
+        p->derivative = 0;
+        p->drive      = 0.0;
+        p->drive_raw  = 0;
+        }
+
+    // linearize - be careful this is a macro
+    p->drive_cmd = _LinearizeDrive( p->drive_raw );
+
+    // return the thing we are really interested in
+    return( p->drive_cmd );
+}
+
+short
+PidControllerUpdate( pidController *p, long sensor_value )
+{
+    if( p == NULL )
+        return(0);
+
+    if( p->enabled )
+        {
+
+        p->sensor_value = sensor_value;
+        p->error = p->target_value - p->sensor_value;
 
         // force error to 0 if below threshold
         if( abs(p->error) < p->error_threshold )
