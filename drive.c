@@ -70,7 +70,9 @@ void driveTurnToDegrees(float degrees) {
   int target = (int) (degrees * 10);
   driveTurnToPid->target_value = target;
 
-  while ( sgn(degrees) * GyroGetAngle() < sgn(degrees) * target ) {
+  int first_error = target - GyroGetAngle();
+
+  while ( sgn(first_error) * GyroGetAngle() < sgn(first_error) * target ) {
     int gyro_value = GyroGetAngle();
     int cmd = PidControllerUpdate(driveTurnToPid, gyro_value);
 
