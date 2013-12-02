@@ -36,7 +36,8 @@ void pre_auton() {
 
   initMotorLuts();
   initMotors();
-
+  initDrive();
+  
   initJoystickLuts();
 
   GyroInit(gyro);
