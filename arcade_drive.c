@@ -19,8 +19,8 @@ void updateDriveArcadeDrive() {
 	if (speed_axis == 0) {
 		left = turn_axis;
 		right = -turn_axis;
-		setLeftDrive(left);
-		setRightDrive(right);
+		setLeftDrive(left * 0.7);
+		setRightDrive(right * 0.7);
 
 	// If the speed joystick has been moved, curve accoring to the turn joystick
 	} else {

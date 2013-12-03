@@ -8,7 +8,7 @@
 
 #define START_TO_BARRIER_TICKS 880
 #define START_TO_BARRIER_INCHES 28.21
-#define START_TO_BARRIER_INCHES_MINUS_3 START_TO_BARRIER_INCHES - 3
+#define START_TO_BARRIER_INCHES_MINUS_3 START_TO_BARRIER_INCHES - 10
 
 #define FIRST_TO_SECOND_BIG_BALL_INCHES 32.25
 
@@ -30,6 +30,7 @@ void AutonTest() {
 }
 
 void AutonBlueMiddleZone(float k_mirror = 1.0) {
+	writeDebugStreamLine("started auton");
   armMoveToPos(ARM_BARRIER_POS);
 
   // Knock the first big ball into the goal zone and return 3 inches from the starting position
@@ -67,7 +68,7 @@ void AutonBlueMiddleZone(float k_mirror = 1.0) {
   wait1Msec(1000);
   setIntakePwr(0);
 }
- 
+
 void AutonBlueHangingZone(float k_mirror = 1.0) {
   // Pick up the two buckies in front of the robot
   setIntakePwr(INTAKE_IN_PWR);

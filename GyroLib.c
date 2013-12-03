@@ -88,6 +88,8 @@ GyroDebug( int displayLine )
 
 task GyroTask()
 {
+		writeDebugStreamLine("started gyro task");
+
     int     gyro_value;
     int     gyro_error = 0;
     int     lastDriftGyro = 0;
@@ -162,6 +164,7 @@ task GyroTask()
         // We can use the angle
         theGyro.valid = true;
 
+        writeDebugStreamLine("Updated gyro");
         // Delay
         wait1Msec( 20 );
         }

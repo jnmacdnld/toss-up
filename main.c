@@ -37,17 +37,21 @@ void pre_auton() {
   initMotorLuts();
   initMotors();
   initDrive();
-  
+
   initJoystickLuts();
 
   GyroInit(gyro);
 }
 
 task autonomous() {
+	StartTask(updateMotors);
+	GyroReinit();
+
   AutonBlueMiddleZone();
 }
 
 task usercontrol() {
+	GyroReinit();
   StartTask(userControl);
   StartTask(updateMotors);
 

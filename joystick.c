@@ -53,7 +53,7 @@ int joystickGetAxis(Joystick j) {
   if (abs(value) < 20)
     value = 0;
 
-  value = joystickLuts[j][ abs(value) ] * sgn(value);
+  // value = joystickLuts[j][ abs(value) ] * sgn(value);
 
   return value;
 }

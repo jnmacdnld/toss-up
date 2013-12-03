@@ -70,14 +70,15 @@ void driveTurnToDegrees(float degrees) {
   int target = (int) (degrees * 10);
   driveTurnToPid->target_value = target;
 
-  int first_error = target - GyroGetAngle();
+  int angle = (int) (GyroGetAngle() * 10);
+  int first_error = target - angle;
 
   while ( sgn(first_error) * GyroGetAngle() < sgn(first_error) * target ) {
-    int gyro_value = GyroGetAngle();
-    int cmd = PidControllerUpdate(driveTurnToPid, gyro_value);
+    int angle = (int) (GyroGetAngle() * 10);
+    int cmd = PidControllerUpdate(driveTurnToPid, angle);
 
     setLeftDrive( cmd * 0.5 );
-    setRightDrive( cmd * 0.5 );
+    setRightDrive( cmd * -0.5 );
   }
 }
 
