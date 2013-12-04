@@ -6,6 +6,12 @@
 #include "PidLib.c"
 
 #define HIGH_SPEED_IME_TICKS_PER_INCH 31.19
+#define HIGH_SPEED_IME_TICKS_PER_REV 392.0
+
+#define TURN_DIAMETER 15.25
+#define WHEEL_DIAMETER 4.0
+
+#define TICKS_PER_PIVOT_DEGREE (HIGH_SPEED_IME_TICKS_PER_REV * TURN_DIAMETER) / (WHEEL_DIAMETER * 360.0)
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);
@@ -80,6 +86,35 @@ void driveTurnToDegrees(float degrees) {
     setLeftDrive( cmd * 0.5 );
     setRightDrive( cmd * -0.5 );
   }
+}
+
+void driveTurnDegrees(float degrees) {
+  degrees * TICKS_PER_PIVOT_DEGREE
+
+  int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
+  driveMovePid->target_value = target;
+
+  while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
+    int cmd = PidControllerUpdate(driveMovePid);
+    driveSetPower(cmd * 0.5);
+  }
+
+  // driveSetPower(sgn(ticks) * -FULL_POWER);
+  // wait1Msec(50);
+  driveSetPower(0);
+}
+
+void driveReflectRight() {
+  int value;
+
+  if (bMotorReflected[backRightDrive] == 0)
+    value = 1;
+  else
+    value = 0;
+
+  bMotorReflected[backRightDrive] = value;
+  bMotorReflected[middleRightDrive] = value;
+  bMotorReflected[frontRightDrive] = value;
 }
 
 #endif
