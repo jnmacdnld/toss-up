@@ -37,16 +37,17 @@ void AutonBlueMiddleZone(float k_mirror = 1.0) {
   driveMoveInches(START_TO_BARRIER_INCHES);
   driveMoveInches( -START_TO_BARRIER_INCHES_MINUS_3);
 
+  return;
   // Turn left and move to the second large ball
-  driveTurnDegrees(-90.0 * k_mirror);
+  driveTurnToDegrees(-90.0 * k_mirror);
   driveMoveInches(FIRST_TO_SECOND_BIG_BALL_INCHES);
 
   // Turn towards the ball and knock it into the goal zone
-  driveTurnDegrees(90.0);
+  driveTurnToDegrees(0);
   driveMoveInches( START_TO_BARRIER_INCHES_MINUS_3);
 
   // Don't use the following for now
-  return;
+
 
   // Move back from the barrier
   driveMoveInches( - START_TO_BARRIER_INCHES_MINUS_3 );

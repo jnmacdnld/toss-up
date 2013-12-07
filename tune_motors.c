@@ -23,11 +23,11 @@
 
 task main() {
   float left_drive_top_speed = getLeftDriveSpeedAtSetting(FULL_POWER);
-  driveSetPower(0);
+
  	while (!SensorValue[touch]) wait1Msec(25);
 
   float right_drive_top_speed = getRightDriveSpeedAtSetting(FULL_POWER);
-  driveSetPower(0);
+
   while (!SensorValue[touch]) wait1Msec(25);
 
   writeDebugStreamLine("left drive top speed: %d", left_drive_top_speed);

@@ -29,7 +29,7 @@
 #include "motor_luts.c"
 #include "auton.c"
 
-#include "GyroLib.c"
+// #include "GyroLib.c"
 
 void pre_auton() {
   bStopTasksBetweenModes = true;
@@ -40,19 +40,29 @@ void pre_auton() {
 
   initJoystickLuts();
 
-  GyroInit(gyro);
+  // GyroInit(gyro);
+   //Completely clear out any previous sensor readings by setting the port to "sensorNone"
+ SensorType[gyro] = sensorNone;
+ wait1Msec(1000);
+ //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
+ SensorType[gyro] = sensorGyro;
+ wait1Msec(2000);
 }
 
 task autonomous() {
 	StartTask(updateMotors);
-	GyroReinit();
+	// GyroReinit();
+
+	// while ( !GyroGetValid() );
+
+	// wait10Msec(100);
 
   AutonBlueMiddleZone();
-	// driveTurnToDegrees(90.0);
+
 }
 
 task usercontrol() {
-	GyroReinit();
+	// GyroReinit();
   StartTask(userControl);
   StartTask(updateMotors);
 

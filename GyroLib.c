@@ -141,9 +141,11 @@ task GyroTask()
         // Create float angle, remove offset
         angle = (gyro_value + gyro_error)  / 10.0;
 
+        angle *= -1;
+
         // normalize into the range 0 - 360
-        if( angle < 0 )
-            angle += 360;
+        // if( angle < 0 )
+        //    angle += 360;
 
         // store in struct for others
         theGyro.angle = angle;
@@ -164,7 +166,7 @@ task GyroTask()
         // We can use the angle
         theGyro.valid = true;
 
-        writeDebugStreamLine("Updated gyro");
+        // writeDebugStreamLine("Updated gyro");
         // Delay
         wait1Msec( 20 );
         }

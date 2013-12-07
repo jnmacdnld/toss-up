@@ -3,8 +3,8 @@
 
 #include "motor.c"
 
-#define ARM_UP_POS   3050
-#define ARM_DOWN_POS 1400
+#define ARM_UP_POS   3200
+#define ARM_DOWN_POS 1500
 #define ARM_ALL_DOWN_POS 1310 // Define me to an actual value
 #define ARM_BARRIER_POS 2240
 #define ARM_BIG_BALL_POS 1775 // Define me to an actual value
@@ -77,7 +77,7 @@ void armUpPressedCb() {
 		return;
 	}
 
-	armSetPower(ARM_UP_PWR / 2);
+	armSetPower(ARM_UP_PWR);
 	armControlActive = false;
 }
 
@@ -87,7 +87,7 @@ void armDownPressedCb() {
 		return;
 	}
 
-	armSetPower(ARM_DOWN_PWR / 2);
+	armSetPower(ARM_DOWN_PWR);
 	armControlActive = false;
 }
 

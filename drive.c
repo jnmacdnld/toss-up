@@ -5,6 +5,8 @@
 #include "GyroLib.c"
 #include "PidLib.c"
 
+// #include "user_control.c"
+
 #define HIGH_SPEED_IME_TICKS_PER_INCH 31.19
 #define HIGH_SPEED_IME_TICKS_PER_REV 392.0
 
@@ -12,6 +14,8 @@
 #define WHEEL_DIAMETER 4.0
 
 #define TICKS_PER_PIVOT_DEGREE (HIGH_SPEED_IME_TICKS_PER_REV * TURN_DIAMETER) / (WHEEL_DIAMETER * 360.0)
+#define TICKS_PER_PIVOT_90 431
+#define TICKS_PER_PIVOT_MINUS_90 -369
 
 void setLeftDrive(int setting);
 void setRightDrive(int setting);
@@ -41,6 +45,8 @@ void setRightDrive(int setting) {
 }
 
 void setLeftDrive(int setting) {
+  setting = (int) ( (float) setting * 0.95);
+
   // setMotorAdjusted(frontLeftDrive, setting);
   setMotorAdjusted(frontLeftDrive, setting);
   setMotorAdjusted(backLeftDrive, setting);
@@ -50,7 +56,7 @@ void setLeftDrive(int setting) {
 void initDrive() {
   driveMovePid = PidControllerInit(1.0, 0.0, 0.0, backLeftDriveEncoder);
   driveTurnToPid = PidControllerInit(1.0, 0.0, 0.0, in1);
-  driveTurnToPid->error_threshold = 10;
+  driveTurnToPid->error_threshold = 50;
 }
 
 void driveMoveTicks(int ticks) {
@@ -60,6 +66,7 @@ void driveMoveTicks(int ticks) {
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
     driveSetPower(cmd * 0.5);
+   wait1Msec(25);
   }
 
   driveSetPower(sgn(ticks) * -FULL_POWER);
@@ -73,48 +80,64 @@ void driveMoveInches(float inches) {
 }
 
 void driveTurnToDegrees(float degrees) {
-  int target = (int) (degrees * 10);
-  driveTurnToPid->target_value = target;
+  int gyroval = 0;
 
-  int angle = (int) (GyroGetAngle() * 10);
-  int first_error = target - angle;
+  int degrees10 = (int) (degrees * 10);
+  int first_error = degrees10 - SensorValue[gyro];
 
-  while ( sgn(first_error) * GyroGetAngle() < sgn(first_error) * target ) {
-    int angle = (int) (GyroGetAngle() * 10);
-    int cmd = PidControllerUpdate(driveTurnToPid, angle);
+  //While the absolute value of the gyro is less than the desired rotation...
+ while( sgn(first_error) * SensorValue[gyro] < degrees10 * sgn(first_error) )
+ {
+  writeDebugStreamLine("%d", SensorValue[gyro]);
+  int setting = 40;
+ //...continue turning
+ motor[backRightDrive] = -setting;
+ motor[middleRightDrive] = -setting;
+ motor[frontRightDrive] = -setting;
 
-    setLeftDrive( cmd * 0.5 );
-    setRightDrive( cmd * -0.5 );
-  }
-}
+ motor[backLeftDrive] = setting;
+ motor[middleLeftDrive] = setting;
+ motor[frontLeftDrive] = setting;
+ }
 
-void driveTurnDegrees(float degrees) {
-  degrees * TICKS_PER_PIVOT_DEGREE
+ int setting = 0;
 
-  int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
-  driveMovePid->target_value = target;
+ motor[backRightDrive] = setting;
+ motor[middleRightDrive] = setting;
+ motor[frontRightDrive] = setting;
 
-  while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
-    int cmd = PidControllerUpdate(driveMovePid);
-    driveSetPower(cmd * 0.5);
-  }
-
-  // driveSetPower(sgn(ticks) * -FULL_POWER);
-  // wait1Msec(50);
-  driveSetPower(0);
+ motor[backLeftDrive] = -setting;
+ motor[middleLeftDrive] = -setting;
+ motor[frontLeftDrive] = -setting;
 }
 
 void driveReflectRight() {
-  int value;
-
-  if (bMotorReflected[backRightDrive] == 0)
-    value = 1;
-  else
-    value = 0;
-
-  bMotorReflected[backRightDrive] = value;
-  bMotorReflected[middleRightDrive] = value;
-  bMotorReflected[frontRightDrive] = value;
+  bMotorReflected[backRightDrive] = false;
+  bMotorReflected[middleRightDrive] = false;
+  bMotorReflected[frontRightDrive] = false;
 }
+
+void driveUnreflectRight() {
+  bMotorReflected[backRightDrive] = true;
+  bMotorReflected[middleRightDrive] = true;
+  bMotorReflected[frontRightDrive] = true;
+}
+
+
+void driveTurnDegrees(float degrees) {
+  driveReflectRight();
+
+  int ticks = degrees * TICKS_PER_PIVOT_DEGREE;
+
+  if (degrees == 90.0)
+    ticks = TICKS_PER_PIVOT_90;
+  if (degrees == -90.0)
+    ticks = TICKS_PER_PIVOT_MINUS_90;
+
+  driveMoveTicks(ticks + 30);
+
+  driveUnreflectRight();
+}
+
 
 #endif
