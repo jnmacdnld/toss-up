@@ -58,7 +58,10 @@ void driveSetLeft(int setting) {
 }
 
 void initDrive() {
-  driveMovePid = PidControllerInit(1.0, 0.0, 0.0, backLeftDriveEncoder);
+  float drive_kp = 1.0 / (HIGH_SPEED_IME_TICKS_PER_INCH * 5.0);
+
+  driveMovePid = PidControllerInit(drive_kp, 0.0, 0.0, backLeftDriveEncoder);
+
   driveTurnToPid = PidControllerInit(1.0, 0.0, 0.0, in1);
   driveTurnToPid->error_threshold = 50;
 }
@@ -70,11 +73,9 @@ void driveMoveTicks(int ticks) {
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
     driveSetPower(cmd * 0.7);
-   wait1Msec(25);
+    wait1Msec(25);
   }
 
-  driveSetPower(sgn(ticks) * -FULL_POWER);
-  wait1Msec(50);
   driveSetPower(0);
 }
 
