@@ -42,9 +42,9 @@ void armHoldPos();
 void armUpdate();
 
 void armUpdate() {
-	if (armUpPresetPressed && )
+	if (armUpPresetPressed)
 		armControlSetTarget(ARM_UP_POS);
-	else if (armDownPresetPressed && )
+	else if (armDownPresetPressed)
 		armControlSetTarget(ARM_ALL_DOWN_POS);
 
 	if ( armUpPressed && !armIsUp() ) {
