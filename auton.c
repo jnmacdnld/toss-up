@@ -41,7 +41,6 @@ void AutonBlueMiddleZone() {
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
   driveMoveInches( -FIELD_TILE_WIDTH_INCHES);
 
-  return;
   // Turn left and move to the second large ball
   driveTurnToDegrees(-90.0);
   driveMoveInches(FIRST_TO_SECOND_BIG_BALL_INCHES);
@@ -52,7 +51,7 @@ void AutonBlueMiddleZone() {
 
   // Don't use the following for now
 
-
+  return;
   // Move back from the barrier
   driveMoveInches( - START_TO_BARRIER_INCHES_MINUS_3 );
 

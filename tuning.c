@@ -106,13 +106,13 @@ void fillMotorSettingLut() {
 
 float getIdealSpeed(int setting, float max_speed) {
 	float max_setting = 127.0;
-	float low_speed = 25.0;
+	float low_speed = 0.0;
 
 	// An equation in point-slope form with the x1 term moved to the right side
 	// Speed goes linearly from 0 rpm to max_speed over the values 0 to 127
 	// return (max_speed / max_setting) * (setting - max_setting) + max_speed;
 
-	// Speed goes linearly from 20 rpm to max_speed over the values 0 to 127
+	// Speed goes linearly from 0 rpm to max_speed over the values 0 to 127
 	return ((max_speed - low_speed) / max_setting) * (setting - max_setting) + max_speed;
 }
 
