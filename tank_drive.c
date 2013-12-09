@@ -5,8 +5,8 @@
 #include "drive.c"
 
 void updateDriveTankDrive() {
-  setLeftDrive( joystickGetAxis(LEFT_Y) );
-  setRightDrive( joystickGetXAxis(RIGHT_Y) );
+  driveSetLeft( joystickGetAxis(LEFT_Y) );
+  driveSetRight( joystickGetXAxis(RIGHT_Y) );
 }
  
 #endif /* TANK_DRIVE */

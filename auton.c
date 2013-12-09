@@ -23,23 +23,27 @@ void AutonTest() {
   driveMoveInches(-20);
   waitForTouch();
 
-  writeDebugStreamLine("Should turn 90 degrees to the left");
+  writeDebugStreamLine("Should turn to position 90 degrees left");
+  driveTurnToDegrees(-90.0);
+  waitForTouch();
+
+  writeDebugStreamLine("Should turn to position 90 degrees right");
   driveTurnToDegrees(90.0);
 
   writeDebugStreamLine("Done.");
 }
 
-void AutonBlueMiddleZone(float k_mirror = 1.0) {
+void AutonBlueMiddleZone() {
 	writeDebugStreamLine("started auton");
   armMoveToPos(ARM_BARRIER_POS);
 
   // Knock the first big ball into the goal zone and return 3 inches from the starting position
-  driveMoveInches(START_TO_BARRIER_INCHES);
-  driveMoveInches( -START_TO_BARRIER_INCHES_MINUS_3);
+  driveMoveInches(FIELD_TILE_WIDTH_INCHES);
+  driveMoveInches( -FIELD_TILE_WIDTH_INCHES);
 
   return;
   // Turn left and move to the second large ball
-  driveTurnToDegrees(-90.0 * k_mirror);
+  driveTurnToDegrees(-90.0);
   driveMoveInches(FIRST_TO_SECOND_BIG_BALL_INCHES);
 
   // Turn towards the ball and knock it into the goal zone
@@ -53,7 +57,7 @@ void AutonBlueMiddleZone(float k_mirror = 1.0) {
   driveMoveInches( - START_TO_BARRIER_INCHES_MINUS_3 );
 
   // Align the robot with the bucky goal
-  driveTurnToDegrees(90.0 * k_mirror);
+  driveTurnToDegrees(90.0);
   driveMoveInches( FIELD_TILE_WIDTH_INCHES / 2 );
 
   // Turn towards the bucky goal
@@ -65,24 +69,24 @@ void AutonBlueMiddleZone(float k_mirror = 1.0) {
 
   // Move to the goal and score the bucky
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
-  setIntakePwr(INTAKE_OUT_SLOW_PWR);
+  intakeSetPower(INTAKE_OUT_SLOW_PWR);
   wait1Msec(1000);
-  setIntakePwr(0);
+  intakeSetPower(0);
 }
 
-void AutonBlueHangingZone(float k_mirror = 1.0) {
+void AutonBlueHangingZone() {
   // Pick up the two buckies in front of the robot
-  setIntakePwr(INTAKE_IN_PWR);
+  intakeSetPower(INTAKE_IN_PWR);
   driveMoveInches(FIELD_TILE_WIDTH_INCHES - 2);
   wait1Msec(500);
-  setIntakePwr(0);
+  intakeSetPower(0);
 
   // Drive to the first big ball
-  driveTurnToDegrees(90.0 * k_mirror);
+  driveTurnToDegrees(90.0);
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
 
   // Push the first big ball into the middle zone and return
-  driveTurnToDegrees(180.0 * k_mirror);
+  driveTurnToDegrees(180.0);
   armMoveToPos(ARM_BIG_BALL_POS);
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
   driveMoveInches(-FIELD_TILE_WIDTH_INCHES);
@@ -92,19 +96,21 @@ void AutonBlueHangingZone(float k_mirror = 1.0) {
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
 
   // Push the second big ball into the middle zone
-  driveTurnToDegrees(180.0 * k_mirror);
+  driveTurnToDegrees(180.0);
   driveMoveInches(FIELD_TILE_WIDTH_INCHES);
   driveMoveInches(-FIELD_TILE_WIDTH_INCHES);
 
-  setIntakePwr(INTAKE_OUT_FAST_PWR);
+  intakeSetPower(INTAKE_OUT_FAST_PWR);
 }
 
 void AutonRedMiddleZone() {
-  AutonBlueMiddleZone(-1.0);
+  driveMirrorTurning = true;
+  AutonBlueMiddleZone();
 }
 
 void AutonRedHangingZone() {
-  AutonBlueHangingZone(-1.0);
+  driveMirrorTurning = true;
+  AutonBlueHangingZone();
 }
 
 #endif /* AUTONOMOUS */

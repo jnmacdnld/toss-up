@@ -9,6 +9,8 @@
 #define ARM_BARRIER_POS 2240
 #define ARM_BIG_BALL_POS 1775 // Define me to an actual value
 
+int armPresets[4] = {ARM_ALL_DOWN_POS, ARM_BIG_BALL_POS, ARM_BARRIER_POS, ARM_UP_POS};
+
 #define ARM_UP_PWR    FULL_POWER
 #define ARM_DOWN_PWR  -FULL_POWER / 2
 #define ARM_HOLD_PWR  25 // Meant for two rubber bands (double looped) on both sides of the arm
@@ -17,9 +19,8 @@
 
 #define armDownPressed    vexRT[Btn6D]
 #define armUpPressed      vexRT[Btn6U]
-#define armUpMacroPressed vexRT[Btn8U]
-#define armDownMacroPressed vexRT[Btn8D]
-
+#define armUpPresetPressed vexRT[Btn8U]
+#define armDownPresetPressed vexRT[Btn8D]
 
 #define BEGIN_SLOWING_AT_DEG 45.0
 #define ARM_KP ( (127.0 - ARM_HOLD_PWR) / BEGIN_SLOWING_AT_DEG) * (250.0 / 4095.0)
@@ -33,29 +34,30 @@ void armSetPower(int value);
 bool armIsDown();
 bool armIsUp();
 
-void armUpPressedCb();
-void armDownPressedCb();
-
 void armControlSetTarget(int target);
 void armControlStep();
+void armControlReset();
 
-void holdArmPos();
-void updateArm();
+void armHoldPos();
+void armUpdate();
 
-void updateArm() {
-	if (armUpMacroPressed && !armIsUp() )
+void armUpdate() {
+	if (armUpPresetPressed && )
 		armControlSetTarget(ARM_UP_POS);
-	else if (armDownMacroPressed && !armIsDown() )
-		armControlSetTarget(ARM_ALL_DOWN_POS); // Go a little past the down position so we know it gets there
+	else if (armDownPresetPressed && )
+		armControlSetTarget(ARM_ALL_DOWN_POS);
 
-	if (armUpPressed)
-		armUpPressedCb();
-	else if (armDownPressed)
-		armDownPressedCb();
-	else if (armControlActive)
+	if ( armUpPressed && !armIsUp() ) {
+		armSetPower(ARM_UP_PWR);
+		armControlActive = false;
+	} else if ( armDownPressed && !armIsDown() ) {
+		armSetPower(ARM_DOWN_PWR);
+		armControlActive = false;
+	} else if (armControlActive) {
 		armControlStep();
-	else
-		holdArmPos();
+	} else {
+		armHoldPos();
+	}
 }
 
 void armSetPower(int value) {
@@ -69,26 +71,6 @@ bool armIsDown() {
 
 bool armIsUp() {
 	return (armPos >= ARM_UP_POS);
-}
-
-void armUpPressedCb() {
-	if ( armIsUp() ) {
-		holdArmPos();
-		return;
-	}
-
-	armSetPower(ARM_UP_PWR);
-	armControlActive = false;
-}
-
-void armDownPressedCb() {
-	if ( armIsDown() ) {
-		holdArmPos();
-		return;
-	}
-
-	armSetPower(ARM_DOWN_PWR);
-	armControlActive = false;
 }
 
 void armControlSetTarget(int target) {
@@ -116,7 +98,7 @@ void armControlStep() {
 	}
 }
 
-void holdArmPos() {
+void armHoldPos() {
 	if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
 			armSetPower(0);
 	else
@@ -129,7 +111,13 @@ void armMoveToPos(int pos) {
   while(armControlActive)
   	armControlStep();
 
-  holdArmPos();
+  armHoldPos();
+}
+
+void armControlReset() {
+  armControlTarget = -1;
+  armControlPwr = 0;
+  armControlActive = false;
 }
 
 #endif

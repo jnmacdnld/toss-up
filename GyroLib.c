@@ -88,8 +88,6 @@ GyroDebug( int displayLine )
 
 task GyroTask()
 {
-		writeDebugStreamLine("started gyro task");
-
     int     gyro_value;
     int     gyro_error = 0;
     int     lastDriftGyro = 0;

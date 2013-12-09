@@ -17,13 +17,17 @@
 #define TICKS_PER_PIVOT_90 431
 #define TICKS_PER_PIVOT_MINUS_90 -369
 
-void setLeftDrive(int setting);
-void setRightDrive(int setting);
+void driveSetLeft(int setting);
+void driveSetRight(int setting);
 
 void driveSetPower(int power);
 
+bool driveMirrorTurning = false;
+
 pidController* driveMovePid;
 pidController* driveTurnToPid;
+
+float driveGetGyro();
 
 void driveSetPowerUnadjusted(int power) {
   setMotor(frontLeftDrive, power);
@@ -33,19 +37,19 @@ void driveSetPowerUnadjusted(int power) {
 }
 
 void driveSetPower(int power) {
-  setLeftDrive(power);
-  setRightDrive(power);
+  driveSetLeft(power);
+  driveSetRight(power);
 }
 
-void setRightDrive(int setting) {
+void driveSetRight(int setting) {
   // setMotorAdjusted(frontRightDrive, setting);
   setMotorAdjusted(frontRightDrive, setting);
   setMotorAdjusted(backRightDrive, setting);
   setMotorAdjusted(middleRightDrive, setting);
 }
 
-void setLeftDrive(int setting) {
-  setting = (int) ( (float) setting * 0.95);
+void driveSetLeft(int setting) {
+  // setting = (int) ( (float) setting * 0.95);
 
   // setMotorAdjusted(frontLeftDrive, setting);
   setMotorAdjusted(frontLeftDrive, setting);
@@ -65,7 +69,7 @@ void driveMoveTicks(int ticks) {
 
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
-    driveSetPower(cmd * 0.5);
+    driveSetPower(cmd * 0.7);
    wait1Msec(25);
   }
 
@@ -80,35 +84,23 @@ void driveMoveInches(float inches) {
 }
 
 void driveTurnToDegrees(float degrees) {
-  int gyroval = 0;
+  if (driveMirrorTurning)
+    degrees *= -1;
 
-  int degrees10 = (int) (degrees * 10);
-  int first_error = degrees10 - SensorValue[gyro];
+  int sgn_first_error = sgn( degrees - driveGetGyro() );
 
-  //While the absolute value of the gyro is less than the desired rotation...
- while( sgn(first_error) * SensorValue[gyro] < degrees10 * sgn(first_error) )
- {
-  writeDebugStreamLine("%d", SensorValue[gyro]);
-  int setting = 40;
- //...continue turning
- motor[backRightDrive] = -setting;
- motor[middleRightDrive] = -setting;
- motor[frontRightDrive] = -setting;
+  while( sgn_first_error * driveGetGyro() < degrees * sgn_first_error ) {
+    writeDebugStreamLine("%f", driveGetGyro() );
 
- motor[backLeftDrive] = setting;
- motor[middleLeftDrive] = setting;
- motor[frontLeftDrive] = setting;
- }
+    driveSetLeft(FULL_POWER * .5 * sgn_first_error);
+    driveSetRight(-FULL_POWER * .5 * sgn_first_error);
+  }
 
- int setting = 0;
+ driveSetPower(0);
+}
 
- motor[backRightDrive] = setting;
- motor[middleRightDrive] = setting;
- motor[frontRightDrive] = setting;
-
- motor[backLeftDrive] = -setting;
- motor[middleLeftDrive] = -setting;
- motor[frontLeftDrive] = -setting;
+float driveGetGyro() {
+  return ( (float) -SensorValue[gyro] ) / 10.0;
 }
 
 void driveReflectRight() {
@@ -123,6 +115,14 @@ void driveUnreflectRight() {
   bMotorReflected[frontRightDrive] = true;
 }
 
+void initGyro() {
+  //Completely clear out any previous sensor readings by setting the port to "sensorNone"
+ SensorType[gyro] = sensorNone;
+ wait1Msec(1000);
+ //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
+ SensorType[gyro] = sensorGyro;
+ wait1Msec(2000);
+}
 
 void driveTurnDegrees(float degrees) {
   driveReflectRight();

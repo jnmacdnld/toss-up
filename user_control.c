@@ -11,21 +11,20 @@ int armPotVal;
 int _backLeftDriveEncoder;
 int _backRightDriveEncoder;
 int gyroValue;
-int gyroValueRaw;
 
 task userControl() {
+  armControlReset();
+
   while (true) {
     updateIntake();
     updateDriveArcadeDrive();
-    updateArm();
+    armUpdate();
 
     // For debugging
     armPotVal = SensorValue[armPot];
     _backLeftDriveEncoder = nMotorEncoder[backLeftDrive];
     _backRightDriveEncoder = nMotorEncoder[backRightDrive];
-    gyroValue = GyroGetAngle();
-    gyroValueRaw = SensorValue[gyro];
-
+    gyroValue = driveGetGyro();
 
     wait1Msec(25);
   }

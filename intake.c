@@ -11,21 +11,21 @@
 #define intakeInPressed  vexRT[Btn5U]
 #define intakeOutPressed vexRT[Btn5D]
 
-void setIntakePwr(int value) {
+void intakeSetPower(int value) {
 	setMotor(leftIntake, value);
 	setMotor(rightIntake, value);
 }
 
 void updateIntake() {
 	if (intakeInPressed) 
-		setIntakePwr(INTAKE_IN_PWR);
+		intakeSetPower(INTAKE_IN_PWR);
 	else if (intakeOutPressed) {
 		if (armPos > ARM_UP_POS - 300 )
-			setIntakePwr(INTAKE_OUT_SLOW_PWR);
+			intakeSetPower(INTAKE_OUT_SLOW_PWR);
 		else
-			setIntakePwr(INTAKE_OUT_FAST_PWR);
+			intakeSetPower(INTAKE_OUT_FAST_PWR);
   } else
-		setIntakePwr(0);
+		intakeSetPower(0);
 }
 
 #endif

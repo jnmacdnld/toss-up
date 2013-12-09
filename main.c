@@ -40,25 +40,13 @@ void pre_auton() {
 
   initJoystickLuts();
 
-  // GyroInit(gyro);
-   //Completely clear out any previous sensor readings by setting the port to "sensorNone"
- SensorType[gyro] = sensorNone;
- wait1Msec(1000);
- //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
- SensorType[gyro] = sensorGyro;
- wait1Msec(2000);
+  initGyro();
 }
 
 task autonomous() {
 	StartTask(updateMotors);
-	// GyroReinit();
-
-	// while ( !GyroGetValid() );
-
-	// wait10Msec(100);
 
   AutonBlueMiddleZone();
-
 }
 
 task usercontrol() {
