@@ -14,21 +14,39 @@
 
 #define FIELD_TILE_WIDTH_INCHES 23.42
 
-void AutonTest() {
+void AutonTestMove() {
   writeDebugStream("Should move forward 20 inches");
   driveMoveInches(20);
   waitForTouch();
 
   writeDebugStreamLine("Should move backward 20 inches");
   driveMoveInches(-20);
-  waitForTouch();
 
+  writeDebugStreamLine("Done.");
+}
+
+void AutonTestTurn() {
+  writeDebugStreamLine("At position %f", driveGetGyro() );
+  
   writeDebugStreamLine("Should turn to position 90 degrees left");
   driveTurnToDegrees(-90.0);
+  wait1Msec(500);
+  writeDebugStreamLine("Should be at position 90 degrees left");
+  writeDebugStreamLine("At position %f", driveGetGyro() );
   waitForTouch();
 
   writeDebugStreamLine("Should turn to position 90 degrees right");
   driveTurnToDegrees(90.0);
+  wait1Msec(500);
+  writeDebugStreamLine("Should be at position 90 degrees right");
+  writeDebugStreamLine("At position %f", driveGetGyro() );
+  waitForTouch();
+
+  writeDebugStreamLine("Should turn to position 0 ahead");
+  driveTurnToDegrees(0.0);
+  wait1Msec(500);
+  writeDebugStreamLine("Should be at position 0 ahead");
+  writeDebugStreamLine("At position %f", driveGetGyro() );
 
   writeDebugStreamLine("Done.");
 }

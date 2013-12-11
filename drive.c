@@ -27,6 +27,8 @@ bool driveMirrorTurning = false;
 pidController* driveMovePid;
 pidController* driveTurnToPid;
 
+int driveGyroVal;
+
 float driveGetGyro();
 
 void driveSetPowerUnadjusted(int power) {
@@ -49,8 +51,6 @@ void driveSetRight(int setting) {
 }
 
 void driveSetLeft(int setting) {
-  // setting = (int) ( (float) setting * 0.95);
-
   // setMotorAdjusted(frontLeftDrive, setting);
   setMotorAdjusted(frontLeftDrive, setting);
   setMotorAdjusted(backLeftDrive, setting);
@@ -91,7 +91,7 @@ void driveTurnToDegrees(float degrees) {
   int sgn_first_error = sgn( degrees - driveGetGyro() );
 
   while( sgn_first_error * driveGetGyro() < degrees * sgn_first_error ) {
-    writeDebugStreamLine("%f", driveGetGyro() );
+    driveGyroVal = driveGetGyro();
 
     driveSetLeft(FULL_POWER * .5 * sgn_first_error);
     driveSetRight(-FULL_POWER * .5 * sgn_first_error);

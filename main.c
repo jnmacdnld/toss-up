@@ -46,7 +46,8 @@ void pre_auton() {
 task autonomous() {
 	StartTask(updateMotors);
 
-  AutonBlueMiddleZone();
+	initGyro();
+  AutonTestTurn();
 }
 
 task usercontrol() {
