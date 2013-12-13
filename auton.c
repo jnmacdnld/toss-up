@@ -6,6 +6,8 @@
 #include "intake.c"
 #include "interface.c"
 
+#include "GyroLib.c"
+
 #define START_TO_BARRIER_TICKS 880
 #define START_TO_BARRIER_INCHES 28.21
 #define START_TO_BARRIER_INCHES_MINUS_3 START_TO_BARRIER_INCHES - 10
@@ -13,6 +15,9 @@
 #define FIRST_TO_SECOND_BIG_BALL_INCHES 32.25
 
 #define FIELD_TILE_WIDTH_INCHES 23.42
+
+#define TICKS_PER_PIVOT_90 431
+#define TICKS_PER_PIVOT_MINUS_90 -369
 
 void AutonTestMove() {
   writeDebugStream("Should move forward 20 inches");
@@ -26,29 +31,40 @@ void AutonTestMove() {
 }
 
 void AutonTestTurn() {
-  writeDebugStreamLine("At position %f", driveGetGyro() );
-  
+  writeDebugStreamLine("At position %f", GyroGetAngle() );
+
   writeDebugStreamLine("Should turn to position 90 degrees left");
   driveTurnToDegrees(-90.0);
   wait1Msec(500);
   writeDebugStreamLine("Should be at position 90 degrees left");
-  writeDebugStreamLine("At position %f", driveGetGyro() );
+  writeDebugStreamLine("At position %f", GyroGetAngle() );
   waitForTouch();
 
   writeDebugStreamLine("Should turn to position 90 degrees right");
   driveTurnToDegrees(90.0);
   wait1Msec(500);
   writeDebugStreamLine("Should be at position 90 degrees right");
-  writeDebugStreamLine("At position %f", driveGetGyro() );
+  writeDebugStreamLine("At position %f", GyroGetAngle() );
   waitForTouch();
 
   writeDebugStreamLine("Should turn to position 0 ahead");
   driveTurnToDegrees(0.0);
   wait1Msec(500);
   writeDebugStreamLine("Should be at position 0 ahead");
-  writeDebugStreamLine("At position %f", driveGetGyro() );
+  writeDebugStreamLine("At position %f", GyroGetAngle() );
 
   writeDebugStreamLine("Done.");
+}
+
+void AutonTestTickTurn() {
+  armMoveToPos(ARM_BARRIER_POS);
+  driveMoveTicks(671);
+  wait1Msec(500);
+  driveMoveTicks(-369);
+  wait1Msec(500);
+  driveTurnTicks(231);
+  wait1Msec(500);
+  driveMoveTicks(851);
 }
 
 void AutonBlueMiddleZone() {

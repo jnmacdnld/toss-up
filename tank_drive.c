@@ -6,7 +6,7 @@
 
 void updateDriveTankDrive() {
   driveSetLeft( joystickGetAxis(LEFT_Y) );
-  driveSetRight( joystickGetXAxis(RIGHT_Y) );
+  driveSetRight( joystickGetAxis(RIGHT_Y) );
 }
  
 #endif /* TANK_DRIVE */

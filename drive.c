@@ -14,8 +14,6 @@
 #define WHEEL_DIAMETER 4.0
 
 #define TICKS_PER_PIVOT_DEGREE (HIGH_SPEED_IME_TICKS_PER_REV * TURN_DIAMETER) / (WHEEL_DIAMETER * 360.0)
-#define TICKS_PER_PIVOT_90 431
-#define TICKS_PER_PIVOT_MINUS_90 -369
 
 void driveSetLeft(int setting);
 void driveSetRight(int setting);
@@ -58,7 +56,8 @@ void driveSetLeft(int setting) {
 }
 
 void initDrive() {
-  float drive_kp = 1.0 / (HIGH_SPEED_IME_TICKS_PER_INCH * 5.0);
+  //float drive_kp = 1.0 / (HIGH_SPEED_IME_TICKS_PER_INCH * 5.0);
+  float drive_kp = 1.0;
 
   driveMovePid = PidControllerInit(drive_kp, 0.0, 0.0, backLeftDriveEncoder);
 
@@ -72,10 +71,12 @@ void driveMoveTicks(int ticks) {
 
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
-    driveSetPower(cmd * 0.7);
+    driveSetPower(cmd * 0.5);
     wait1Msec(25);
   }
 
+  driveSetPower(sgn(ticks) * -FULL_POWER);
+  wait1Msec(30);
   driveSetPower(0);
 }
 
@@ -88,16 +89,14 @@ void driveTurnToDegrees(float degrees) {
   if (driveMirrorTurning)
     degrees *= -1;
 
-  int sgn_first_error = sgn( degrees - driveGetGyro() );
+  int sgn_first_error = sgn( degrees - GyroGetAngle() );
 
-  while( sgn_first_error * driveGetGyro() < degrees * sgn_first_error ) {
-    driveGyroVal = driveGetGyro();
+  while( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
+    driveGyroVal = GyroGetAngle();
 
     driveSetLeft(FULL_POWER * .5 * sgn_first_error);
     driveSetRight(-FULL_POWER * .5 * sgn_first_error);
   }
-
- driveSetPower(0);
 }
 
 float driveGetGyro() {
@@ -125,15 +124,8 @@ void initGyro() {
  wait1Msec(2000);
 }
 
-void driveTurnDegrees(float degrees) {
+void driveTurnTicks(int ticks) {
   driveReflectRight();
-
-  int ticks = degrees * TICKS_PER_PIVOT_DEGREE;
-
-  if (degrees == 90.0)
-    ticks = TICKS_PER_PIVOT_90;
-  if (degrees == -90.0)
-    ticks = TICKS_PER_PIVOT_MINUS_90;
 
   driveMoveTicks(ticks + 30);
 

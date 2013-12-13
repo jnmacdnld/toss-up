@@ -207,7 +207,7 @@ GyroReinit()
 float
 GyroGetAngle()
 {
-    return( theGyro.angle );
+    return( -theGyro.angle );
 }
 
 /*-----------------------------------------------------------------------------*/

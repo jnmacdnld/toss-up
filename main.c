@@ -40,18 +40,22 @@ void pre_auton() {
 
   initJoystickLuts();
 
-  initGyro();
+  // initGyro();
+  GyroInit(gyro);
 }
 
 task autonomous() {
 	StartTask(updateMotors);
+  GyroInit(gyro);
 
-	initGyro();
-  AutonTestTurn();
+  while (theGyro.valid = false);
+
+	// initGyro();
+  AutonTestTickTurn();
 }
 
 task usercontrol() {
-	// GyroReinit();
+	GyroReinit();
   StartTask(userControl);
   StartTask(updateMotors);
 

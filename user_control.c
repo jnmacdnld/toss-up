@@ -6,6 +6,7 @@
 #include "arm.c"
 #include "arcade_drive.c"
 #include "GyroLib.c"
+#include "tank_drive.c"
 
 int armPotVal;
 int _backLeftDriveEncoder;
@@ -24,7 +25,7 @@ task userControl() {
     armPotVal = SensorValue[armPot];
     _backLeftDriveEncoder = nMotorEncoder[backLeftDrive];
     _backRightDriveEncoder = nMotorEncoder[backRightDrive];
-    gyroValue = driveGetGyro();
+    gyroValue = GyroGetAngle();
 
     wait1Msec(25);
   }
