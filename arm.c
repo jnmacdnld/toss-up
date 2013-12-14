@@ -22,10 +22,10 @@ int armPresets[4] = {ARM_ALL_DOWN_POS, ARM_BIG_BALL_POS, ARM_BARRIER_POS, ARM_UP
 #define armUpPresetPressed vexRT[Btn8U]
 #define armDownPresetPressed vexRT[Btn8D]
 
-float arm_kp = ( (127.0 - ARM_HOLD_PWR) / 45.0) * (250.0 / 4095.0);
+float armKp = ( (127.0 - ARM_HOLD_PWR) / 45.0) * (250.0 / 4095.0);
 
-float getArmKp(float begin_slowing_at_deg) {
-	return ( (127.0 - ARM_HOLD_PWR) / begin_slowing_at_deg) * (250.0 / 4095.0);
+void armSetKp(float begin_slowing_at_deg) {
+	armKp = ( (127.0 - ARM_HOLD_PWR) / begin_slowing_at_deg) * (250.0 / 4095.0);
 }
 
 int armControlTarget = -1;
@@ -78,9 +78,9 @@ bool armIsUp() {
 
 void armControlSetTarget(int target) {
 	if (target == ARM_BARRIER_POS)
-		arm_kp = getArmKp(35.0);
+		armSetKp(35.0);
 	else
-		arm_kp = getArmKp(45.0);
+		armSetKp(45.0);
 
 	if (armPos < target)
 		armControlPwr = ARM_UP_PWR;
@@ -94,7 +94,7 @@ void armControlSetTarget(int target) {
 void armControlStep() {
 	if (armControlPwr > 0 && armPos < armControlTarget ||
 			armControlPwr < 0 && armPos > armControlTarget) {
-		int power = (armControlTarget - armPos) * arm_kp;
+		int power = (armControlTarget - armPos) * armKp;
 
 		if (abs(power) > armControlPwr)
 			power = sgn(power) * abs(armControlPwr);
