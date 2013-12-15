@@ -19,6 +19,7 @@ void driveSetLeft(int setting);
 void driveSetRight(int setting);
 
 void driveSetPower(int power);
+void driveMoveTicks(int ticks);
 
 bool driveMirrorTurning = false;
 
@@ -126,11 +127,8 @@ void initGyro() {
 
 void driveTurnTicks(int ticks) {
   driveReflectRight();
-
   driveMoveTicks(ticks + 30);
-
   driveUnreflectRight();
 }
-
 
 #endif

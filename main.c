@@ -42,16 +42,14 @@ void pre_auton() {
 
   // initGyro();
   GyroInit(gyro);
+
+  AutonInit();
 }
 
 task autonomous() {
 	StartTask(updateMotors);
-  GyroInit(gyro);
-
-  while (theGyro.valid = false);
-
-	// initGyro();
-  AutonTestTickTurn();
+  
+  AutonMiddleZone(Red);
 }
 
 task usercontrol() {
