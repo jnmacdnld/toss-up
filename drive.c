@@ -7,19 +7,14 @@
 
 // #include "user_control.c"
 
-#define HIGH_SPEED_IME_TICKS_PER_INCH 31.19
-#define HIGH_SPEED_IME_TICKS_PER_REV 392.0
+#define kHighSpeedImeTicksPerInch 31.19
+#define kHighSpeedImeTicksPerRev 392.0
 
-#define TURN_DIAMETER 15.25
-#define WHEEL_DIAMETER 4.0
+void DriveSetLeft(int setting);
+void DriveSetRight(int setting);
 
-#define TICKS_PER_PIVOT_DEGREE (HIGH_SPEED_IME_TICKS_PER_REV * TURN_DIAMETER) / (WHEEL_DIAMETER * 360.0)
-
-void driveSetLeft(int setting);
-void driveSetRight(int setting);
-
-void driveSetPower(int power);
-void driveMoveTicks(int ticks);
+void DriveSetPower(int power);
+void DriveMoveTicks(int ticks);
 
 bool driveMirrorTurning = false;
 
@@ -28,36 +23,34 @@ pidController* driveTurnToPid;
 
 int driveGyroVal;
 
-float driveGetGyro();
+float DriveGetGyro();
 
-void driveSetPowerUnadjusted(int power) {
-  setMotor(frontLeftDrive, power);
-  setMotor(backLeftDrive, power);
-  setMotor(frontRightDrive, power);
-  setMotor(backRightDrive, power);
+void DriveSetPowerUnadjusted(int power) {
+  SetMotor(frontLeftDrive, power);
+  SetMotor(backLeftDrive, power);
+  SetMotor(frontRightDrive, power);
+  SetMotor(backRightDrive, power);
 }
 
-void driveSetPower(int power) {
-  driveSetLeft(power);
-  driveSetRight(power);
+void DriveSetPower(int power) {
+  DriveSetLeft(power);
+  DriveSetRight(power);
 }
 
-void driveSetRight(int setting) {
-  // setMotorAdjusted(frontRightDrive, setting);
-  setMotorAdjusted(frontRightDrive, setting);
-  setMotorAdjusted(backRightDrive, setting);
-  setMotorAdjusted(middleRightDrive, setting);
+void DriveSetRight(int setting) {
+  SetMotorAdjusted(frontRightDrive, setting);
+  SetMotorAdjusted(backRightDrive, setting);
+  SetMotorAdjusted(middleRightDrive, setting);
 }
 
-void driveSetLeft(int setting) {
-  // setMotorAdjusted(frontLeftDrive, setting);
-  setMotorAdjusted(frontLeftDrive, setting);
-  setMotorAdjusted(backLeftDrive, setting);
-  setMotorAdjusted(middleLeftDrive, setting);
+void DriveSetLeft(int setting) {
+  SetMotorAdjusted(frontLeftDrive, setting);
+  SetMotorAdjusted(backLeftDrive, setting);
+  SetMotorAdjusted(middleLeftDrive, setting);
 }
 
-void initDrive() {
-  //float drive_kp = 1.0 / (HIGH_SPEED_IME_TICKS_PER_INCH * 5.0);
+void InitDrive() {
+  //float drive_kp = 1.0 / (kHighSpeedImeTicksPerInch * 5.0);
   float drive_kp = 1.0;
 
   driveMovePid = PidControllerInit(drive_kp, 0.0, 0.0, backLeftDriveEncoder);
@@ -66,57 +59,57 @@ void initDrive() {
   driveTurnToPid->error_threshold = 50;
 }
 
-void driveMoveTicks(int ticks) {
+void DriveMoveTicks(int ticks) {
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
   driveMovePid->target_value = target;
 
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
-    driveSetPower(cmd * 0.5);
+    DriveSetPower(cmd * 0.5);
     wait1Msec(25);
   }
 
-  driveSetPower(sgn(ticks) * -FULL_POWER);
+  DriveSetPower(sgn(ticks) * -kFullPower);
   wait1Msec(30);
-  driveSetPower(0);
+  DriveSetPower(0);
 }
 
-void driveMoveInches(float inches) {
-  int ticks = (int) (inches * HIGH_SPEED_IME_TICKS_PER_INCH);
-  driveMoveTicks(ticks);
+void DriveMoveInches(float inches) {
+  int ticks = (int) (inches * kHighSpeedImeTicksPerInch);
+  DriveMoveTicks(ticks);
 }
 
-void driveTurnToDegrees(float degrees) {
+void DriveTurnToDegrees(float degrees) {
   if (driveMirrorTurning)
     degrees *= -1;
 
   int sgn_first_error = sgn( degrees - GyroGetAngle() );
 
-  while( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
+  While( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
     driveGyroVal = GyroGetAngle();
 
-    driveSetLeft(FULL_POWER * .5 * sgn_first_error);
-    driveSetRight(-FULL_POWER * .5 * sgn_first_error);
+    DriveSetLeft(kFullPower * .5 * sgn_first_error);
+    DriveSetRight(-kFullPower * .5 * sgn_first_error);
   }
 }
 
-float driveGetGyro() {
+float DriveGetGyro() {
   return ( (float) -SensorValue[gyro] ) / 10.0;
 }
 
-void driveReflectRight() {
+void DriveReflectRight() {
   bMotorReflected[backRightDrive] = false;
   bMotorReflected[middleRightDrive] = false;
   bMotorReflected[frontRightDrive] = false;
 }
 
-void driveUnreflectRight() {
+void DriveUnreflectRight() {
   bMotorReflected[backRightDrive] = true;
   bMotorReflected[middleRightDrive] = true;
   bMotorReflected[frontRightDrive] = true;
 }
 
-void initGyro() {
+void InitGyro() {
   //Completely clear out any previous sensor readings by setting the port to "sensorNone"
  SensorType[gyro] = sensorNone;
  wait1Msec(1000);
@@ -125,10 +118,10 @@ void initGyro() {
  wait1Msec(2000);
 }
 
-void driveTurnTicks(int ticks) {
-  driveReflectRight();
-  driveMoveTicks(ticks + 30);
-  driveUnreflectRight();
+void DriveTurnTicks(int ticks) {
+  DriveReflectRight();
+  DriveMoveTicks(ticks + 30);
+  DriveUnreflectRight();
 }
 
 #endif

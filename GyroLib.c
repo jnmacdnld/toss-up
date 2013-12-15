@@ -57,7 +57,7 @@ typedef struct {
     tSensors port;      ///< The analog port
     bool     valid;     ///< flag showing data is valid
     float    angle;     ///< raw gyro angle
-    float    abs_angle; ///< Absolute gyro angle
+    float    abs_angle; ///< absolute gyro angle
     } gyroData;
 
 static  gyroData    theGyro = {in1, false, 0.0, 0.0};
@@ -216,7 +216,7 @@ GyroGetAngle()
 /*-----------------------------------------------------------------------------*/
 
 float
-GyroGetAbsAngle()
+GyroGetabsAngle()
 {
     return( theGyro.abs_angle );
 }

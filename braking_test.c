@@ -21,7 +21,7 @@
 #include "drive.c"
 #include "motor.c"
 
-#define HALF_POWER_ADJ 44
+#define kHalfPowerAdj 44
 
 void _driveSetPower(int power) {
   motor[frontLeftDrive] = power;
@@ -34,11 +34,11 @@ void _driveSetPower(int power) {
 }
 
 task main() {
-  _driveSetPower(HALF_POWER_ADJ);
+  _driveSetPower(kHalfPowerAdj);
 
   for (int i = 0; i < 100; i++) {
     writeDebugStreamLine("%d", nMotorEncoder[backLeftDrive]);
-    _driveSetPower(-FULL_POWER);
+    _driveSetPower(-kFullPower);
     wait1Msec(10);
   }
 }

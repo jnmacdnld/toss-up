@@ -4,28 +4,28 @@
 #include "motor.c"
 #include "arm.c"
 
-#define INTAKE_OUT_SLOW_PWR -40
-#define INTAKE_OUT_FAST_PWR -127
-#define INTAKE_IN_PWR   127
+#define kIntakeOutSlowPower -40
+#define kIntakeOutFastPower -127
+#define kIntakeInPower   127
 
 #define intakeInPressed  vexRT[Btn5U]
 #define intakeOutPressed vexRT[Btn5D]
 
-void intakeSetPower(int value) {
-	setMotor(leftIntake, value);
-	setMotor(rightIntake, value);
+void IntakeSetPower(int value) {
+	SetMotor(leftIntake, value);
+	SetMotor(rightIntake, value);
 }
 
-void updateIntake() {
+void UpdateIntake() {
 	if (intakeInPressed) 
-		intakeSetPower(INTAKE_IN_PWR);
+		IntakeSetPower(kIntakeInPower);
 	else if (intakeOutPressed) {
-		if (armPos > ARM_UP_POS - 300 )
-			intakeSetPower(INTAKE_OUT_SLOW_PWR);
+		if (armPos > kArmUpPos - 300 )
+			IntakeSetPower(kIntakeOutSlowPower);
 		else
-			intakeSetPower(INTAKE_OUT_FAST_PWR);
+			IntakeSetPower(kIntakeOutFastPower);
   } else
-		intakeSetPower(0);
+		IntakeSetPower(0);
 }
 
 #endif

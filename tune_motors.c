@@ -21,12 +21,12 @@
 #include "motor.c"
 #include "drive.c"
 
-task main() {
-  float left_drive_top_speed = getLeftDriveSpeedAtSetting(FULL_POWER);
+task Main() {
+  float left_drive_top_speed = GetLeftDriveSpeedAtSetting(kFullPower);
 
  	while (!SensorValue[touch]) wait1Msec(25);
 
-  float right_drive_top_speed = getRightDriveSpeedAtSetting(FULL_POWER);
+  float right_drive_top_speed = GetRightDriveSpeedAtSetting(kFullPower);
 
   while (!SensorValue[touch]) wait1Msec(25);
 
@@ -40,9 +40,9 @@ task main() {
 
   writeDebugStreamLine("slower drive top speed: %d", max_motor_speed);
 
-  tuneDrive(backLeftDrive, middleLeftDrive, frontLeftDrive);
+  TuneDrive(backLeftDrive, middleLeftDrive, frontLeftDrive);
 
   while (!SensorValue[touch]) wait1Msec(25);
 
-  tuneDrive(backRightDrive, middleRightDrive, frontRightDrive);
+  TuneDrive(backRightDrive, middleRightDrive, frontRightDrive);
 }

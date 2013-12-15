@@ -3,17 +3,17 @@
 
 #include "motor.c"
 
-#define ARM_UP_POS   3200
-#define ARM_DOWN_POS 1500
-#define ARM_ALL_DOWN_POS 1310 // Define me to an actual value
-#define ARM_BARRIER_POS 2240
-#define ARM_BIG_BALL_POS 1775 // Define me to an actual value
+#define kArmUpPos   3200
+#define kArmDownPos 1500
+#define kArmAllDownPos 1310 // Define me to an actual value
+#define kArmBarrierPos 2240
+#define kArmBigBallPos 1775 // Define me to an actual value
 
-int armPresets[4] = {ARM_ALL_DOWN_POS, ARM_BIG_BALL_POS, ARM_BARRIER_POS, ARM_UP_POS};
+int armPresets[4] = {kArmAllDownPos, kArmBigBallPos, kArmBarrierPos, kArmUpPos};
 
-#define ARM_UP_PWR    FULL_POWER
-#define ARM_DOWN_PWR  -FULL_POWER / 2
-#define ARM_HOLD_PWR  25 // Meant for two rubber bands (double looped) on both sides of the arm
+#define kArmUpPower    kFullPower
+#define kArmDownPower  -kFullPower / 2
+#define kArmHoldPower  25 // Meant for two rubber bands (double looped) on both sides of the arm
 
 #define armPos         SensorValue[armPot]
 
@@ -22,109 +22,109 @@ int armPresets[4] = {ARM_ALL_DOWN_POS, ARM_BIG_BALL_POS, ARM_BARRIER_POS, ARM_UP
 #define armUpPresetPressed vexRT[Btn8U]
 #define armDownPresetPressed vexRT[Btn8D]
 
-float armKp = ( (127.0 - ARM_HOLD_PWR) / 45.0) * (250.0 / 4095.0);
+float armKp = ( (127.0 - kArmHoldPower) / 45.0) * (250.0 / 4095.0);
 
-void armSetKp(float begin_slowing_at_deg) {
-	armKp = ( (127.0 - ARM_HOLD_PWR) / begin_slowing_at_deg) * (250.0 / 4095.0);
+void ArmSetKp(float begin_slowing_at_deg) {
+	armKp = ( (127.0 - kArmHoldPower) / begin_slowing_at_deg) * (250.0 / 4095.0);
 }
 
 int armControlTarget = -1;
-int armControlPwr = 0;
+int armControlPower = 0;
 bool armControlActive = false;
 
-void armSetPower(int value);
+void ArmSetPower(int value);
 
-bool armIsDown();
-bool armIsUp();
+bool ArmIsDown();
+bool ArmIsUp();
 
-void armControlSetTarget(int target);
-void armControlStep();
-void armControlReset();
+void ArmControlSetTarget(int target);
+void ArmControlStep();
+void ArmControlReset();
 
-void armHoldPos();
-void armUpdate();
+void ArmHoldPos();
+void ArmUpdate();
 
-void armUpdate() {
+void ArmUpdate() {
 	if (armUpPresetPressed)
-		armControlSetTarget(ARM_UP_POS);
+		ArmControlSetTarget(kArmUpPos);
 	else if (armDownPresetPressed)
-		armControlSetTarget(ARM_ALL_DOWN_POS);
+		ArmControlSetTarget(kArmAllDownPos);
 
-	if ( armUpPressed && !armIsUp() ) {
-		armSetPower(ARM_UP_PWR);
+	if ( armUpPressed && !ArmIsUp() ) {
+		ArmSetPower(kArmUpPower);
 		armControlActive = false;
-	} else if ( armDownPressed && !armIsDown() ) {
-		armSetPower(ARM_DOWN_PWR);
+	} else if ( armDownPressed && !ArmIsDown() ) {
+		ArmSetPower(kArmDownPower);
 		armControlActive = false;
 	} else if (armControlActive) {
-		armControlStep();
+		ArmControlStep();
 	} else {
-		armHoldPos();
+		ArmHoldPos();
 	}
 }
 
-void armSetPower(int value) {
-	setMotor(leftArm, value);
-	setMotor(rightArm, value);
+void ArmSetPower(int value) {
+	SetMotor(leftArm, value);
+	SetMotor(rightArm, value);
 }
 
-bool armIsDown() {
-	return (armPos <= ARM_DOWN_POS);
+bool ArmIsDown() {
+	return (armPos <= kArmDownPos);
 }
 
-bool armIsUp() {
-	return (armPos >= ARM_UP_POS);
+bool ArmIsUp() {
+	return (armPos >= kArmUpPos);
 }
 
-void armControlSetTarget(int target) {
-	if (target == ARM_BARRIER_POS)
-		armSetKp(35.0);
+void ArmControlSetTarget(int target) {
+	if (target == kArmBarrierPos)
+		ArmSetKp(35.0);
 	else
-		armSetKp(45.0);
+		ArmSetKp(45.0);
 
 	if (armPos < target)
-		armControlPwr = ARM_UP_PWR;
+		armControlPower = kArmUpPower;
 	else
-		armControlPwr = ARM_DOWN_PWR;
+		armControlPower = kArmDownPower;
 
 	armControlTarget = target;
 	armControlActive = true;
 }
 
-void armControlStep() {
-	if (armControlPwr > 0 && armPos < armControlTarget ||
-			armControlPwr < 0 && armPos > armControlTarget) {
+void ArmControlStep() {
+	if (armControlPower > 0 && armPos < armControlTarget ||
+			armControlPower < 0 && armPos > armControlTarget) {
 		int power = (armControlTarget - armPos) * armKp;
 
-		if (abs(power) > armControlPwr)
-			power = sgn(power) * abs(armControlPwr);
+		if (abs(power) > armControlPower)
+			power = sgn(power) * abs(armControlPower);
 
-		armSetPower(power + ARM_HOLD_PWR);
+		ArmSetPower(power + kArmHoldPower);
 	}	else {
 		writeDebugStreamLine("armControlTarget = %d, armPos = %d, deactivating arm control", armControlTarget, armPos);
 		armControlActive = false;
 	}
 }
 
-void armHoldPos() {
-	if ( armIsDown() ) // Don't try to hold up the arm if it's all the way down
-			armSetPower(0);
+void ArmHoldPos() {
+	if ( ArmIsDown() ) // Don't try to hold up the arm if it's all the way down
+			ArmSetPower(0);
 	else
-		armSetPower(ARM_HOLD_PWR); // Hold up the arm so it doesn't fall
+		ArmSetPower(kArmHoldPower); // Hold up the arm so it doesn't fall
 }
 
-void armMoveToPos(int pos) {
-	armControlSetTarget(pos);
+void ArmMoveToPos(int pos) {
+	ArmControlSetTarget(pos);
 
-  while(armControlActive)
-  	armControlStep();
+  while (armControlActive)
+  	ArmControlStep();
 
-  armHoldPos();
+  ArmHoldPos();
 }
 
-void armControlReset() {
+void ArmControlReset() {
   armControlTarget = -1;
-  armControlPwr = 0;
+  armControlPower = 0;
   armControlActive = false;
 }
 

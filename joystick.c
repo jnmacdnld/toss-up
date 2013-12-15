@@ -1,49 +1,49 @@
 #ifndef JOYSTICK
 #define JOYSTICK
 
-#define RADIANS_TO_DEG 57.295779
+#define kRadiansToDeg 57.295779
 
 #include "motor.c"
 
 typedef enum {
-  LEFT_X = 0,
-  RIGHT_X = 1,
-  LEFT_Y = 2,
-  RIGHT_Y = 3
+  kLeftStickXAxis = 0,
+  kRightStickXAxis = 1,
+  kLeftStickYAxis = 2,
+  kRightStickYAxis = 3
 } Joystick;
 
-int joystickLuts[4][128];
+// int joystickLuts[4][128];
 
-int getAdjustedJoystickValue(int value) {
+int GetAdjustedJoystickValue(int value) {
   if ( abs(value) <= 117 )
     return (int) (value * (80.0 / 117) ) * sgn(value);
   else
-    return FULL_POWER * sgn(value);
+    return kFullPower * sgn(value);
 }
 
-void initJoystickLuts() {
-  for (int i = 0; i < 128; i++){
-    joystickLuts[RIGHT_X][i] = getAdjustedJoystickValue(i);
-    joystickLuts[LEFT_X][i] = i;
-    joystickLuts[RIGHT_Y][i] = i;
-    joystickLuts[LEFT_Y][i] = i;
-  }
+void InitJoystickLuts() {
+  /*for (int i = 0; i < 128; i++){
+    joystickLuts[kRightStickXAxis][i] = GetAdjustedJoystickValue(i);
+    joystickLuts[kLeftStickXAxis][i] = i;
+    joystickLuts[kRightStickYAxis][i] = i;
+    joystickLuts[kLeftStickYAxis][i] = i;
+  }*/
 }
 
-int joystickGetAxis(Joystick j) {
+int JoystickGet(Joystick j) {
   int value;
 
   switch (j) {
-    case LEFT_X:
+    case kLeftStickXAxis:
       value = vexRT[Ch4];
       break;
-    case RIGHT_X:
+    case kRightStickXAxis:
       value = vexRT[Ch1];
       break;
-    case LEFT_Y:
+    case kLeftStickYAxis:
       value = vexRT[Ch3];
       break;
-    case RIGHT_Y:
+    case kRightStickYAxis:
       value = vexRT[Ch2];
       break;
   }
@@ -59,10 +59,10 @@ int joystickGetAxis(Joystick j) {
 }
 
 /*// Get the joystick angle (in standard position) in tenths of degrees
-int joystickGetAngle(Joystick j) {
-  float x = joystickGetXAxis(j);
-  float y = joystickGetYAxis(j);
-  float angle = atan(x / y);
+int JoystickGetAngle(Joystick j) {
+  float x = JoystickGetXAxis(j);
+  float y = JoystickGetYAxis(j);
+  float angle = Atan(x / y);
 
   // Adjust if the angle if it is not in Q1 so the correct value is returned
   if (x < 0 && y > 0 || x < 0 && y < 0) // If in Q2 or Q2
@@ -75,11 +75,11 @@ int joystickGetAngle(Joystick j) {
 }
 
 // Get joystick magnitude (returns values from 0 to 127)
-int joystickGetMagnitude(Joystick j) {
-  int x = joystickGetXAxis(j);
-  int y = joystickGetYAxis(j);
+int JoystickGetMagnitude(Joystick j) {
+  int x = JoystickGetXAxis(j);
+  int y = JoystickGetYAxis(j);
 
-  return (int) sqrt( (x * x) + (y * y) );
+  return (int) Sqrt( (x * x) + (y * y) );
 }
 */
 #endif

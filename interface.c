@@ -1,7 +1,7 @@
 #ifndef INTERFACE
 #define INTERFACE
  
-void waitForTouch() {
+void WaitForTouch() {
   writeDebugStreamLine("Press touch to continue.");
   while (!SensorValue[touch]) wait1Msec(25);
 }

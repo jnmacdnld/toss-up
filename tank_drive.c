@@ -4,9 +4,9 @@
 #include "joystick.c"
 #include "drive.c"
 
-void updateDriveTankDrive() {
-  driveSetLeft( joystickGetAxis(LEFT_Y) );
-  driveSetRight( joystickGetAxis(RIGHT_Y) );
+void TankDriveUpdate() {
+  DriveSetLeft( JoystickGet(kLeftStickYAxis) );
+  DriveSetRight( JoystickGet(kRightStickYAxis) );
 }
  
 #endif /* TANK_DRIVE */

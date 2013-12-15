@@ -13,13 +13,13 @@ int _backLeftDriveEncoder;
 int _backRightDriveEncoder;
 int gyroValue;
 
-task userControl() {
-  armControlReset();
+task UserControl() {
+  ArmControlReset();
 
   while (true) {
-    updateIntake();
-    updateDriveArcadeDrive();
-    armUpdate();
+    UpdateIntake();
+    UpdateDriveArcadeDrive();
+    ArmUpdate();
 
     // For debugging
     armPotVal = SensorValue[armPot];
