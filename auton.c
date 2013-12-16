@@ -15,6 +15,13 @@ typedef enum { kInsideBigBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
+typedef struct {
+  Zone zone;
+  TeamColor color;
+} Auton;
+
+Auton auton = { kMiddleZone, kRed };
+
 int autonTurnsTicks[kNumAutonTurns][2];
 
 void AutonInit() {
@@ -58,6 +65,20 @@ void AutonMiddleZone(TeamColor color) {
 
 void AutonHangingZone(TeamColor color) {
 
+}
+
+void AutonToggleZone() {
+  if (auton.zone == kHangingZone)
+    auton.zone = kMiddleZone;
+  else
+    auton.zone = kHangingZone;
+}
+
+void AutonToggleColor() {
+  if (auton.color == kRed)
+    auton.color = kBlue;
+  else
+    auton.color = kRed;
 }
 
 /*#define kStartToBarrierTicks 880
