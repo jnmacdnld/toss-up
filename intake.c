@@ -16,7 +16,7 @@ void IntakeSetPower(int value) {
 	SetMotor(rightIntake, value);
 }
 
-void UpdateIntake() {
+void IntakeUpdate() {
 	if (intakeInPressed) 
 		IntakeSetPower(kIntakeInPower);
 	else if (intakeOutPressed) {

@@ -23,7 +23,7 @@ void AutonInit() {
 }
 
 int AutonGetTurnTicks(AutonTurn turn, TeamColor color) {
-  return AutonTurnsTicks[turn][color];
+  return autonTurnsTicks[turn][color];
 }
 
 void AutonTurn(AutonTurn turn, TeamColor color) {

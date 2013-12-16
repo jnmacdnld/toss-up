@@ -17,8 +17,8 @@ task UserControl() {
   ArmControlReset();
 
   while (true) {
-    UpdateIntake();
-    UpdateDriveArcadeDrive();
+    IntakeUpdate();
+    ArcadeDriveUpdate();
     ArmUpdate();
 
     // For debugging

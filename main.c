@@ -47,15 +47,15 @@ void pre_auton() {
 }
 
 task autonomous() {
-	StartTask(updateMotors);
+	StartTask(UpdateMotors);
   
   AutonMiddleZone(Red);
 }
 
 task usercontrol() {
 	GyroReinit();
-  StartTask(userControl);
-  StartTask(updateMotors);
+  StartTask(UserControl);
+  StartTask(UpdateMotors);
 
   While(true)
     wait1Msec(1000);
