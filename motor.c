@@ -4,7 +4,6 @@
 #include "motor_luts.c"
 
 #define kFullPower 127
-#define kFullPower kFullPower
 #define kHalfPower kFullPower / 2
 
 #define kDefaultAccelLimit 256
@@ -17,11 +16,11 @@ typedef struct {
 
 Motor motors[10];
 
-void SetMotor(tMotor port, int power) {
+void MotorSet(tMotor port, int power) {
 	motors[port].request = power;
 }
 
-void InitMotors() {
+void MotorInitMotors() {
   for (int i = 0; i < 10; i++) {
     Motor* m = &motors[i];
 
@@ -49,11 +48,11 @@ task UpdateMotors() {
   }
 }
 
-void SetMotorAdjusted(tMotor _motor, int power) {
+void MotorSetAdjusted(tMotor _motor, int power) {
 	if (abs(power) > kFullPower)
     power = kFullPower * sgn(power);
 
-  SetMotor(_motor, sgn(power) * motorLuts[_motor][sgn(power) * power]);
+  MotorSet(_motor, sgn(power) * motorLuts[_motor][sgn(power) * power]);
 }
 
 #endif /* MOTOR_H */

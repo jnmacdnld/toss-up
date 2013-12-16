@@ -11,7 +11,7 @@
 
 #define kNumAutonTurns 1
 
-typedef enum { kInsideBigBall } AutonTurn;
+typedef enum { kInsideBigBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
@@ -22,11 +22,11 @@ void AutonInit() {
   autonTurnsTicks[kInsideBigBall][kBlue] = -184;
 }
 
-int AutonGetTurnTicks(AutonTurn turn, TeamColor color) {
+int AutonGetTurnTicks(Turn turn, TeamColor color) {
   return autonTurnsTicks[turn][color];
 }
 
-void AutonTurn(AutonTurn turn, TeamColor color) {
+void AutonTurn(Turn turn, TeamColor color) {
   DriveTurnTicks( AutonGetTurnTicks(turn, color) );
 }
 

@@ -38,7 +38,7 @@ int leftDriveSettingLut[128] =
 };
 
 
-void initMotorLuts() {
+void MotorLutsInit() {
   motorLuts[frontLeftDrive] = &leftDriveSettingLut;
   motorLuts[middleLeftDrive] = &leftDriveSettingLut;
   motorLuts[backLeftDrive] = &leftDriveSettingLut;

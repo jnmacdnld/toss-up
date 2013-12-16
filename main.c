@@ -26,30 +26,27 @@
 #include "Vex_Competition_Includes.c"
 
 #include "user_control.c"
+#include "motor.c"
 #include "motor_luts.c"
 #include "auton.c"
 
-// #include "GyroLib.c"
+#include "GyroLib.c"
 
 void pre_auton() {
   bStopTasksBetweenModes = true;
 
-  InitMotorLuts();
-  InitMotors();
-  InitDrive();
-
-  InitJoystickLuts();
-
-  // InitGyro();
-  GyroInit(gyro);
-
+  MotorLutsInit();
+  MotorInitMotors();
+  DriveInit();
   AutonInit();
+
+  GyroInit(gyro);
 }
 
 task autonomous() {
 	StartTask(UpdateMotors);
   
-  AutonMiddleZone(Red);
+  AutonMiddleZone(kRed);
 }
 
 task usercontrol() {
@@ -57,6 +54,6 @@ task usercontrol() {
   StartTask(UserControl);
   StartTask(UpdateMotors);
 
-  While(true)
+  while (true)
     wait1Msec(1000);
 }

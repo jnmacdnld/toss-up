@@ -224,7 +224,7 @@ void TuneDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
 
 void WaitForTouch() {
 	writeDebugStreamLine("Press touch sensor to continue.");
-	While(!SensorValue[touch]) wait1Msec(25);
+	while (!SensorValue[touch]) wait1Msec(25);
 	wait1Msec(250);
 }
 

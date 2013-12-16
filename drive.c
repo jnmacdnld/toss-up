@@ -26,10 +26,10 @@ int driveGyroVal;
 float DriveGetGyro();
 
 void DriveSetPowerUnadjusted(int power) {
-  SetMotor(frontLeftDrive, power);
-  SetMotor(backLeftDrive, power);
-  SetMotor(frontRightDrive, power);
-  SetMotor(backRightDrive, power);
+  MotorSet(frontLeftDrive, power);
+  MotorSet(backLeftDrive, power);
+  MotorSet(frontRightDrive, power);
+  MotorSet(backRightDrive, power);
 }
 
 void DriveSetPower(int power) {
@@ -38,18 +38,18 @@ void DriveSetPower(int power) {
 }
 
 void DriveSetRight(int setting) {
-  SetMotorAdjusted(frontRightDrive, setting);
-  SetMotorAdjusted(backRightDrive, setting);
-  SetMotorAdjusted(middleRightDrive, setting);
+  MotorSetAdjusted(frontRightDrive, setting);
+  MotorSetAdjusted(backRightDrive, setting);
+  MotorSetAdjusted(middleRightDrive, setting);
 }
 
 void DriveSetLeft(int setting) {
-  SetMotorAdjusted(frontLeftDrive, setting);
-  SetMotorAdjusted(backLeftDrive, setting);
-  SetMotorAdjusted(middleLeftDrive, setting);
+  MotorSetAdjusted(frontLeftDrive, setting);
+  MotorSetAdjusted(backLeftDrive, setting);
+  MotorSetAdjusted(middleLeftDrive, setting);
 }
 
-void InitDrive() {
+void DriveInit() {
   //float drive_kp = 1.0 / (kHighSpeedImeTicksPerInch * 5.0);
   float drive_kp = 1.0;
 
@@ -85,7 +85,7 @@ void DriveTurnToDegrees(float degrees) {
 
   int sgn_first_error = sgn( degrees - GyroGetAngle() );
 
-  While( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
+  while ( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
     driveGyroVal = GyroGetAngle();
 
     DriveSetLeft(kFullPower * .5 * sgn_first_error);
