@@ -21,6 +21,7 @@ void MotorSet(tMotor port, int power) {
 }
 
 void MotorInitMotors() {
+  // Initialize the motor data structure
   for (int i = 0; i < 10; i++) {
     Motor* m = &motors[i];
 
@@ -32,6 +33,7 @@ void MotorInitMotors() {
 
 task UpdateMotors() {
   while (true) {
+    // Update each motor
     for (int i = 0; i < 10; i++) {
       Motor* m = &motors[i];
 
@@ -41,6 +43,7 @@ task UpdateMotors() {
       else
         m->setting = m->request;
 
+      // Finally, set the motor
       motor[i] = m->setting;
     }
 

@@ -4,6 +4,8 @@
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl7,  touch,          sensorTouch)
+#pragma config(Sensor, dgtl8,  ColorJumper,    sensorDigitalIn)
+#pragma config(Sensor, dgtl9,  ZoneJumper,     sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port1,           middleLeftDrive, tmotorVex393HighSpeed, openLoop)
@@ -30,6 +32,7 @@
 #include "motor_luts.c"
 #include "auton.c"
 #include "lcd.c"
+#include "jumpers.c"
 
 #include "GyroLib.c"
 
@@ -42,18 +45,20 @@ void pre_auton() {
   AutonInit();
   GyroInit(gyro);
 
+  JumpersSetAuton();
+
   StartTask(Lcd);
 }
 
 task autonomous() {
 	StartTask(UpdateMotors);
-  
+
   AutonRun();
 }
 
 task usercontrol() {
 	GyroReinit();
-  
+
   StartTask(UserControl);
   StartTask(UpdateMotors);
 

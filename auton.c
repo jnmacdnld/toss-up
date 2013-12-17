@@ -73,20 +73,12 @@ void AutonHangingZone(TeamColor color)
 
 }
 
-void AutonToggleZone()
-{
-  if (auton.zone == kHangingZone)
-    auton.zone = kMiddleZone;
-  else
-    auton.zone = kHangingZone;
+void AutonSetZone(Zone zone) {
+  auton.zone = zone;
 }
 
-void AutonToggleColor()
-{
-  if (auton.color == kRed)
-    auton.color = kBlue;
-  else
-    auton.color = kRed;
+void AutonSetColor(TeamColor color) {
+  auton.color = color;
 }
 
 TeamColor AutonGetColor()
@@ -99,16 +91,34 @@ Zone AutonGetZone()
   return auton.zone;
 }
 
+void AutonToggleZone()
+{
+  if ( AutonGetZone() == kHangingZone )
+    AutonSetZone(kMiddleZone);
+  else
+    AutonSetZone(kHangingZone);
+}
+
+void AutonToggleColor()
+{
+  if ( AutonGetColor() == kRed )
+    AutonSetColor(kBlue);
+  else
+    AutonSetColor(kRed);
+}
+
 void AutonRun()
 {
-  switch (auton.zone)
+  TeamColor color = AutonGetColor();
+
+  switch ( AutonGetZone() )
   {
     case kHangingZone:
-      AutonHangingZone(auton.color);
+      AutonHangingZone(color);
       break;
 
     case kMiddleZone:
-      AutonMiddleZone(auton.color);
+      AutonMiddleZone(color);
       break;
   }
 }
