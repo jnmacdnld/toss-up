@@ -29,6 +29,7 @@
 #include "motor.c"
 #include "motor_luts.c"
 #include "auton.c"
+#include "lcd.c"
 
 #include "GyroLib.c"
 
@@ -39,18 +40,20 @@ void pre_auton() {
   MotorInitMotors();
   DriveInit();
   AutonInit();
-
   GyroInit(gyro);
+
+  StartTask(Lcd);
 }
 
 task autonomous() {
 	StartTask(UpdateMotors);
   
-  AutonMiddleZone(kRed);
+  AutonRun();
 }
 
 task usercontrol() {
 	GyroReinit();
+  
   StartTask(UserControl);
   StartTask(UpdateMotors);
 

@@ -7,38 +7,47 @@
 #define kLeftPressed 1
 #define kRightPressed 4
 
+void LcdUpdateScreen();
+
 task Lcd()
 {
-  current_state = nLcdButtons;
+  short current_state = nLCDButtons;
+  short last_state = kNonePressed;
 
-  // Call the right functions when buttons are released
-  if (current_state == kNonePressed)
+  while (true)
   {
-    if (last_state == kLeftPressed)
-      AutonToggleColor();
+    // Call the right functions when buttons are released
+    if (current_state == kNonePressed)
+    {
+      if (last_state == kLeftPressed)
+        AutonToggleColor();
 
-    if (last_state == kRightPressed)
-      AutonToggleZone();
+      if (last_state == kRightPressed)
+        AutonToggleZone();
+    }
+
+    last_state = current_state;
+
+    // Update what it says on the screen
+    LcdUpdateScreen();
+
+    wait1Msec(25);
   }
-
-  last_state = current_state;
-
-  LcdUpdate();
 }
 
-void LcdUpdate()
+void LcdUpdateScreen()
 {
   // Update the team color on the screen
-  if (auton.color == kRed)
-    displayLCDCenterString(0, "Red");
+  if ( AutonGetColor() == kRed )
+    displayLCDCenteredString(0, "Red");
   else
-    displayLCDCenterString(0, "Blue");
+    displayLCDCenteredString(0, "Blue");
 
   // Update the zone on the screen
-  if (auton.zone == kHangingZone)
-    displayLCDCenterString(1, "Hanging Zone");
+  if ( AutonGetZone() == kHangingZone )
+    displayLCDCenteredString(1, "Hanging Zone");
   else
-    displayLCDCenterString(1, "Middle Zone");
+    displayLCDCenteredString(1, "Middle Zone");
 }
  
 #endif /* LCD */

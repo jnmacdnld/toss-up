@@ -15,29 +15,34 @@ typedef enum { kInsideBigBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
-typedef struct {
+typedef struct
+{
   Zone zone;
   TeamColor color;
+
+  short turns[kNumAutonTurns][2];
 } Auton;
 
-Auton auton = { kMiddleZone, kRed };
+static Auton auton = { kMiddleZone, kBlue };
 
-int autonTurnsTicks[kNumAutonTurns][2];
-
-void AutonInit() {
-  autonTurnsTicks[kInsideBigBall][kRed] = 231;
-  autonTurnsTicks[kInsideBigBall][kBlue] = -184;
+void AutonInit()
+{
+  auton.turns[kInsideBigBall][kRed] = 231;
+  auton.turns[kInsideBigBall][kBlue] = -184;
 }
 
-int AutonGetTurnTicks(Turn turn, TeamColor color) {
-  return autonTurnsTicks[turn][color];
+int AutonGetTurnTicks(Turn turn, TeamColor color)
+{
+  return auton.turns[turn][color];
 }
 
-void AutonTurn(Turn turn, TeamColor color) {
+void AutonTurn(Turn turn, TeamColor color)
+{
   DriveTurnTicks( AutonGetTurnTicks(turn, color) );
 }
 
-void AutonMiddleZone(TeamColor color) {
+void AutonMiddleZone(TeamColor color)
+{
   // Move the arm to the barrier height
   ArmMoveToPos(kArmBarrierPos);
 
@@ -63,22 +68,49 @@ void AutonMiddleZone(TeamColor color) {
   IntakeSetPower(0);
 }
 
-void AutonHangingZone(TeamColor color) {
+void AutonHangingZone(TeamColor color)
+{
 
 }
 
-void AutonToggleZone() {
+void AutonToggleZone()
+{
   if (auton.zone == kHangingZone)
     auton.zone = kMiddleZone;
   else
     auton.zone = kHangingZone;
 }
 
-void AutonToggleColor() {
+void AutonToggleColor()
+{
   if (auton.color == kRed)
     auton.color = kBlue;
   else
     auton.color = kRed;
+}
+
+TeamColor AutonGetColor()
+{
+  return auton.color;
+}
+
+Zone AutonGetZone()
+{
+  return auton.zone;
+}
+
+void AutonRun()
+{
+  switch (auton.zone)
+  {
+    case kHangingZone:
+      AutonHangingZone(auton.color);
+      break;
+
+    case kMiddleZone:
+      AutonMiddleZone(auton.color);
+      break;
+  }
 }
 
 /*#define kStartToBarrierTicks 880
