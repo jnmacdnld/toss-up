@@ -3,6 +3,9 @@
   
 #include "auton.c"
 
+// Digital Port 8: Red initially, Blue with jumper
+// Digital Port 9: Middle Zone initally, Hanging Zone with Jumper
+
 void JumpersSetAuton()
 {
   // Set the team color from one jumper
