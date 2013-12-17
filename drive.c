@@ -93,10 +93,6 @@ void DriveTurnToDegrees(float degrees) {
   }
 }
 
-float DriveGetGyro() {
-  return ( (float) -SensorValue[gyro] ) / 10.0;
-}
-
 void DriveReflectRight() {
   bMotorReflected[backRightDrive] = false;
   bMotorReflected[middleRightDrive] = false;
@@ -109,7 +105,11 @@ void DriveUnreflectRight() {
   bMotorReflected[frontRightDrive] = true;
 }
 
-void InitGyro() {
+float DriveGetGyro() {
+  return ( (float) -SensorValue[gyro] ) / 10.0;
+}
+
+void DriveInitGyro() {
   //Completely clear out any previous sensor readings by setting the port to "sensorNone"
  SensorType[gyro] = sensorNone;
  wait1Msec(1000);
