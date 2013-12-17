@@ -1,9 +1,9 @@
 #ifndef MOTOR_LUTS
 #define MOTOR_LUTS
 
-int* motorLuts[10];
+short* motorLuts[10];
 
-int rightDriveSettingLut[128] =
+short rightDriveSettingLut[128] =
 {
 18, 18, 18, 18, 18, 19, 19, 19, 19, 20, 
 20, 20, 20, 21, 21, 21, 22, 22, 22, 22, 
@@ -20,7 +20,7 @@ int rightDriveSettingLut[128] =
 85, 86, 91, 99, 123, 124, 126, 126 
 };
 
-int leftDriveSettingLut[128] = 
+short leftDriveSettingLut[128] = 
 {
 19, 19, 19, 20, 20, 20, 20, 20, 20, 21, 
 21, 21, 21, 21, 22, 22, 22, 22, 23, 23, 
