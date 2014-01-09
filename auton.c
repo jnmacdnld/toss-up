@@ -43,12 +43,25 @@ void AutonTurn(Turn turn, TeamColor color)
 
 void AutonMiddleZone(TeamColor color)
 {
+  displayLCDCenteredString(0, "Running Auton");
+
+  // Flip out the intake
+  DriveSetPower(kFullPower);
+  wait1Msec(250);
+  DriveSetPower(-kFullPower);
+  wait1Msec(250);
+  DriveSetPower(0);
+
   // Move the arm to the barrier height
   ArmMoveToPos(kArmBarrierPos);
 
   // Knock the outside big ball in to the goal Zone
   DriveMoveTicks(kStartToBarrierTicks);
-  wait1Msec(500);
+
+  // Outtake the bucky into the goal Zone
+  IntakeSetPower(kIntakeOutSlowPower);
+  wait1Msec(1000);
+  IntakeSetPower(0);
 
   // Move back partway to the starting tile
   DriveMoveTicks(kBarrierToStartTicks);
@@ -60,17 +73,21 @@ void AutonMiddleZone(TeamColor color)
 
   // Knock the inside big ball into the goal Zone
   DriveMoveTicks(kToInsideBigBallTicks);
-  wait1Msec(500);
-
-  // Outtake the bucky into the goal Zone
-  IntakeSetPower(kIntakeOutSlowPower);
-  wait1Msec(1000);
-  IntakeSetPower(0);
 }
 
 void AutonHangingZone(TeamColor color)
 {
+  // Set the intake in to flip it out and get ready to intake the two buckies
+  IntakeSetPower(kIntakeInPower);
 
+  // Drive forward to pick up the two buckies
+  DriveMoveTicks(kStartToWall);
+
+  // Turn into position to push a big ball over the bump and knock the three buckies off the bump
+  AutonTurn(kHangingLargeBall, color);
+
+  // Push the large ball over the bump and the three buckies with it
+  DriveMoveTicks(kWallToLargeBall);
 }
 
 void AutonSetZone(Zone zone) {
@@ -111,16 +128,10 @@ void AutonRun()
 {
   TeamColor color = AutonGetColor();
 
-  switch ( AutonGetZone() )
-  {
-    case kHangingZone:
-      AutonHangingZone(color);
-      break;
-
-    case kMiddleZone:
-      AutonMiddleZone(color);
-      break;
-  }
+  if ( AutonGetZone() == kHangingZone )
+    AutonHangingZone(color);
+  else
+    AutonMiddleZone(color);
 }
 
 /*#define kStartToBarrierTicks 880

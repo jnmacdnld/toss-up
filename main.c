@@ -4,8 +4,8 @@
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl7,  touch,          sensorTouch)
-#pragma config(Sensor, dgtl8,  ColorJumper,    sensorDigitalIn)
-#pragma config(Sensor, dgtl9,  ZoneJumper,     sensorDigitalIn)
+#pragma config(Sensor, dgtl6,  ColorJumper,    sensorDigitalIn)
+#pragma config(Sensor, dgtl8,  ZoneJumper,     sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port1,           middleLeftDrive, tmotorVex393HighSpeed, openLoop)
@@ -48,9 +48,16 @@ void pre_auton() {
   JumpersSetAuton();
 
   StartTask(Lcd);
+
+
+
 }
 
 task autonomous() {
+	JumpersSetAuton();
+
+  writeDebugStreamLine("Starting auton");
+
 	StartTask(UpdateMotors);
 
   AutonRun();

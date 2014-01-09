@@ -9,13 +9,13 @@
 void JumpersSetAuton()
 {
   // Set the team color from one jumper
-  if ( SensorBoolean[ColorJumper] == false )
+  if ( SensorBoolean[ColorJumper] == true )
     AutonSetColor(kRed);
   else
     AutonSetColor(kBlue);
 
   // Set the zone from one jumper
-  if ( SensorBoolean[ZoneJumper] == false )
+  if ( SensorBoolean[ZoneJumper] == true )
     AutonSetZone(kMiddleZone);
   else
     AutonSetZone(kHangingZone);

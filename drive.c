@@ -60,12 +60,14 @@ void DriveInit() {
 }
 
 void DriveMoveTicks(int ticks) {
+  writeDebugStreamLine("Driving");
+
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
   driveMovePid->target_value = target;
 
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
-    DriveSetPower(cmd * 0.5);
+    DriveSetPower(cmd * 0.7);
     wait1Msec(25);
   }
 

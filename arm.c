@@ -6,7 +6,7 @@
 #define kArmUpPos   3200
 #define kArmDownPos 1500
 #define kArmAllDownPos 1310 // Define me to an actual value
-#define kArmBarrierPos 2240
+#define kArmBarrierPos 2450
 #define kArmBigBallPos 1775 // Define me to an actual value
 
 int armPresets[4] = {kArmAllDownPos, kArmBigBallPos, kArmBarrierPos, kArmUpPos};
@@ -78,7 +78,7 @@ bool ArmIsUp() {
 
 void ArmControlSetTarget(int target) {
 	if (target == kArmBarrierPos)
-		ArmSetKp(35.0);
+		ArmSetKp(25.0);
 	else
 		ArmSetKp(45.0);
 
@@ -114,6 +114,8 @@ void ArmHoldPos() {
 }
 
 void ArmMoveToPos(int pos) {
+	writeDebugStreamLine("Moving arm");
+
 	ArmControlSetTarget(pos);
 
   while (armControlActive)

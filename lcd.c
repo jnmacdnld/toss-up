@@ -16,6 +16,9 @@ task Lcd()
 
   while (true)
   {
+    // Record the current state
+    current_state = nLCDButtons;
+
     // Call the right functions when buttons are released
     if (current_state == kNonePressed)
     {
