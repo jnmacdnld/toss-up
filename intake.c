@@ -11,8 +11,6 @@
 #define intakeInPressed  vexRT[Btn5U]
 #define intakeOutPressed vexRT[Btn5D]
 
-bool intakeInHasBeenPressed = false;
-
 void IntakeSetPower(int value) {
 	MotorSet(leftIntake, value);
 	MotorSet(rightIntake, value);
@@ -21,16 +19,13 @@ void IntakeSetPower(int value) {
 void IntakeUpdate() {
 	if (intakeInPressed && intakeOutPressed)
 		IntakeSetPower(kIntakeOutFastPower);
-	else if (intakeInPressed) {
-		intakeInHasBeenPressed = true;
+	else if (intakeInPressed)
 		IntakeSetPower(kIntakeInPower);
-	} else if (intakeOutPressed) {
+	else if (intakeOutPressed) {
 		if (armPos > kArmUpPos - 300 )
 			IntakeSetPower(kIntakeOutSlowPower);
 		else
 			IntakeSetPower(kIntakeOutFastPower);
-  } else if (intakeInHasBeenPressed)
-		IntakeSetPower(kIntakeInPower);
 	else
 		IntakeSetPower(0);
 }
