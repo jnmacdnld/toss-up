@@ -9,9 +9,12 @@
 #define kBarrierToStartTicks -369
 #define kToInsideBigBallTicks 851
 
-#define kNumAutonTurns 1
+#define kStartToWall 622
+#define kWallToLargeBall -1337
 
-typedef enum { kInsideBigBall } Turn;
+#define kNumAutonTurns 2
+
+typedef enum { kInsideBigBall, kHangingLargeBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
@@ -29,6 +32,8 @@ void AutonInit()
 {
   auton.turns[kInsideBigBall][kRed] = 231;
   auton.turns[kInsideBigBall][kBlue] = -184;
+  auton.turns[kHangingLargeBall][kBlue] = -295;
+  auton.turns[kHangingLargeBall][kRed] = 205; // FIX ME
 }
 
 int AutonGetTurnTicks(Turn turn, TeamColor color)
@@ -46,11 +51,9 @@ void AutonMiddleZone(TeamColor color)
   displayLCDCenteredString(0, "Running Auton");
 
   // Flip out the intake
-  DriveSetPower(kFullPower);
+  IntakeSetPower(kIntakeInPower);
   wait1Msec(250);
-  DriveSetPower(-kFullPower);
-  wait1Msec(250);
-  DriveSetPower(0);
+  IntakeSetPower(0);
 
   // Move the arm to the barrier height
   ArmMoveToPos(kArmBarrierPos);
@@ -82,6 +85,11 @@ void AutonHangingZone(TeamColor color)
 
   // Drive forward to pick up the two buckies
   DriveMoveTicks(kStartToWall);
+  wait1Msec(500);
+
+
+  // Stop intaking
+  IntakeSetPower(0);
 
   // Turn into position to push a big ball over the bump and knock the three buckies off the bump
   AutonTurn(kHangingLargeBall, color);

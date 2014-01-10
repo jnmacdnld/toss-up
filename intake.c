@@ -26,7 +26,7 @@ void IntakeUpdate() {
 			IntakeSetPower(kIntakeOutSlowPower);
 		else
 			IntakeSetPower(kIntakeOutFastPower);
-	else
+	} else
 		IntakeSetPower(0);
 }
 
