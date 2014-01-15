@@ -9,9 +9,10 @@
 #define kDefaultAccelLimit 256
 
 typedef struct {
-  int setting;
-  int request;
-  int accel_limit;
+  short setting;
+  short request;
+  short min_delta_setting;
+  short max_delta_setting;
 } Motor;
 
 Motor motors[10];
@@ -21,14 +22,23 @@ void MotorSet(tMotor port, int power) {
 }
 
 void MotorInitMotors() {
+  short drive_motors[6] =
+  {
+    backRightDrive, middleRightDrive, frontRightDrive,
+    backLeftDrive, middleLeftDrive, frontLeftDrive
+  };
+
   // Initialize the motor data structure
   for (int i = 0; i < 10; i++) {
     Motor* m = &motors[i];
 
     m->setting = 0;
     m->request = 0;
-    m->accel_limit = kDefaultAccelLimit;
+    m->max_delta_setting = kDefaultAccelLimit;
+    m->min_delta_setting = -kDefaultAccelLimit;
   }
+
+
 }
 
 task UpdateMotors() {
@@ -37,9 +47,13 @@ task UpdateMotors() {
     for (int i = 0; i < 10; i++) {
       Motor* m = &motors[i];
 
+      short delta_setting = m->request - m->setting;
+
       // Enforce acceleration limit
-      if ( abs(m->request - m->setting) > m->accel_limit )
-        m->setting += m->accel_limit * sgn(m->request - m->setting);
+      if ( delta_setting > max_delta_setting )
+        m->setting += max_delta_setting
+      else if ( delta_setting < min_delta_setting )
+        m->setting -= min_delta_setting
       else
         m->setting = m->request;
 

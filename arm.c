@@ -22,6 +22,9 @@ int armPresets[4] = {kArmAllDownPos, kArmBigBallPos, kArmBarrierPos, kArmUpPos};
 #define armUpPresetPressed vexRT[Btn8U]
 #define armDownPresetPressed vexRT[Btn8D]
 
+#define armDownFullPowerPressed vexRT[Btn7D]
+#define armUpFullPowerPressed vexRT[Btn7U]
+
 float armKp = ( (127.0 - kArmHoldPower) / 45.0) * (250.0 / 4095.0);
 
 void ArmSetKp(float begin_slowing_at_deg) {
@@ -50,7 +53,11 @@ void ArmUpdate() {
 	else if (armDownPresetPressed)
 		ArmControlSetTarget(kArmAllDownPos);
 
-	if ( armUpPressed && !ArmIsUp() ) {
+	if ( armDownFullPowerPressed ) {
+		ArmSetPower(-kFullPower);
+	} else if ( armUpFullPowerPressed ) {
+		ArmSetPower( kFullPower );
+	} else if ( armUpPressed && !ArmIsUp() ) {
 		ArmSetPower(kArmUpPower);
 		armControlActive = false;
 	} else if ( armDownPressed && !ArmIsDown() ) {

@@ -45,15 +45,11 @@ void pre_auton() {
   AutonInit();
   GyroInit(gyro);
 
-  while (true) {
+    writeDebugStreamLine("in pre auton");
     JumpersSetAuton();
-    wait1Msec(25);
-  }
+
 
   // StartTask(Lcd);
-
-
-
 }
 
 task autonomous() {
