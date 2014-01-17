@@ -4,7 +4,7 @@
 #include "auton.c"
 
 // Digital Port 6: Red initially, Blue with jumper
-// Digital Port : Middle Zone initally, Hanging Zone with Jumper
+// Digital Port 8: Middle Zone initally, Hanging Zone with Jumper
 
 void JumpersSetAuton()
 {

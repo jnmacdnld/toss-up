@@ -44,7 +44,7 @@ void pre_auton() {
   DriveInit();
   ArmInit();
   AutonInit();
-  GyroInit(gyro);
+  // GyroInit(gyro);
 
   // StartTask(Lcd);
 }
@@ -58,7 +58,7 @@ task autonomous() {
 }
 
 task usercontrol() {
-	GyroReinit();
+	// GyroReinit();
 
   StartTask(UserControl);
   StartTask(MotorsUpdate);

@@ -37,7 +37,6 @@ short leftDriveSettingLut[128] =
 83, 84, 85, 87, 93, 109, 121, 124 
 };
 
-
 void MotorLutsInit() {
   motorLuts[frontLeftDrive] = &leftDriveSettingLut;
   motorLuts[middleLeftDrive] = &leftDriveSettingLut;
