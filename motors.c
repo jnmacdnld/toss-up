@@ -17,11 +17,11 @@ typedef struct {
 
 Motor motors[10];
 
-void MotorSet(tMotor port, int power) {
+void MotorsSet(tMotor port, int power) {
 	motors[port].request = power;
 }
 
-void MotorInitMotors() {
+void MotorsInit() {
   // Initialize the motor data structure
   for (int i = 0; i < 10; i++) {
     Motor* m = &motors[i];
@@ -34,7 +34,7 @@ void MotorInitMotors() {
 
 }
 
-task UpdateMotors() {
+task MotorsUpdate() {
   while (true) {
     // Update each motor
     for (int i = 0; i < 10; i++) {
@@ -58,11 +58,11 @@ task UpdateMotors() {
   }
 }
 
-void MotorSetAdjusted(tMotor _motor, int power) {
+void MotorsSetAdjusted(tMotor _motor, int power) {
 	if (abs(power) > kFullPower)
     power = kFullPower * sgn(power);
 
-  MotorSet(_motor, sgn(power) * motorLuts[_motor][sgn(power) * power]);
+  MotorsSet(_motor, sgn(power) * motorLuts[_motor][sgn(power) * power]);
 }
 
 #endif /* MOTOR_H */

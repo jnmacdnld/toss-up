@@ -1,7 +1,7 @@
 #ifndef ARM_C
 #define ARM_C
 
-#include "motor.c"
+#include "motors.c"
 
 #define kArmUpPos   3270
 #define kArmDownPos 1500
@@ -71,8 +71,8 @@ void ArmUpdate() {
 }
 
 void ArmSetPower(int value) {
-	MotorSet(leftArm, value);
-	MotorSet(rightArm, value);
+	MotorsSet(leftArm, value);
+	MotorsSet(rightArm, value);
 }
 
 bool ArmIsDown() {

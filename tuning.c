@@ -1,7 +1,7 @@
 #ifndef TUNING_C
 #define TUNING_C
 
-#include "motor.c"
+#include "motors.c"
 
 #define kSamplePeriod 1000
 
@@ -31,7 +31,7 @@ float max_motor_speed = 0.0;
 
 float GetActualMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev);
 void FillMotorSpeedsArrWithUnadjusted(tMotor mtr, float ticks_per_rev);
-void FillMotorSettingLut();
+void FillMotorsSettingLut();
 float GetIdealSpeed(int setting, float max_speed);
 float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev);
 
@@ -78,7 +78,7 @@ void FillMotorSpeedsArrWithAdjusted(tMotor mtr, float ticks_per_rev) {
 	}
 }
 
-void FillMotorSettingLut() {
+void FillMotorsSettingLut() {
 	float least_diff = 0;
 	int best_match = 0;
 	float diff = 0;
@@ -150,7 +150,7 @@ void TuneMotor(tMotor _motor, float ticks_per_rev) {
   writeDebugStreamLine("Unadjusted motor speed data:");
   PrintMotorSpeedsGraphable();
 
-  FillMotorSettingLut();
+  FillMotorsSettingLut();
   FillMotorSpeedsArrWithAdjusted(_motor, ticks_per_rev);
 
   wait1Msec(1000);
@@ -217,7 +217,7 @@ void TuneDrive(tMotor motor1, tMotor motor2, tMotor motor3) {
   writeDebugStreamLine("Unadjusted motor speed data:");
   PrintMotorSpeedsGraphable();
 
-  FillMotorSettingLut();
+  FillMotorsSettingLut();
 
   PrintSettingLut();
 }

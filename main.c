@@ -28,7 +28,7 @@
 #include "Vex_Competition_Includes.c"
 
 #include "user_control.c"
-#include "motor.c"
+#include "motors.c"
 #include "motor_luts.c"
 #include "auton.c"
 #include "lcd.c"
@@ -40,15 +40,11 @@ void pre_auton() {
   bStopTasksBetweenModes = true;
 
   MotorLutsInit();
-  MotorInitMotors();
+  MotorsInit();
   DriveInit();
   ArmInit();
   AutonInit();
   GyroInit(gyro);
-
-    writeDebugStreamLine("in pre auton");
-    JumpersSetAuton();
-
 
   // StartTask(Lcd);
 }
@@ -56,9 +52,7 @@ void pre_auton() {
 task autonomous() {
 	JumpersSetAuton();
 
-  writeDebugStreamLine("Starting auton");
-
-	StartTask(UpdateMotors);
+	StartTask(MotorsUpdate);
 
   AutonRun();
 }
@@ -67,7 +61,7 @@ task usercontrol() {
 	GyroReinit();
 
   StartTask(UserControl);
-  StartTask(UpdateMotors);
+  StartTask(MotorsUpdate);
 
   while (true)
     wait1Msec(1000);

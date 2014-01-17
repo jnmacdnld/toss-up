@@ -1,7 +1,7 @@
 #ifndef INTAKE_C
 #define INTAKE_C
 
-#include "motor.c"
+#include "motors.c"
 #include "arm.c"
 
 #define kIntakeOutSlowPower -40
@@ -12,8 +12,8 @@
 #define intakeOutPressed vexRT[Btn5D]
 
 void IntakeSetPower(int value) {
-	MotorSet(leftIntake, value);
-	MotorSet(rightIntake, value);
+	MotorsSet(leftIntake, value);
+	MotorsSet(rightIntake, value);
 }
 
 void IntakeUpdate() {

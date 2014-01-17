@@ -1,7 +1,7 @@
 #ifndef DRIVE
 #define DRIVE
 
-#include "motor.c"
+#include "motors.c"
 #include "GyroLib.c"
 #include "PidLib.c"
 
@@ -26,10 +26,10 @@ int driveGyroVal;
 float DriveGetGyro();
 
 void DriveSetPowerUnadjusted(int power) {
-  MotorSet(frontLeftDrive, power);
-  MotorSet(backLeftDrive, power);
-  MotorSet(frontRightDrive, power);
-  MotorSet(backRightDrive, power);
+  MotorsSet(frontLeftDrive, power);
+  MotorsSet(backLeftDrive, power);
+  MotorsSet(frontRightDrive, power);
+  MotorsSet(backRightDrive, power);
 }
 
 void DriveSetPower(int power) {
@@ -38,15 +38,15 @@ void DriveSetPower(int power) {
 }
 
 void DriveSetRight(int setting) {
-  MotorSetAdjusted(frontRightDrive, setting);
-  MotorSetAdjusted(backRightDrive, setting);
-  MotorSetAdjusted(middleRightDrive, setting);
+  MotorsSetAdjusted(frontRightDrive, setting);
+  MotorsSetAdjusted(backRightDrive, setting);
+  MotorsSetAdjusted(middleRightDrive, setting);
 }
 
 void DriveSetLeft(int setting) {
-  MotorSetAdjusted(frontLeftDrive, setting);
-  MotorSetAdjusted(backLeftDrive, setting);
-  MotorSetAdjusted(middleLeftDrive, setting);
+  MotorsSetAdjusted(frontLeftDrive, setting);
+  MotorsSetAdjusted(backLeftDrive, setting);
+  MotorsSetAdjusted(middleLeftDrive, setting);
 }
 
 void DriveInit() {

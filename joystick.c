@@ -3,7 +3,7 @@
 
 #define kRadiansToDeg 57.295779
 
-#include "motor.c"
+#include "motors.c"
 
 typedef enum {
   kLeftStickXAxis = 0,
