@@ -42,6 +42,7 @@ void pre_auton() {
   MotorLutsInit();
   MotorInitMotors();
   DriveInit();
+  ArmInit();
   AutonInit();
   GyroInit(gyro);
 

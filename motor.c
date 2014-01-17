@@ -22,12 +22,6 @@ void MotorSet(tMotor port, int power) {
 }
 
 void MotorInitMotors() {
-  short drive_motors[6] =
-  {
-    backRightDrive, middleRightDrive, frontRightDrive,
-    backLeftDrive, middleLeftDrive, frontLeftDrive
-  };
-
   // Initialize the motor data structure
   for (int i = 0; i < 10; i++) {
     Motor* m = &motors[i];
@@ -37,7 +31,6 @@ void MotorInitMotors() {
     m->max_delta_setting = kDefaultAccelLimit;
     m->min_delta_setting = -kDefaultAccelLimit;
   }
-
 
 }
 
@@ -50,10 +43,10 @@ task UpdateMotors() {
       short delta_setting = m->request - m->setting;
 
       // Enforce acceleration limit
-      if ( delta_setting > max_delta_setting )
-        m->setting += max_delta_setting
-      else if ( delta_setting < min_delta_setting )
-        m->setting -= min_delta_setting
+      if ( delta_setting > m->max_delta_setting )
+        m->setting += m->max_delta_setting;
+      else if ( delta_setting < m->min_delta_setting )
+        m->setting -= m->min_delta_setting;
       else
         m->setting = m->request;
 
