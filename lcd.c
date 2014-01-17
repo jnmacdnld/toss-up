@@ -19,7 +19,8 @@ task Lcd()
     // Record the current state
     current_state = nLCDButtons;
 
-    // Call the right functions when buttons are released
+    // If no buttons are currently pressed and one was pressed on the last
+    // iteration, that button was just released; call the appropriate function
     if (current_state == kNonePressed)
     {
       if (last_state == kLeftPressed)
@@ -29,11 +30,13 @@ task Lcd()
         AutonToggleZone();
     }
 
+    // Update last_state for the next iteration
     last_state = current_state;
 
     // Update what it says on the screen
     LcdUpdateScreen();
 
+    // Don't hog CPU
     wait1Msec(25);
   }
 }

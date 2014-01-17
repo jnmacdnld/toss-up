@@ -58,7 +58,7 @@ void DriveInit() {
   driveTurnToPid = PidControllerInit(1.0, 0.0, 0.0, in1);
   driveTurnToPid->error_threshold = 50;
 
-  // Don't allow too much negative acceleration to tip over the robot
+  // Don't allow too much positive acceleration to tip over the robot
   short drive_motors[6] =
   {
     backRightDrive, middleRightDrive, frontRightDrive,
@@ -67,7 +67,7 @@ void DriveInit() {
 
   for (short i = 0; i < 6; i++) {
     Motor* m = &motors[drive_motors[i]];
-    m->min_delta_setting = -30;
+    m->max_delta_setting = 30;
   }
 }
 
