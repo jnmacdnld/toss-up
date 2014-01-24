@@ -59,16 +59,6 @@ void DriveInit() {
   driveTurnToPid->error_threshold = 50;
 
   // Don't allow too much positive acceleration to tip over the robot
-  short drive_motors[6] =
-  {
-    backRightDrive, middleRightDrive, frontRightDrive,
-    backLeftDrive, middleLeftDrive, frontLeftDrive
-  };
-
-  for (short i = 0; i < 6; i++) {
-    Motor* m = &motors[drive_motors[i]];
-    m->max_delta_setting = 30;
-  }
 }
 
 void DriveMoveTicks(int ticks) {
@@ -136,6 +126,20 @@ void DriveTurnTicks(int ticks) {
   DriveReflectRight();
   DriveMoveTicks(ticks + 30);
   DriveUnreflectRight();
+}
+
+void DriveSetDeltaSettingLimits(short min_delta_setting, short max_delta_setting) {
+  short drive_motors[6] =
+  {
+    backRightDrive, middleRightDrive, frontRightDrive,
+    backLeftDrive, middleLeftDrive, frontLeftDrive
+  };
+
+  for (short i = 0; i < 6; i++) {
+    Motor* m = &motors[drive_motors[i]];
+    m->max_delta_setting = max_delta_setting;
+    m->min_delta_setting = min_delta_setting;
+  }
 }
 
 #endif
