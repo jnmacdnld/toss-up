@@ -2,6 +2,7 @@
 #pragma config(Sensor, in1,    armPot,         sensorPotentiometer)
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
+#pragma config(Sensor, in2,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl7,  touch,          sensorTouch)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
@@ -21,7 +22,7 @@
 #include "motors.c"
 #include "drive.c"
 
-task Main() {
+task main() {
   float left_drive_top_speed = GetLeftDriveSpeedAtSetting(kFullPower);
 
  	while (!SensorValue[touch]) wait1Msec(25);

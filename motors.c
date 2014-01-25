@@ -46,7 +46,7 @@ task MotorsUpdate() {
       if ( delta_setting > m->max_delta_setting )
         m->setting += m->max_delta_setting;
       else if ( delta_setting < m->min_delta_setting )
-        m->setting -= m->min_delta_setting;
+        m->setting += m->min_delta_setting;
       else
         m->setting = m->request;
 

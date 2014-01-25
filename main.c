@@ -37,14 +37,15 @@
 #include "GyroLib.c"
 
 void pre_auton() {
-  bStopTasksBetweenModes = true;
+  bStopTasksBetweenModes = false;
 
   MotorLutsInit();
   MotorsInit();
   DriveInit();
   ArmInit();
   AutonInit();
-  // GyroInit(gyro);
+  DriveInitGyro();
+  GyroInit(gyro);
 
   // StartTask(Lcd);
 }
@@ -58,8 +59,6 @@ task autonomous() {
 }
 
 task usercontrol() {
-	// GyroReinit();
-
   StartTask(UserControl);
   StartTask(MotorsUpdate);
 

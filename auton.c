@@ -32,7 +32,7 @@ void AutonInit()
 {
   auton.turns[kInsideBigBall][kRed] = 231;
   auton.turns[kInsideBigBall][kBlue] = -184;
-  auton.turns[kHangingLargeBall][kBlue] = -295;
+  auton.turns[kHangingLargeBall][kBlue] = -280;
   auton.turns[kHangingLargeBall][kRed] = 205; // FIX ME
 }
 
@@ -77,6 +77,11 @@ void AutonMiddleZone(TeamColor color)
   // Knock the inside big ball into the goal Zone
   DriveMoveTicks(kToInsideBigBallTicks);
 }
+
+/*void AutonHangingZone(TeamColor color)
+{
+  DriveTurnToDegrees(104.0);
+}*/
 
 void AutonHangingZone(TeamColor color)
 {

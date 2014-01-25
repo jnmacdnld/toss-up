@@ -11,7 +11,7 @@
 int armPotVal;
 int _backLeftDriveEncoder;
 int _backRightDriveEncoder;
-int gyroValue;
+float gyroValue;
 
 task UserControl() {
   ArmControlReset();

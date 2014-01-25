@@ -89,11 +89,10 @@ void DriveTurnToDegrees(float degrees) {
 
   int sgn_first_error = sgn( degrees - GyroGetAngle() );
 
-  while ( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error ) {
-    driveGyroVal = GyroGetAngle();
-
-    DriveSetLeft(kFullPower * .5 * sgn_first_error);
-    DriveSetRight(-kFullPower * .5 * sgn_first_error);
+  while ( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error )
+  {
+    DriveSetLeft(kFullPower * 0.7 * sgn_first_error);
+    DriveSetRight(-kFullPower * 0.7 * sgn_first_error);
   }
 }
 

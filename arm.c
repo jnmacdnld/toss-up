@@ -142,7 +142,7 @@ void ArmInit() {
 
 	for (short i = 0; i < 2; i++) {
 		Motor* m = &motors[arm_motors[i]];
-    m->min_delta_setting = -60;
+    m->min_delta_setting = -256;
     m->max_delta_setting = 60;
 	}
 }
