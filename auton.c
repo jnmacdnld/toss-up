@@ -139,6 +139,8 @@ void AutonToggleColor()
 
 void AutonRun()
 {
+  writeDebugStreamLine("Call to AutonRun");
+
   TeamColor color = AutonGetColor();
 
   if ( AutonGetZone() == kHangingZone )

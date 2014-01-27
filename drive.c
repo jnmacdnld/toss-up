@@ -62,7 +62,7 @@ void DriveInit() {
 }
 
 void DriveMoveTicks(int ticks) {
-  writeDebugStreamLine("Driving");
+  writeDebugStreamLine("Call to DriveMoveTicks");
 
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
   driveMovePid->target_value = target;

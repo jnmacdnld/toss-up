@@ -21,11 +21,11 @@ task UserControl() {
     ArcadeDriveUpdate();
     ArmUpdate();
 
-    // Prevent tipping
+    /*// Prevent tipping
     if ( armPos > (kArmUpPos - 300) )
       DriveSetDeltaSettingLimits(-256, 30);
     else
-      DriveSetDeltaSettingLimits(-256, 256);
+      DriveSetDeltaSettingLimits(-256, 256);*/
 
     // For debugging
     armPotVal = SensorValue[armPot];
