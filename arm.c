@@ -5,7 +5,7 @@
 
 #define kArmUpPos   3270
 #define kArmDownPos 1500
-#define kArmAllDownPos 1310 // Define me to an actual value
+#define kArmAllDownPos 1430 // Define me to an actual value
 #define kArmBarrierPos 2300
 #define kArmBigBallPos 1775 // Define me to an actual value
 
@@ -24,6 +24,8 @@ int armPresets[4] = {kArmAllDownPos, kArmBigBallPos, kArmBarrierPos, kArmUpPos};
 
 #define armDownFullPowerPressed vexRT[Btn7D]
 #define armUpFullPowerPressed vexRT[Btn7U]
+
+#define kPotTicksPerDegree 16.05882
 
 float armKp = ( (127.0 - kArmHoldPower) / 45.0) * (250.0 / 4095.0);
 
@@ -48,11 +50,13 @@ void ArmControlReset();
 void ArmHoldPos();
 void ArmUpdate();
 
+void ArmControlStepDownPreset();
+
 void ArmUpdate() {
 	if (armUpPresetPressed)
 		ArmControlSetTarget(kArmUpPos);
 	else if (armDownPresetPressed)
-		ArmControlSetTarget(kArmAllDownPos);
+		ArmControlSetTarget(kArmDownPos);
 
 	if ( armDownFullPowerPressed ) {
 		ArmSetPower(-kFullPower);
@@ -102,18 +106,30 @@ void ArmControlSetTarget(int target) {
 }
 
 void ArmControlStep() {
-	if (armControlActive == false)
+	writeDebugStreamLine("Call to ArmControlStep");
+
+	if (!armControlActive)
 		return;
-	
-	int power = (armControlTarget - armPos) * armKp;
 
-	if (abs(power) > armControlPower)
-		power = sgn(power) * abs(armControlPower);
+	// Handle the down preset separately
+	if (armControlTarget == kArmDownPos) {
+		ArmControlStepDownPreset();
+		return;
+	}
 
-	ArmSetPower(power + kArmHoldPower);
+	short error = armControlTarget - armPos;
 
-	if ( abs(armControlTarget - armPos) < 25)
+	if ( abs(error) > (kPotTicksPerDegree * 15) ) {
+		int power = error * armKp;
+
+		if (abs(power) > armControlPower)
+			power = sgn(power) * abs(armControlPower);
+
+		ArmSetPower(power + kArmHoldPower);
+	} else {
 		armControlReachedTarget = true;
+		ArmHoldPos();
+	}
 }
 
 void ArmHoldPos() {
@@ -121,6 +137,15 @@ void ArmHoldPos() {
 			ArmSetPower(0);
 	else
 		ArmSetPower(kArmHoldPower); // Hold up the arm so it doesn't fall
+}
+
+void ArmControlStepDownPreset() {
+	writeDebugStreamLine("Call to ArmControlStepDownPreset");
+
+	if ( ArmIsDown() )
+		ArmHoldPos();
+	else
+		ArmSetPower(kArmDownPower);
 }
 
 void ArmMoveToPos(int pos) {
