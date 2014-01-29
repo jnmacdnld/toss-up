@@ -34,6 +34,7 @@ void ArmSetKp(float begin_slowing_at_deg) {
 int armControlTarget = -1;
 int armControlPower = 0;
 bool armControlActive = false;
+bool armControlReachedTarget = false;
 
 void ArmSetPower(int value);
 
@@ -96,21 +97,23 @@ void ArmControlSetTarget(int target) {
 
 	armControlTarget = target;
 	armControlActive = true;
+
+	armControlReachedTarget = false;
 }
 
 void ArmControlStep() {
-	if (armControlPower > 0 && armPos < armControlTarget ||
-			armControlPower < 0 && armPos > armControlTarget) {
-		int power = (armControlTarget - armPos) * armKp;
+	if (armControlActive == false)
+		return;
+	
+	int power = (armControlTarget - armPos) * armKp;
 
-		if (abs(power) > armControlPower)
-			power = sgn(power) * abs(armControlPower);
+	if (abs(power) > armControlPower)
+		power = sgn(power) * abs(armControlPower);
 
-		ArmSetPower(power + kArmHoldPower);
-	}	else {
-		writeDebugStreamLine("armControlTarget = %d, armPos = %d, deactivating arm control", armControlTarget, armPos);
-		armControlActive = false;
-	}
+	ArmSetPower(power + kArmHoldPower);
+
+	if ( abs(armControlTarget - armPos) < 25)
+		armControlReachedTarget = true;
 }
 
 void ArmHoldPos() {
@@ -125,7 +128,7 @@ void ArmMoveToPos(int pos) {
 
 	ArmControlSetTarget(pos);
 
-  while (armControlActive)
+  while (!armControlReachedTarget)
   	ArmControlStep();
 
   ArmHoldPos();
@@ -135,6 +138,7 @@ void ArmControlReset() {
   armControlTarget = -1;
   armControlPower = 0;
   armControlActive = false;
+  armControlReachedTarget = false;
 }
 
 void ArmInit() {
