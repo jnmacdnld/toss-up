@@ -10,6 +10,9 @@
 #define kHighSpeedImeTicksPerInch 31.19
 #define kHighSpeedImeTicksPerRev 392.0
 
+#define kNumLeftDriveMotors 3
+#define kNumRightDriveMotors 3
+
 void DriveSetLeft(int setting);
 void DriveSetRight(int setting);
 
@@ -25,12 +28,15 @@ int driveGyroVal;
 
 float DriveGetGyro();
 
-void DriveSetPowerUnadjusted(int power) {
-  MotorsSet(frontLeftDrive, power);
-  MotorsSet(backLeftDrive, power);
-  MotorsSet(frontRightDrive, power);
-  MotorsSet(backRightDrive, power);
-}
+tMotor drive_motors_left[kNumLeftDriveMotors] =
+{
+  backLeftDrive, middleLeftDrive, frontLeftDrive,
+};
+
+tMotor drive_motors_right[kNumRightDriveMotors] =
+{
+  backRightDrive, middleRightDrive, frontRightDrive
+};
 
 void DriveSetPower(int power) {
   DriveSetLeft(power);
@@ -38,15 +44,13 @@ void DriveSetPower(int power) {
 }
 
 void DriveSetRight(int setting) {
-  MotorsSetAdjusted(frontRightDrive, setting);
-  MotorsSetAdjusted(backRightDrive, setting);
-  MotorsSetAdjusted(middleRightDrive, setting);
+  for (short i = 0; i < kNumRightDriveMotors; i++)
+    MotorsSetAdjusted(drive_motors_right[i], setting);
 }
 
 void DriveSetLeft(int setting) {
-  MotorsSetAdjusted(frontLeftDrive, setting);
-  MotorsSetAdjusted(backLeftDrive, setting);
-  MotorsSetAdjusted(middleLeftDrive, setting);
+  for (short i = 0; i < kNumLeftDriveMotors; i++)
+    MotorsSetAdjusted(drive_motors_left[i], setting);
 }
 
 void DriveInit() {
