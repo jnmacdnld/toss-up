@@ -63,6 +63,7 @@ task autonomous() {
 task usercontrol() {
   StartTask(UserControl);
   StartTask(MotorsUpdate);
+  StartTask(DebugInfo);
 
   GyroReinit();
 
