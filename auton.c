@@ -2,7 +2,7 @@
 #define AUTON
 
 #include "arm.c"
-#include "intake.c"
+#include "Intake.c"
 #include "drive.c"
 
 #define kStartToBarrierTicks 671

@@ -27,7 +27,7 @@
 
 #include "Vex_Competition_Includes.c"
 
-#include "user_control.c"
+#include "UserControl.c"
 #include "motors.c"
 #include "motor_luts.c"
 #include "auton.c"
