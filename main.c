@@ -54,9 +54,6 @@ task autonomous() {
   StartTask(MotorsUpdate);
 
 	JumpersSetAuton();
-
-	StartTask(MotorsUpdate);
-
   AutonRun();
 }
 
