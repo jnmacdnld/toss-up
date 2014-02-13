@@ -4,10 +4,10 @@
 #include "PidLib.c"
 #include "Arm.c"
 
-#define kP 0.0
-#define kI 0.0
-#define kD 0.0
-#define kBias 0.0
+#define kArmKp 0.0
+#define kArmKi 0.0
+#define kArmKd 0.0
+#define kArmKbias 0.0
 
 typedef struct {
   pidController* pid;
@@ -19,7 +19,7 @@ static ArmController arm_controller;
 void ArmControllerInit()
 {
   // Initialize the PID controller structure
-  arm_controller.pid = PidControllerInit(kP, kI, kD, kBias, armPot);
+  arm_controller.pid = PidControllerInit(kArmKp, kArmKi, kArmKd, kArmKbias, armPot);
 }
 
 void ArmControllerSetTarget(short target)
@@ -27,6 +27,7 @@ void ArmControllerSetTarget(short target)
   // Enable the arm controller in case it has been disabled
   ArmControllerEnable();
 
+  // Set the PID controller target
   arm_controller.pid->target_value = target;
 }
 

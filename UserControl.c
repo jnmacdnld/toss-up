@@ -3,7 +3,7 @@
 
 #include "drive.c"
 #include "Intake.c"
-#include "arm.c"
+#include "Arm.c"
 #include "arcade_drive.c"
 #include "GyroLib.c"
 
