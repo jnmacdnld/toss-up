@@ -17,13 +17,15 @@
 
 static tMotor arm_motors[kNumArmMotors];
 
-void ArmSetPower(short power) {
+void ArmSetPower(short power)
+{
   // Set each arm motor to the requested power
   for (short i = 0; i < kNumArmMotors; i++)
     MotorsSet(arm_motors[i], power);
 }
 
-bool ArmAtPreset(short preset) {
+bool ArmAtPreset(short preset)
+{
   // Account for the tolerance
   if ( abs(preset - ARM_POT) < kArmTolerance)
     return true;
@@ -31,11 +33,13 @@ bool ArmAtPreset(short preset) {
     return false;
 }
 
-bool ArmAtUpperLimit() {
+bool ArmAtUpperLimit()
+{
   return ArmAtPreset(kArmLowerLimit);
 }
 
-bool ArmAtLowerLimit() {
+bool ArmAtLowerLimit()
+{
   return ArmAtPreset(kArmLowerLimit);
 }
 
