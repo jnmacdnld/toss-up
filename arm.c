@@ -3,13 +3,10 @@
 
 #include "motors.c"
 
-#define kArmUpPos   3270
+#define kArmUpPos   3140
 #define kArmDownPos 1500
 #define kArmAllDownPos 1430 // Define me to an actual value
 #define kArmBarrierPos 2300
-#define kArmBigBallPos 1775 // Define me to an actual value
-
-int armPresets[4] = {kArmAllDownPos, kArmBigBallPos, kArmBarrierPos, kArmUpPos};
 
 #define kArmUpPower    kFullPower
 #define kArmDownPower  -kFullPower / 2
@@ -58,19 +55,37 @@ void ArmUpdate() {
 	else if (armDownPresetPressed)
 		ArmControlSetTarget(kArmDownPos);
 
-	if ( armDownFullPowerPressed ) {
+	if ( armDownFullPowerPressed )
+	{
 		ArmSetPower(-kFullPower);
-	} else if ( armUpFullPowerPressed ) {
+	}
+	else if ( armUpFullPowerPressed )
+	{
 		ArmSetPower( kFullPower );
-	} else if ( armUpPressed && !ArmIsUp() ) {
-		ArmSetPower(kArmUpPower);
+	}
+	else if ( armUpPressed && !ArmIsUp() )
+	{
+		short error = kArmUpPos - armPos;
+		int power = error * armKp;
+
+		if (abs(power) > kFullPower)
+			power = kFullPower;
+
+		ArmSetPower(power + kArmHoldPower);
+
 		armControlActive = false;
-	} else if ( armDownPressed && !ArmIsDown() ) {
+	}
+	else if ( armDownPressed && !ArmIsDown() )
+	{
 		ArmSetPower(kArmDownPower);
 		armControlActive = false;
-	} else if (armControlActive) {
+	}
+	else if (armControlActive)
+	{
 		ArmControlStep();
-	} else {
+	}
+	else
+	{
 		ArmHoldPos();
 	}
 }
