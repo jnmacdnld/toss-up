@@ -32,7 +32,7 @@ void AutonInit()
 {
   auton.turns[kInsideBigBall][kRed] = 231;
   auton.turns[kInsideBigBall][kBlue] = -184;
-  auton.turns[kHangingLargeBall][kBlue] = -280;
+  auton.turns[kHangingLargeBall][kBlue] = -290;
   auton.turns[kHangingLargeBall][kRed] = 205; // FIX ME
 }
 
@@ -62,9 +62,9 @@ void AutonMiddleZone(TeamColor color)
   DriveMoveTicks(kStartToBarrierTicks);
 
   // Outtake the bucky into the goal Zone
-  IntakeSetPower(kIntakeOutSlowPower);
+  /*IntakeSetPower(kIntakeOutSlowPower);
   wait1Msec(1000);
-  IntakeSetPower(0);
+  IntakeSetPower(0);*/
 
   // Move back partway to the starting tile
   DriveMoveTicks(kBarrierToStartTicks);
@@ -74,8 +74,18 @@ void AutonMiddleZone(TeamColor color)
   AutonTurn(kInsideBigBall, color);
   wait1Msec(500);
 
+  // Set the intake to sweep the ball
+  if (color == kRed)
+    IntakeSetSweepLeft();
+  else
+    IntakeSetSweepRight();
+
   // Knock the inside big ball into the goal Zone
-  DriveMoveTicks(kToInsideBigBallTicks);
+  DriveMoveTicks(kToInsideBigBallTicks, 0.7);
+
+  // Stop the intake
+  wait1Msec(1000);
+  IntakeSetPower(0);
 }
 
 /*void AutonHangingZone(TeamColor color)
@@ -100,7 +110,7 @@ void AutonHangingZone(TeamColor color)
   AutonTurn(kHangingLargeBall, color);
 
   // Push the large ball over the bump and the three buckies with it
-  DriveMoveTicks(kWallToLargeBall);
+  DriveMoveTicks(kWallToLargeBall, 1.0);
 }
 
 void AutonSetZone(Zone zone) {

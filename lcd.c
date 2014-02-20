@@ -43,17 +43,23 @@ task Lcd()
 
 void LcdUpdateScreen()
 {
-  // Update the team color on the screen
-  if ( AutonGetColor() == kRed )
-    displayLCDCenteredString(0, "Red");
-  else
-    displayLCDCenteredString(0, "Blue");
+  // Update the autonomous displayed on the screen
 
-  // Update the zone on the screen
-  if ( AutonGetZone() == kHangingZone )
-    displayLCDCenteredString(1, "Hanging Zone");
+  // Get the color and zone
+  TeamColor color = AutonGetColor();
+  Zone zone = AutonGetZone();
+
+  // Display the color and zone on the screen
+  if ( color == kRed && zone == kMiddleZone)
+    displayLCDCenteredString(0, "Red Middle Zone");
+  else if (color == kRed && zone == kHangingZone)
+    displayLCDCenteredString(0, "Red Hanging Zone");
+  else if (color == kBlue && zone == kMiddleZone)
+    displayLCDCenteredString(0, "Blue Middle Zone");
+  else if (color == kBlue && zone == kHangingZone)
+    displayLCDCenteredString(0, "Blue Hanging Zone");
   else
-    displayLCDCenteredString(1, "Middle Zone");
+    displayLCDCenteredString(0, "");
 }
  
 #endif /* LCD */

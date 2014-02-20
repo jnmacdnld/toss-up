@@ -17,7 +17,7 @@ void DriveSetLeft(int setting);
 void DriveSetRight(int setting);
 
 void DriveSetPower(int power);
-void DriveMoveTicks(int ticks);
+void DriveMoveTicks(int ticks, float percent = 0.7);
 
 bool driveMirrorTurning = false;
 
@@ -65,7 +65,7 @@ void DriveInit() {
   // Don't allow too much positive acceleration to tip over the robot
 }
 
-void DriveMoveTicks(int ticks) {
+void DriveMoveTicks(int ticks, float percent) {
   writeDebugStreamLine("Call to DriveMoveTicks");
 
   int target = nMotorEncoder[backLeftDrive] + (ticks - 30);
@@ -73,7 +73,7 @@ void DriveMoveTicks(int ticks) {
 
   while ( sgn(ticks) * nMotorEncoder[backLeftDrive] < sgn(ticks) * target ) {
     int cmd = PidControllerUpdate(driveMovePid);
-    DriveSetPower(cmd * 0.7);
+    DriveSetPower(cmd * percent);
     wait1Msec(25);
   }
 

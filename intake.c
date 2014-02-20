@@ -4,7 +4,7 @@
 #include "motors.c"
 #include "arm.c"
 
-#define kIntakeOutSlowPower -40
+#define kIntakeOutSlowPower -50
 #define kIntakeOutFastPower -127
 #define kIntakeInPower   127
 
@@ -14,6 +14,16 @@
 void IntakeSetPower(int value) {
 	MotorsSet(leftIntake, value);
 	MotorsSet(rightIntake, value);
+}
+
+void IntakeSetSweepLeft() {
+	MotorsSet(leftIntake, kIntakeOutFastPower);
+	MotorsSet(rightIntake, kIntakeInPower);
+}
+
+void IntakeSetSweepRight() {
+	MotorsSet(leftIntake, kIntakeInPower);
+	MotorsSet(rightIntake, kIntakeOutFastPower);
 }
 
 void IntakeUpdate() {

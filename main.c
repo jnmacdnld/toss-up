@@ -1,10 +1,9 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
-#pragma config(Sensor, in1,    armPot,         sensorPotentiometer)
+#pragma config(Sensor, in1,    armPot,         sensorNone)
 #pragma config(Sensor, in2,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl3,  ,               sensorQuadEncoder)
-#pragma config(Sensor, dgtl5,  ,               sensorQuadEncoder)
-#pragma config(Sensor, dgtl7,  touch,          sensorTouch)
 #pragma config(Sensor, dgtl6,  ColorJumper,    sensorDigitalIn)
+#pragma config(Sensor, dgtl7,  touch,          sensorTouch)
 #pragma config(Sensor, dgtl8,  ZoneJumper,     sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
@@ -48,14 +47,12 @@ void pre_auton()
   // DriveInitGyro();
   GyroInit(gyro);
 
-  // StartTask(Lcd);
+  StartTask(Lcd);
 }
 
 task autonomous()
 {
   StartTask(MotorsUpdate);
-
-	JumpersSetAuton();
   AutonRun();
 }
 
