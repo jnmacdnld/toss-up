@@ -22,28 +22,47 @@
 #include "motors.c"
 #include "drive.c"
 
-task main() {
+void TuneDrive() {
+  // Calculate and store the left drive top speed
   float left_drive_top_speed = GetLeftDriveSpeedAtSetting(kFullPower);
 
- 	while (!SensorValue[touch]) wait1Msec(25);
-
+  // Calculate and store the right drive top speed
   float right_drive_top_speed = GetRightDriveSpeedAtSetting(kFullPower);
 
-  while (!SensorValue[touch]) wait1Msec(25);
-
+  // Print the left and right drive top speeds
   writeDebugStreamLine("left drive top speed: %d", left_drive_top_speed);
   writeDebugStreamLine("right drive top speed: %d", right_drive_top_speed);
 
+  // The top speed the motors should be tuned to reach should be the lower of
+  // the speeds of the two sides of the drive
   if (left_drive_top_speed < right_drive_top_speed)
     max_motor_speed = left_drive_top_speed;
   else
     max_motor_speed = right_drive_top_speed;
 
+  // Print the speed of the slower side
   writeDebugStreamLine("slower drive top speed: %d", max_motor_speed);
 
-  TuneDrive(backLeftDrive, middleLeftDrive, frontLeftDrive);
 
-  while (!SensorValue[touch]) wait1Msec(25);
+  // Tune the left side of the drive
+  writeDebugStreamLine("Tuning left side of drive");
+  TuneDriveSide(backLeftDrive, middleLeftDrive, frontLeftDrive);
 
-  TuneDrive(backRightDrive, middleRightDrive, frontRightDrive);
+  // Tune the right side of the drive
+  writeDebugStreamLine("Tuning right side of drive");
+  TuneDriveSide(backRightDrive, middleRightDrive, frontRightDrive);
+}
+
+task main() {
+  // Tune the drive moving forwards
+  writeDebugStreamLine("Tuning the drive moving forwards");
+  TuneDrive();
+
+  // Reflect the drive
+  DriveReflectLeft();
+  DriveReflectRight();
+
+  // Tune the drive moving backwards
+  writeDebugStreamLine("Tuning the drive moving backwards");
+  TuneDrive();
 }
