@@ -106,6 +106,12 @@ void DriveReflectRight() {
   bMotorReflected[frontRightDrive] = false;
 }
 
+void DriveReflectLeft() {
+  bMotorReflected[backLeftDrive] = true;
+  bMotorReflected[middleLeftDrive] = true;
+  bMotorReflected[frontLeftDrive] = true;
+}
+
 void DriveUnreflectRight() {
   bMotorReflected[backRightDrive] = true;
   bMotorReflected[middleRightDrive] = true;

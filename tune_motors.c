@@ -22,6 +22,8 @@
 #include "motors.c"
 #include "drive.c"
 
+float max_motor_speed;
+
 void TuneDrive() {
   // Calculate and store the left drive top speed
   float left_drive_top_speed = GetLeftDriveSpeedAtSetting(kFullPower);
