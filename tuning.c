@@ -18,6 +18,7 @@ void FillMotorSpeedsArrWithUnadjusted(tMotor mtr, float ticks_per_rev);
 void FillMotorsSettingLut();
 float GetIdealSpeed(int setting, float max_speed);
 float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev);
+void WaitForContinue();
 
 float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev) {
 	return GetActualMotorSpeedAtSetting(mtr, motorSettingLut[setting], ticks_per_rev);
@@ -26,14 +27,7 @@ float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_re
 float GetActualMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev) {
 	// If pause is pressed, wait until continue is pressed in order to continue
 	if (PAUSE_PRESSED)
-	{
-		// Alert the user that the tuning is paused
-		writeDebugStreamLine("Paused. Press button 6U to continue.");
-
-		// Wait until continue is pressed
-		while (!CONTINUE_PRESSED)
-			wait1Msec(25);
-	}
+		WaitForContinue();
 
 	// Declare the variables that will be used
 	int final_pos;
@@ -239,9 +233,8 @@ void TuneDriveSide(tMotor motor1, tMotor motor2, tMotor motor3) {
 }
 
 void WaitForContinue() {
-	writeDebugStreamLine("Press button 6U to continue.");
+	writeDebugStreamLine("Paused. Press button 6U to continue.");
 	while (!CONTINUE_PRESSED) wait1Msec(25);
-	wait1Msec(250);
 }
 
 #endif /* TUNING_C */

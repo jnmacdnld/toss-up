@@ -26,8 +26,14 @@ void TuneDrive() {
   // Calculate and store the left drive top speed
   float left_drive_top_speed = GetLeftDriveSpeedAtSetting(kFullPower);
 
+  // Wait so that the user can reposition the robot
+  WaitForContinue();
+
   // Calculate and store the right drive top speed
   float right_drive_top_speed = GetRightDriveSpeedAtSetting(kFullPower);
+
+  // Wait so that the user can reposition the robot
+  WaitForContinue();
 
   // Print the left and right drive top speeds
   writeDebugStreamLine("left drive top speed: %d", left_drive_top_speed);
@@ -43,10 +49,12 @@ void TuneDrive() {
   // Print the speed of the slower side
   writeDebugStreamLine("slower drive top speed: %d", max_motor_speed);
 
-
   // Tune the left side of the drive
   writeDebugStreamLine("Tuning left side of drive");
   TuneDriveSide(backLeftDrive, middleLeftDrive, frontLeftDrive);
+
+  // Wait so that the user can reposition the robot
+  WaitForContinue();
 
   // Tune the right side of the drive
   writeDebugStreamLine("Tuning right side of drive");
