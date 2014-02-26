@@ -7,6 +7,9 @@
 #define kMaxMotorSpeed 0.0
 #define kNumDriveMotorsPerSide 3
 
+#define PAUSE_PRESSED vexRT[Btn6D]
+#define CONTINUE_PRESSED vexRT[Btn6U]
+
 int motorSettingLut[128];
 float motorSpeeds[128];
 
@@ -21,6 +24,17 @@ float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_re
 }
 
 float GetActualMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev) {
+	// If pause is pressed, wait until continue is pressed in order to continue
+	if (PAUSE_PRESSED)
+	{
+		// Alert the user that the tuning is paused
+		writeDebugStreamLine("Paused. Press button 6U to continue.");
+
+		// Wait until continue is pressed
+		while (!CONTINUE_PRESSED)
+			wait1Msec(25);
+	}
+
 	// Declare the variables that will be used
 	int final_pos;
 	int initial_pos;
@@ -224,9 +238,9 @@ void TuneDriveSide(tMotor motor1, tMotor motor2, tMotor motor3) {
   PrintSettingLut();
 }
 
-void WaitForTouch() {
-	writeDebugStreamLine("Press touch sensor to continue.");
-	while (!SensorValue[touch]) wait1Msec(25);
+void WaitForContinue() {
+	writeDebugStreamLine("Press button 6U to continue.");
+	while (!CONTINUE_PRESSED) wait1Msec(25);
 	wait1Msec(250);
 }
 
