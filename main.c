@@ -37,8 +37,12 @@
 
 void pre_auton()
 {
+  // Stop all running tasks when the mode is switched
   bStopTasksBetweenModes = true;
 
+  // Turn on the backlight
+  bLCDBacklight = true;
+  
   MotorLutsInit();
   MotorsInit();
   DriveInit();
