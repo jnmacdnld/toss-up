@@ -44,7 +44,7 @@ task Lcd()
 void LcdUpdateScreen()
 {
   // Display labels for color and zone
-  displayLCDCenteredString(1, "Color:     Zone:");
+  displayLCDCenteredString(0, "Color:     Zone:");
 
   // Get the color and zone
   TeamColor color = AutonGetColor();
