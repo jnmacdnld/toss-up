@@ -3,7 +3,7 @@
 
 #include "motors.c"
 
-#define kArmUpPos   3140
+#define kArmUpPos   3160
 #define kArmDownPos 1500
 #define kArmAllDownPos 1430 // Define me to an actual value
 #define kArmBarrierPos 2300
@@ -71,7 +71,7 @@ void ArmUpdate() {
 		if (abs(power) > kFullPower)
 			power = kFullPower;
 
-		ArmSetPower(power + kArmHoldPower);
+		ArmSetPower(power + kArmHoldPower + 10);
 
 		armControlActive = false;
 	}
