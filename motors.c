@@ -65,7 +65,7 @@ void MotorsSetAdjusted(tMotor _motor, int power) {
   if (power > 0)
     MotorsSet(_motor, motorLutsForward[_motor][power]);
   else
-    MotorsSet(_motor, -motorLutsBackward[_motor][power]);
+    MotorsSet(_motor, -motorLutsBackward[_motor][abs(power)]);
 }
 
 #endif /* MOTOR_H */
