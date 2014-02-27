@@ -16,7 +16,7 @@ task Lcd()
 
   while (true)
   {
-    // Record the current state
+    // Store the current state
     current_state = nLCDButtons;
 
     // If no buttons are currently pressed and one was pressed on the last
@@ -43,7 +43,8 @@ task Lcd()
 
 void LcdUpdateScreen()
 {
-  // Update the autonomous displayed on the screen
+  // Display labels for color and zone
+  displayLCDCenteredString(1, "Color:     Zone:");
 
   // Get the color and zone
   TeamColor color = AutonGetColor();
@@ -51,15 +52,15 @@ void LcdUpdateScreen()
 
   // Display the color and zone on the screen
   if ( color == kRed && zone == kMiddleZone)
-    displayLCDCenteredString(0, "Red Middle Zone");
+    displayLCDCenteredString(1, "Red       Middle");
   else if (color == kRed && zone == kHangingZone)
-    displayLCDCenteredString(0, "Red Hanging Zone");
+    displayLCDCenteredString(1, "Red      Hanging");
   else if (color == kBlue && zone == kMiddleZone)
-    displayLCDCenteredString(0, "Blue Middle Zone");
+    displayLCDCenteredString(1, "Blue      Middle");
   else if (color == kBlue && zone == kHangingZone)
-    displayLCDCenteredString(0, "Blue Hanging Zone");
+    displayLCDCenteredString(1, "Blue     Hanging");
   else
-    displayLCDCenteredString(0, "");
+    displayLCDCenteredString(1, "Error      Error");
 }
- 
+
 #endif /* LCD */
