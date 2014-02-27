@@ -7,7 +7,7 @@
 #define kLeftPressed 1
 #define kRightPressed 4
 
-void LcdUpdateScreen();
+void LcdUpdateAuton();
 
 task Lcd()
 {
@@ -34,14 +34,14 @@ task Lcd()
     last_state = current_state;
 
     // Update what it says on the screen
-    LcdUpdateScreen();
+    LcdUpdateAuton();
 
     // Don't hog CPU
     wait1Msec(25);
   }
 }
 
-void LcdUpdateScreen()
+void LcdUpdateAuton()
 {
   // Display labels for color and zone
   displayLCDCenteredString(0, "Color:     Zone:");
