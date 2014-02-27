@@ -4,7 +4,6 @@
 #include "motors.c"
 
 #define kSamplePeriod 1000
-#define kMaxMotorSpeed 0.0
 #define kNumDriveMotorsPerSide 3
 
 #define PAUSE_PRESSED vexRT[Btn6D]
@@ -19,6 +18,8 @@ void FillMotorsSettingLut();
 float GetIdealSpeed(int setting, float max_speed);
 float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev);
 void WaitForContinue();
+
+float max_motor_speed = 0.0;
 
 float GetAdjustedMotorSpeedAtSetting(tMotor mtr, int setting, float ticks_per_rev) {
 	return GetActualMotorSpeedAtSetting(mtr, motorSettingLut[setting], ticks_per_rev);
@@ -80,7 +81,7 @@ void FillMotorSpeedsArrWithAdjusted(tMotor mtr, float ticks_per_rev) {
 
 		motorSpeeds[s] = speed;
 
-		float ideal_speed = GetIdealSpeed(s, kMaxMotorSpeed);
+		float ideal_speed = GetIdealSpeed(s, max_motor_speed);
 		float error = ( (speed - ideal_speed) / speed ) * 100;
 
 		writeDebugStreamLine("adjusted speed at power setting %d is about %d rpm (about %d percent error)", s, (int) speed, (int) error);
@@ -100,7 +101,7 @@ void FillMotorsSettingLut() {
 		best_match = 0;
 
 		for (short k = 0; k <= 127; k++) {
-			diff = abs(GetIdealSpeed(s, kMaxMotorSpeed) - motorSpeeds[k]);
+			diff = abs(GetIdealSpeed(s, max_motor_speed) - motorSpeeds[k]);
 
 			// The power setting that gives a speed closest to the speed we want
 			// (the speed that makes the acceleration constant) is the best match
