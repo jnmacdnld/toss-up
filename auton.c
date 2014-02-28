@@ -12,6 +12,13 @@
 #define kStartToWall 622
 #define kWallToLargeBall -1337
 
+#define kStartUnderBarrierTicks 0
+#define kInFrontOfStashDistance 0
+#define kStashUnderBarrier 0
+#define kUnderBarrier 0
+
+#define CENTER_LINE SensorValue[centerLine]
+
 #define kNumAutonTurns 2
 
 typedef enum { kInsideBigBall, kHangingLargeBall } Turn;
@@ -48,8 +55,6 @@ void AutonTurn(Turn turn, TeamColor color)
 
 void AutonMiddleZone(TeamColor color)
 {
-  displayLCDCenteredString(0, "Running Auton");
-
   // Flip out the intake
   IntakeSetPower(kIntakeInPower);
   wait1Msec(250);
@@ -58,13 +63,8 @@ void AutonMiddleZone(TeamColor color)
   // Move the arm to the barrier height
   ArmMoveToPos(kArmBarrierPos);
 
-  // Knock the outside big ball in to the goal Zone
+  // Knock the outside big ball into the goal zone and push the preload in
   DriveMoveTicks(kStartToBarrierTicks);
-
-  // Outtake the bucky into the goal Zone
-  /*IntakeSetPower(kIntakeOutSlowPower);
-  wait1Msec(1000);
-  IntakeSetPower(0);*/
 
   // Move back partway to the starting tile
   DriveMoveTicks(kBarrierToStartTicks);
@@ -88,10 +88,50 @@ void AutonMiddleZone(TeamColor color)
   IntakeSetPower(0);
 }
 
-/*void AutonHangingZone(TeamColor color)
+void AutonMiddleZoneStash(TeamColor color)
+{
+  // Flip out the intake
+  IntakeSetPower(kIntakeInPower);
+  wait1Msec(250);
+  IntakeSetPower(0);
+
+  // Drive under the barrier, knocking a large ball into the goal zone
+  DriveMoveTicks(kStartUnderBarrierTicks, 1.0);
+
+  // Raise the lift
+  ArmMoveToPos(kArmUpPos);
+
+  // Drive up to the stash
+  while (SensorValue[stashSonar] > kInFrontOfStashDistance)
+    DriveSetPower(kFullPower);
+  DriveSetPower(0);
+
+  // Pivot so the robot is facing straight forwards
+  while(!CENTER_LINE)
+  {
+    if (color == kBlue)
+      DriveSetLeft(kFullPower * 0.7);
+    else
+      DriveSetRight(kFullPower * 0.7);
+  }
+
+  // Eject the preload
+  IntakeSetPower(kIntakeOutSlowPower);
+  wait1Msec(500);
+
+  // Drive backwards under the barrier
+  DriveMoveTicks(kStashUnderBarrier, 1.0);
+
+  // Drive forwards under the barrier to knock off a large ball
+  DriveMoveTicks(kUnderBarrier, 1.0);
+}
+
+/*
+void AutonHangingZone(TeamColor color)
 {
   DriveTurnToDegrees(104.0);
-}*/
+}
+*/
 
 void AutonHangingZone(TeamColor color)
 {
