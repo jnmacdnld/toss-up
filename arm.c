@@ -6,7 +6,7 @@
 #define kArmUpPos   3160
 #define kArmDownPos 1500
 #define kArmAllDownPos 1430 // Define me to an actual value
-#define kArmBarrierPos 2300
+#define kArmBarrierPos 2400
 
 #define kArmUpPower    kFullPower
 #define kArmDownPower  -kFullPower / 2
@@ -139,6 +139,9 @@ void ArmControlStep() {
 
 		if (abs(power) > armControlPower)
 			power = sgn(power) * abs(armControlPower);
+
+		if (armControlTarget == kArmUpPos)
+			power += 10;
 
 		ArmSetPower(power + kArmHoldPower);
 	} else {
