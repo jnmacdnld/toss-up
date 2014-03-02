@@ -17,8 +17,6 @@
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
 
-#define CENTER_LINE SensorValue[centerLine]
-
 #define kNumAutonTurns 2
 
 typedef enum { kInsideBigBall, kHangingLargeBall } Turn;
@@ -92,11 +90,12 @@ void AutonMiddleZoneStash(TeamColor color)
 {
   // Flip out the intake
   IntakeSetPower(kIntakeInPower);
-  wait1Msec(250);
-  IntakeSetPower(0);
 
   // Drive under the barrier, knocking a large ball into the goal zone
   DriveMoveTicks(kStartUnderBarrierTicks, 1.0);
+
+  // Stop the intake
+  IntakeSetPower(0);
 
   // Raise the lift
   ArmMoveToPos(kArmUpPos);
@@ -106,23 +105,33 @@ void AutonMiddleZoneStash(TeamColor color)
     DriveSetPower(kFullPower);
   DriveSetPower(0);
 
-  // Pivot so the robot is facing straight forwards
-  while(!CENTER_LINE)
+  // Turn the robot until it's facing forwards
+  if (color == kRed)
   {
-    if (color == kBlue)
-      DriveSetLeft(kFullPower * 0.7);
-    else
+    while (SensorValue[gyro] > kFacingForwardsRed) 
       DriveSetRight(kFullPower * 0.7);
+  }
+  else
+  {
+    while (SensorValue[gyro] < kFacingForwardsBlue)
+      DriveSetLeft(kFullPower * 0.7);
   }
 
   // Eject the preload
   IntakeSetPower(kIntakeOutSlowPower);
   wait1Msec(500);
+  IntakeSetPower(0);
+
+  // Drive backwards up to the barrier
+  DriveMoveTicks(kStashToBarrier, 1.0);
+
+  // Lower the lift
+  ArmMoveToPos(kArmDownPos);
 
   // Drive backwards under the barrier
   DriveMoveTicks(kStashUnderBarrier, 1.0);
 
-  // Drive forwards under the barrier to knock off a large ball
+  // Drive forwards under the barrier to knock a large ball into the goal zone
   DriveMoveTicks(kUnderBarrier, 1.0);
 }
 
