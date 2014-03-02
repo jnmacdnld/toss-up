@@ -50,6 +50,9 @@ static void displayStatusAndTime();
 
 task main()
 {
+  // Turn on the LCD backlight
+  bLCDBacklight = true;
+  
   // Master CPU will not let competition start until powered on for at least 2-seconds
   clearLCDLine(0);
   clearLCDLine(1);
