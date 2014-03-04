@@ -102,7 +102,7 @@ void AutonMiddleZoneStash(TeamColor color)
 
   // Drive up to the stash
   while (SensorValue[stashSonar] > kInFrontOfStashDistance)
-    DriveSetPower(kFullPower);
+    DriveSetPower(kFullPower * 0.7);
   DriveSetPower(0);
 
   // Turn the robot until it's facing forwards
