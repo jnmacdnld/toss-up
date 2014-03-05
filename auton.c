@@ -19,6 +19,10 @@
 
 #define kNumAutonTurns 2
 
+#define kFacingForwardsRed 0
+#define kFacingForwardsBlue 0
+#define kStashToBarrier 0
+
 typedef enum { kInsideBigBall, kHangingLargeBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
@@ -32,6 +36,8 @@ typedef struct
 } Auton;
 
 static Auton auton = { kMiddleZone, kBlue };
+
+void AutonHangingZoneStash(TeamColor color);
 
 void AutonInit()
 {
@@ -162,6 +168,56 @@ void AutonHangingZone(TeamColor color)
   DriveMoveTicks(kWallToLargeBall, 1.0);
 }
 
+void AutonHangingZoneStash(TeamColor color)
+{
+  // Set the intake in to flip it out and get ready to intake the two buckies
+  IntakeSetPower(kIntakeInPower);
+
+  // Drive forward to pick up the two buckies
+  DriveMoveTicks(kStartToWall, 0.7);
+
+  // Stop the intake
+  IntakeSetPower(0);
+  
+  // Drive backwards to the start
+  DriveMoveTicks(-kStartToWall, 1.0);
+
+  // Drive over the bump
+  DriveMoveTicks(-1205, 1.0);
+
+  // Pivot to face forwards
+  DriveTurnTicks(823);
+
+  // Drive under the barrier
+  DriveMoveTicks(966, 1.0);
+
+  // Pivot to face paralell to the stash
+  DriveTurnTicks(-381);
+
+  // Back into the wall to even out the robot
+  DriveSetPower(kFullPower * 0.7);
+  wait1Msec(500);
+
+  // Raise the arm
+  ArmMoveToPos(kArmUpPos);
+
+  // Drive paralell to the stash
+  DriveMoveTicks(932);
+
+  // Pivot to face the stash
+  DriveTurnTicks(394);
+
+  // Drive up to the stash
+  while (SensorValue[stashSonar] > kInFrontOfStashDistance)
+    DriveSetPower(kFullPower * 0.7);
+  DriveSetPower(0);
+
+  // Eject the three buckyballs into the stash
+  IntakeSetPower(kIntakeOutSlowPower);
+  wait1Msec(3000);
+  IntakeSetPower(0);
+}
+
 void AutonSetZone(Zone zone) {
   auton.zone = zone;
 }
@@ -203,7 +259,7 @@ void AutonRun()
   TeamColor color = AutonGetColor();
 
   if ( AutonGetZone() == kHangingZone )
-    AutonHangingZone(color);
+    AutonHangingZoneStash(color);
   else
     AutonMiddleZone(color);
 }
