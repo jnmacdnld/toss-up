@@ -32,6 +32,7 @@
 #include "auton.c"
 #include "lcd.c"
 #include "jumpers.c"
+#include "Recorder.c"
 
 #include "GyroLib.c"
 
@@ -61,6 +62,7 @@ task usercontrol()
 {
   StartTask(UserControl);
   StartTask(MotorsUpdate);
+  StartTask(Recorder);
 
   GyroReinit();
 
