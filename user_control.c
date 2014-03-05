@@ -12,6 +12,8 @@ int armPotVal;
 int _backLeftDriveEncoder;
 int _backRightDriveEncoder;
 float gyroValue;
+int gyroValueRaw;
+int sonarValue;
 
 task UserControl() {
   ArmControlReset();
@@ -32,6 +34,8 @@ task UserControl() {
     _backLeftDriveEncoder = nMotorEncoder[backLeftDrive];
     _backRightDriveEncoder = nMotorEncoder[backRightDrive];
     gyroValue = GyroGetAngle();
+    gyroValueRaw = SensorValue[gyro];
+    sonarValue = SensorValue[stashSonar];
 
     wait1Msec(25);
   }
