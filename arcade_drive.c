@@ -26,7 +26,7 @@ void ArcadeDriveUpdate() {
 
 	// If the speed joystick has not been moved,
 	// pivot according to the turn joystick
-	if (speed_axis == 0 && arcade_drive_can_pivot)
+	if (speed_axis == 0)
 	{
   	left = turn_axis;
 		right = -turn_axis;
