@@ -14,6 +14,10 @@ int _backRightDriveEncoder;
 float gyroValue;
 int gyroValueRaw;
 int sonarValue;
+int leftFrontLineValue;
+
+bool seeLine;
+int lineNumber;
 
 task UserControl() {
   ArmControlReset();
@@ -36,8 +40,14 @@ task UserControl() {
     gyroValue = GyroGetAngle();
     gyroValueRaw = SensorValue[gyro];
     sonarValue = SensorValue[stashSonar];
+    leftFrontLineValue = SensorValue[leftFrontLine];
 
-    wait1Msec(25);
+    seeLine = SensorValue[leftFrontLine] < 2300;
+
+    if (seeLine)
+      lineNumber++;
+
+    wait1Msec(10);
   }
 }
 

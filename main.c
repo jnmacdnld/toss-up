@@ -1,7 +1,7 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,    armPot,         sensorNone)
 #pragma config(Sensor, in2,    gyro,           sensorGyro)
-#pragma config(Sensor, in3,    centerLine,     sensorLineFollower)
+#pragma config(Sensor, in3,    leftFrontLine,  sensorLineFollower)
 #pragma config(Sensor, dgtl1,  stashSonar,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl3,  ColorJumper,    sensorDigitalIn)
 #pragma config(Sensor, dgtl4,  ZoneJumper,     sensorDigitalIn)

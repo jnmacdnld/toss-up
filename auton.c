@@ -13,7 +13,7 @@
 #define kWallToLargeBall -1337
 
 #define kStartUnderBarrierTicks 0
-#define kInFrontOfStashDistance 0
+#define kInFrontOfStashDistance 27
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
 
@@ -183,26 +183,30 @@ void AutonHangingZoneStash(TeamColor color)
   DriveMoveTicks(-kStartToWall, 1.0);
 
   // Drive over the bump
-  DriveMoveTicks(-1205, 1.0);
+  DriveMoveTicks(-1005, 1.0);
 
   // Pivot to face forwards
-  DriveTurnTicks(823);
+  DriveTurnTicks(823 - 30);
 
-  // Drive under the barrier
-  DriveMoveTicks(966, 1.0);
+  // Drive up to the barrier
+  while (SensorValue[leftFrontLine] > 2300)
+    DriveSetPower(kFullPower);
+
+  // Drive under the barrier, knocking a large ball into the goal zone
+  DriveMoveTicks(639, 1.0);
 
   // Pivot to face paralell to the stash
   DriveTurnTicks(-381);
 
   // Back into the wall to even out the robot
-  DriveSetPower(kFullPower * 0.7);
+  DriveSetPower(-kFullPower * 0.7);
   wait1Msec(500);
 
   // Raise the arm
   ArmMoveToPos(kArmUpPos);
 
   // Drive paralell to the stash
-  DriveMoveTicks(932);
+  DriveMoveTicks(932, 0.7);
 
   // Pivot to face the stash
   DriveTurnTicks(394);
