@@ -170,14 +170,15 @@ void AutonHangingZone(TeamColor color)
 
 void AutonHangingZoneStash(TeamColor color)
 {
-  // Set the intake in to flip it out and get ready to intake the two buckies
+  // Set the intake in to flip it out and get ready to intake the two buckies, leave it on
+  // to keep buckies from falling out
   IntakeSetPower(kIntakeInPower);
+
+  // Keep the arm down
+  ArmSetPower(-15);
 
   // Drive forward to pick up the two buckies
   DriveMoveTicks(kStartToWall, 0.7);
-
-  // Stop the intake
-  IntakeSetPower(0);
   
   // Drive backwards to the start
   DriveMoveTicks(-kStartToWall, 1.0);
@@ -185,35 +186,38 @@ void AutonHangingZoneStash(TeamColor color)
   // Drive over the bump
   DriveMoveTicks(-1005, 1.0);
 
+  // Stop the intake
+  IntakeSetPower(0);
+
   // Pivot to face forwards
-  DriveTurnTicks(823 - 30);
+  DriveTurnTicks(823 - 60);
 
   // Drive up to the barrier
-  while (SensorValue[leftFrontLine] > 2300)
+  while (SensorValue[leftFrontLine] > 2600)
     DriveSetPower(kFullPower);
 
   // Drive under the barrier, knocking a large ball into the goal zone
   DriveMoveTicks(639, 1.0);
 
   // Pivot to face paralell to the stash
-  DriveTurnTicks(-381);
+  DriveTurnTicks(-381 + 80, 0.85);
+
+  // Raise the arm in the background
+  ArmControlSetTarget(kArmUpPos);
 
   // Back into the wall to even out the robot
-  DriveSetPower(-kFullPower * 0.7);
-  wait1Msec(500);
-
-  // Raise the arm
-  ArmMoveToPos(kArmUpPos);
+  DriveSetPower(-kFullPower * 0.85);
+  wait1Msec(750);
 
   // Drive paralell to the stash
-  DriveMoveTicks(932, 0.7);
+  DriveMoveTicks(932 - 10, 0.85);
 
   // Pivot to face the stash
-  DriveTurnTicks(394);
+  DriveTurnTicks(394 + 40);  
 
   // Drive up to the stash
   while (SensorValue[stashSonar] > kInFrontOfStashDistance)
-    DriveSetPower(kFullPower * 0.7);
+    DriveSetPower(kFullPower * 0.85);
   DriveSetPower(0);
 
   // Eject the three buckyballs into the stash

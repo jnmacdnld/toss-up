@@ -33,6 +33,7 @@
 #include "lcd.c"
 #include "jumpers.c"
 #include "Recorder.c"
+#include "ArmControl.c"
 
 #include "GyroLib.c"
 
@@ -54,7 +55,11 @@ void pre_auton()
 
 task autonomous()
 {
+  ArmControlReset();
+
   StartTask(MotorsUpdate);
+  StartTask(ArmControl);
+
   AutonRun();
 }
 

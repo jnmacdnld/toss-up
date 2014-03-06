@@ -18,6 +18,7 @@ void DriveSetRight(int setting);
 
 void DriveSetPower(int power);
 void DriveMoveTicks(int ticks, float percent = 0.7);
+void DriveTurnTicks(int ticks, float percent = 0.7);
 
 bool driveMirrorTurning = false;
 
@@ -138,9 +139,9 @@ void DriveInitGyro() {
  wait1Msec(2000);
 }
 
-void DriveTurnTicks(int ticks) {
+void DriveTurnTicks(int ticks, float percent) {
   DriveReflectRight();
-  DriveMoveTicks(ticks + 30);
+  DriveMoveTicks(ticks + 30, percent);
   DriveUnreflectRight();
 }
 

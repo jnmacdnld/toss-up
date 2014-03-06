@@ -43,7 +43,7 @@ task Recorder()
     		initial_encoder = nMotorEncoder[backLeftDrive];
 
     		// Print a message that recording has started
-    		writeDebugStreamLine("Started mesasurment.")
+    		writeDebugStreamLine("Started mesasurment.");
 			}
     }
 
