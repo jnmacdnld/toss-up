@@ -80,6 +80,13 @@ void DriveMoveTicks(int ticks, float percent) {
   DriveSetPower(sgn(ticks) * -kFullPower);
   wait1Msec(30);
   DriveSetPower(0);
+
+  // Calculate the error
+  int error = nMotorEncoder[backLeftDrive] - target;
+
+  // Print the error to the debug stream
+  writeDebugStreamLine("Error: %d", error);
+  writeDebugStreamLine("\n");
 }
 
 void DriveMoveInches(float inches) {
