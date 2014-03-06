@@ -13,7 +13,7 @@
 #define kWallToLargeBall -1337
 
 #define kStartUnderBarrierTicks 0
-#define kInFrontOfStashDistance 27
+#define kInFrontOfStashDistance 28
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
 
@@ -170,6 +170,9 @@ void AutonHangingZone(TeamColor color)
 
 void AutonHangingZoneStash(TeamColor color)
 {
+  // Start counting the time
+  ClearTimer(T1);
+
   // Set the intake in to flip it out and get ready to intake the two buckies, leave it on
   // to keep buckies from falling out
   IntakeSetPower(kIntakeInPower);
@@ -179,25 +182,26 @@ void AutonHangingZoneStash(TeamColor color)
 
   // Drive forward to pick up the two buckies
   DriveMoveTicks(kStartToWall, 0.7);
-  
-  // Drive backwards to the start
+
+  // Drive back to the start
   DriveMoveTicks(-kStartToWall, 1.0);
 
-  // Drive over the bump
+  // Drive backwards over the bump
   DriveMoveTicks(-1005, 1.0);
 
   // Stop the intake
   IntakeSetPower(0);
 
   // Pivot to face forwards
-  DriveTurnTicks(823 - 60);
+  DriveTurnTicks(823 - 90, 0.85);
 
   // Drive up to the barrier
-  while (SensorValue[leftFrontLine] > 2600)
+  while (SensorValue[leftFrontLine] > 2700)
     DriveSetPower(kFullPower);
+  writeDebugStreamLine("Saw line, continuing");
 
   // Drive under the barrier, knocking a large ball into the goal zone
-  DriveMoveTicks(639, 1.0);
+  DriveMoveTicks(639 + 60, 1.0);
 
   // Pivot to face paralell to the stash
   DriveTurnTicks(-381 + 80, 0.85);
@@ -210,19 +214,28 @@ void AutonHangingZoneStash(TeamColor color)
   wait1Msec(750);
 
   // Drive paralell to the stash
-  DriveMoveTicks(932 - 10, 0.85);
+  DriveMoveTicks(932 - 40);
 
   // Pivot to face the stash
-  DriveTurnTicks(394 + 40);  
+  DriveTurnTicks(394 + 50);
 
   // Drive up to the stash
   while (SensorValue[stashSonar] > kInFrontOfStashDistance)
+  {
+    // If the robot is almost out of time, eject the buckies
+    if (time1[T1] > 13000)
+      break;
+
+    // Keep driving toward the stash
     DriveSetPower(kFullPower * 0.85);
+  }
+
+  // Stop driving up to the stash
   DriveSetPower(0);
 
   // Eject the three buckyballs into the stash
   IntakeSetPower(kIntakeOutSlowPower);
-  wait1Msec(3000);
+  wait1Msec(2000);
   IntakeSetPower(0);
 }
 

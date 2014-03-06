@@ -49,7 +49,7 @@ task main()
  //SensorFullCount[in8] = 3600;
 
 //Specify the number of degrees for the robot to turn (1 degree = 10, or 900 = 90 degrees)
- int degrees10 = 900;
+ int degrees10 = 1050;
 
 //While the absolute value of the gyro is less than the desired rotation...
  while(abs(SensorValue[gyro]) < degrees10)
@@ -65,7 +65,7 @@ task main()
  motor[frontLeftDrive] = -setting;
  }
 
- int setting = -20;
+ int setting = -40;
 
  motor[backRightDrive] = setting;
  motor[middleRightDrive] = setting;
@@ -75,4 +75,5 @@ task main()
  motor[middleLeftDrive] = -setting;
  motor[frontLeftDrive] = -setting;
 
+ wait1Msec(500);
 }

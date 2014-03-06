@@ -69,8 +69,6 @@ task usercontrol()
   StartTask(MotorsUpdate);
   StartTask(Recorder);
 
-  GyroReinit();
-
   while (true)
     wait1Msec(1000);
 }

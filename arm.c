@@ -121,7 +121,6 @@ void ArmControlSetTarget(int target) {
 }
 
 void ArmControlStep() {
-	writeDebugStreamLine("Call to ArmControlStep");
 
 	if (!armControlActive)
 		return;
@@ -158,8 +157,6 @@ void ArmHoldPos() {
 }
 
 void ArmControlStepDownPreset() {
-	writeDebugStreamLine("Call to ArmControlStepDownPreset");
-
 	if ( ArmIsDown() )
 		ArmHoldPos();
 	else
