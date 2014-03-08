@@ -6,7 +6,7 @@
 #define kArmUpPos   3160
 #define kArmDownPos 1500
 #define kArmAllDownPos 1430 // Define me to an actual value
-#define kArmBarrierPos 2400
+#define kArmBarrierPos 2300
 
 #define kArmUpPower    kFullPower
 #define kArmDownPower  -kFullPower / 2

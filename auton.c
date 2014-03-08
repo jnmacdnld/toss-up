@@ -17,13 +17,16 @@
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
 
-#define kNumAutonTurns 2
+#define kNumAutonTurns 5
 
 #define kFacingForwardsRed 0
 #define kFacingForwardsBlue 0
 #define kStashToBarrier 0
 
-typedef enum { kInsideBigBall, kHangingLargeBall } Turn;
+#define kWallToStashRed 932 + 20
+#define kWallToStashBlue 932 - 40
+
+typedef enum { kInsideBigBall, kHangingLargeBall, kPivotForwards, kPivotInside, kPivotStash } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
@@ -38,13 +41,27 @@ typedef struct
 static Auton auton = { kMiddleZone, kBlue };
 
 void AutonHangingZoneStash(TeamColor color);
+void AutonTurn(Turn turn, TeamColor color, float percent = 0.7);
 
 void AutonInit()
 {
+  // Middle Zone autonomous
   auton.turns[kInsideBigBall][kRed] = 231;
   auton.turns[kInsideBigBall][kBlue] = -184;
+
+  // Hanging Zone autonomous
   auton.turns[kHangingLargeBall][kBlue] = -290;
   auton.turns[kHangingLargeBall][kRed] = 205; // FIX ME
+
+  // Hanging Zone stash autonomous
+  auton.turns[kPivotForwards][kBlue] = 723;
+  auton.turns[kPivotForwards][kRed] = -810;
+
+  auton.turns[kPivotInside][kBlue] = -301;
+  auton.turns[kPivotInside][kRed] = 447;
+
+  auton.turns[kPivotStash][kBlue] = 444 - 10;
+  auton.turns[kPivotStash][kRed] = -404 + 30;
 }
 
 int AutonGetTurnTicks(Turn turn, TeamColor color)
@@ -52,9 +69,9 @@ int AutonGetTurnTicks(Turn turn, TeamColor color)
   return auton.turns[turn][color];
 }
 
-void AutonTurn(Turn turn, TeamColor color)
+void AutonTurn(Turn turn, TeamColor color, float percent)
 {
-  DriveTurnTicks( AutonGetTurnTicks(turn, color) );
+  DriveTurnTicks( AutonGetTurnTicks(turn, color), percent );
 }
 
 void AutonMiddleZone(TeamColor color)
@@ -186,14 +203,14 @@ void AutonHangingZoneStash(TeamColor color)
   // Drive back to the start
   DriveMoveTicks(-kStartToWall, 1.0);
 
-  // Drive backwards over the bump
+  // Drive backwards over the bump (breaking this into two parts evens out the robot)
   DriveMoveTicks(-1005, 1.0);
 
   // Stop the intake
   IntakeSetPower(0);
 
   // Pivot to face forwards
-  DriveTurnTicks(823 - 90, 0.85);
+  AutonTurn(kPivotForwards, color, 0.85);
 
   // Drive up to the barrier
   while (SensorValue[leftFrontLine] > 2700)
@@ -204,7 +221,7 @@ void AutonHangingZoneStash(TeamColor color)
   DriveMoveTicks(639 + 60, 1.0);
 
   // Pivot to face paralell to the stash
-  DriveTurnTicks(-381 + 80, 0.85);
+  AutonTurn(kPivotInside, color, 0.85);
 
   // Raise the arm in the background
   ArmControlSetTarget(kArmUpPos);
@@ -214,10 +231,13 @@ void AutonHangingZoneStash(TeamColor color)
   wait1Msec(750);
 
   // Drive paralell to the stash
-  DriveMoveTicks(932 - 40);
+  if (color == kRed)
+    DriveMoveTicks(kWallToStashRed);
+  else
+    DriveMoveTicks(kWallToStashBlue);
 
   // Pivot to face the stash
-  DriveTurnTicks(394 + 50);
+  AutonTurn(kPivotStash, color, 0.85);
 
   // Drive up to the stash
   while (SensorValue[stashSonar] > kInFrontOfStashDistance)
@@ -279,91 +299,15 @@ void AutonRun()
 
   TeamColor color = AutonGetColor();
 
+  if (color == kRed)
+    writeDebugStreamLine("Color is red.");
+  else
+    writeDebugStreamLine("Color is blue.")
+
   if ( AutonGetZone() == kHangingZone )
-    AutonHangingZoneStash(color);
+    AutonHangingZone(color);
   else
     AutonMiddleZone(color);
 }
-
-/*#define kStartToBarrierTicks 880
-#define kStartToBarrierInches 28.21
-#define START_TO_BARRIER_INCHES_MINUS_3 kStartToBarrierInches - 10
-
-#define kFirstToSecondBigBallInches 32.25
-
-#define kFieldTileWidthInches 23.42
-
-#define TICKS_PER_PIVOT_90 431
-#define TICKS_PER_PIVOT_MINUS_90 -369*/
-
-/*void AutonBlueMiddleZone() {
-	writeDebugStreamLine("started auton");
-  ArmMoveToPos(kArmBarrierPos);
-
-  // Knock the first big ball into the goal Zone and return 3 inches from the starting position
-  DriveMoveInches(kFieldTileWidthInches);
-  DriveMoveInches( -kFieldTileWidthInches);
-
-  // Turn left and move to the second large ball
-  AutonTurnToDegrees(-90.0);
-  DriveMoveInches(kFirstToSecondBigBallInches);
-
-  // Turn towards the ball and knock it into the goal Zone
-  AutonTurnToDegrees(0);
-  DriveMoveInches( START_TO_BARRIER_INCHES_MINUS_3);
-
-  // Don't use the following for now
-
-  return;
-  // Move back from the barrier
-  DriveMoveInches( - START_TO_BARRIER_INCHES_MINUS_3 );
-
-  // Align the robot with the bucky goal
-  AutonTurnToDegrees(90.0);
-  DriveMoveInches( kFieldTileWidthInches / 2 );
-
-  // Turn towards the bucky goal
-  AutonTurnToDegrees(0.0);
-
-  // Move 2/3 the way to the bucky goal, raise the arm
-  DriveMoveInches( (kFieldTileWidthInches * 2) - 3);
-  ArmMoveToPos(kArmUpPos);
-
-  // Move to the goal and score the bucky
-  DriveMoveInches(kFieldTileWidthInches);
-  IntakeSetPower(kIntakeOutSlowPower);
-  wait1Msec(1000);
-  IntakeSetPower(0);
-}
-
-void AutonBlueHangingZone() {
-  // Pick up the two buckies in front of the robot
-  IntakeSetPower(kIntakeInPower);
-  DriveMoveInches(kFieldTileWidthInches - 2);
-  wait1Msec(500);
-  IntakeSetPower(0);
-
-  // Drive to the first big ball
-  AutonTurnToDegrees(90.0);
-  DriveMoveInches(kFieldTileWidthInches);
-
-  // Push the first big ball into the middle Zone and return
-  AutonTurnToDegrees(180.0);
-  ArmMoveToPos(kArmBigBallPos);
-  DriveMoveInches(kFieldTileWidthInches);
-  DriveMoveInches(-kFieldTileWidthInches);
-
-  // Drive to the second big ball
-  AutonTurnToDegrees(90.0);
-  DriveMoveInches(kFieldTileWidthInches);
-
-  // Push the second big ball into the middle Zone
-  AutonTurnToDegrees(180.0);
-  DriveMoveInches(kFieldTileWidthInches);
-  DriveMoveInches(-kFieldTileWidthInches);
-
-  IntakeSetPower(kIntakeOutFastPower);
-}
-*/
 
 #endif /* AUTON */

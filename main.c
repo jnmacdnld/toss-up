@@ -1,4 +1,4 @@
-#pragma config(I2C_Usage, I2C1, i2cSensors)
+  #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,    armPot,         sensorNone)
 #pragma config(Sensor, in2,    gyro,           sensorGyro)
 #pragma config(Sensor, in3,    leftFrontLine,  sensorLineFollower)
