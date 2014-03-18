@@ -158,13 +158,18 @@ void ArmHoldPos() {
 
 void ArmControlStepDownPreset() {
 	if ( ArmIsDown() )
+	{
 		ArmHoldPos();
+		armControlReachedTarget = true;
+	}
 	else
+	{
 		ArmSetPower(kArmDownPower);
+	}
 }
 
 void ArmMoveToPos(int pos) {
-	writeDebugStreamLine("Moving arm");
+	writeDebugStreamLine("Call to ArmMoveToPos\n");
 
 	ArmControlSetTarget(pos);
 

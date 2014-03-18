@@ -12,7 +12,7 @@
 #define kStartToWall 622
 #define kWallToLargeBall -1337
 
-#define kStartUnderBarrierTicks 0
+#define kStartUnderBarrierTicks 1679
 #define kInFrontOfStashDistance 28
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
@@ -124,10 +124,16 @@ void AutonMiddleZoneStash(TeamColor color)
   ArmMoveToPos(kArmUpPos);
 
   // Drive up to the stash
-  while (SensorValue[stashSonar] > kInFrontOfStashDistance)
-    DriveSetPower(kFullPower * 0.7);
+  while (SensorValue[stashSonar] > 50)
+    DriveSetPower(kFullPower * 0.85);
+
+  // Make sure the robot is against the stash
+  wait1Msec(1000);
+
+  // Stop moving forward
   DriveSetPower(0);
 
+  /*
   // Turn the robot until it's facing forwards
   if (color == kRed)
   {
@@ -139,12 +145,14 @@ void AutonMiddleZoneStash(TeamColor color)
     while (SensorValue[gyro] < kFacingForwardsBlue)
       DriveSetLeft(kFullPower * 0.7);
   }
+  */
 
   // Eject the preload
   IntakeSetPower(kIntakeOutSlowPower);
-  wait1Msec(500);
+  wait1Msec(1000);
   IntakeSetPower(0);
-
+  
+  /*
   // Drive backwards up to the barrier
   DriveMoveTicks(kStashToBarrier, 1.0);
 
@@ -156,6 +164,16 @@ void AutonMiddleZoneStash(TeamColor color)
 
   // Drive forwards under the barrier to knock a large ball into the goal zone
   DriveMoveTicks(kUnderBarrier, 1.0);
+  */
+
+  // Drive backwards away from the stash
+  DriveMoveTicks(-560, 1.0);
+
+  // Lower the arm
+  ArmMoveToPos(kArmDownPos);
+
+  // Drive backwards to the starting tile
+  DriveMoveTicks(-1491 + 440, 1.0);
 }
 
 /*
@@ -300,14 +318,16 @@ void AutonRun()
   TeamColor color = AutonGetColor();
 
   if (color == kRed)
-    writeDebugStreamLine("Color is red.");
+    writeDebugStreamLine("Color is red");
   else
-    writeDebugStreamLine("Color is blue.")
+    writeDebugStreamLine("Color is blue");
+
+  writeDebugStreamLine("");
 
   if ( AutonGetZone() == kHangingZone )
     AutonHangingZone(color);
   else
-    AutonMiddleZone(color);
+    AutonMiddleZoneStash(color);
 }
 
 #endif /* AUTON */

@@ -86,8 +86,7 @@ void DriveMoveTicks(int ticks, float percent) {
   int error = nMotorEncoder[backLeftDrive] - target;
 
   // Print the error to the debug stream
-  writeDebugStreamLine("Error: %d", error);
-  writeDebugStreamLine("\n");
+  writeDebugStreamLine("Error: %d\n", error);
 }
 
 void DriveMoveInches(float inches) {
