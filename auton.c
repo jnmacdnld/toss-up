@@ -120,8 +120,11 @@ void AutonMiddleZoneStash(TeamColor color)
   // Stop the intake
   IntakeSetPower(0);
 
-  // Raise the lift
-  ArmMoveToPos(kArmUpPos);
+  // Raise the lift in the background
+  ArmControlSetTarget(kArmUpPos);
+
+  // Drive close to the stash
+  DriveMoveTicks(0);
 
   // Drive up to the stash
   while (SensorValue[stashSonar] > 50)
@@ -169,8 +172,8 @@ void AutonMiddleZoneStash(TeamColor color)
   // Drive backwards away from the stash
   DriveMoveTicks(-560, 1.0);
 
-  // Lower the arm
-  ArmMoveToPos(kArmDownPos);
+  // Lower the arm in the background
+  ArmControlSetPos(kArmDownPos);
 
   // Drive backwards to the starting tile
   DriveMoveTicks(-1491 + 440, 1.0);
@@ -313,17 +316,13 @@ void AutonToggleColor()
 
 void AutonRun()
 {
-  writeDebugStreamLine("Call to AutonRun");
+  // Print a message that says AutonRun was called
+  writeDebugStreamLine("Call to AutonRun\n");
 
+  // Get the team color
   TeamColor color = AutonGetColor();
 
-  if (color == kRed)
-    writeDebugStreamLine("Color is red");
-  else
-    writeDebugStreamLine("Color is blue");
-
-  writeDebugStreamLine("");
-
+  // Run the appropriate autonomous routine
   if ( AutonGetZone() == kHangingZone )
     AutonHangingZone(color);
   else
