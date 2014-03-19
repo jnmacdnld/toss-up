@@ -113,9 +113,15 @@ void AutonMiddleZoneStash(TeamColor color)
 {
   // Flip out the intake
   IntakeSetPower(kIntakeInPower);
+  
+  // Store the initial position of the robot
+  short initial = nMotorEncoder[backLeftDrive];
 
-  // Drive under the barrier, knocking a large ball into the goal zone
-  DriveMoveTicks(kStartUnderBarrierTicks, 1.0);
+  // Keep driving forwards
+  DriveSetPower(kFullPower);
+
+  // Wait until the robot has moved under the barrier
+  while (nMotorEncoder[backLeftDrive] < initial + 1315 - 300);
 
   // Stop the intake
   IntakeSetPower(0);
@@ -123,68 +129,42 @@ void AutonMiddleZoneStash(TeamColor color)
   // Raise the lift in the background
   ArmControlSetTarget(kArmUpPos);
 
-  // Drive close to the stash
-  DriveMoveTicks(0);
+  // Store the initial position of the robot
+  initial = nMotorEncoder[backLeftDrive];
+
+  // Keep driving forwards
+  DriveSetPower(kFullPower);
+
+  // Wait until the robot has moved close to the stash
+  while (nMotorEncoder[backLeftDrive] > initial + 679);
 
   // Drive up to the stash
-  while (SensorValue[stashSonar] > 50)
+  while (SensorValue[stashSonar] > 30)
     DriveSetPower(kFullPower * 0.85);
-
-  // Make sure the robot is against the stash
-  wait1Msec(1000);
 
   // Stop moving forward
   DriveSetPower(0);
-
-  /*
-  // Turn the robot until it's facing forwards
-  if (color == kRed)
-  {
-    while (SensorValue[gyro] > kFacingForwardsRed) 
-      DriveSetRight(kFullPower * 0.7);
-  }
-  else
-  {
-    while (SensorValue[gyro] < kFacingForwardsBlue)
-      DriveSetLeft(kFullPower * 0.7);
-  }
-  */
 
   // Eject the preload
   IntakeSetPower(kIntakeOutSlowPower);
   wait1Msec(1000);
   IntakeSetPower(0);
   
-  /*
-  // Drive backwards up to the barrier
-  DriveMoveTicks(kStashToBarrier, 1.0);
+  // Store the initial position of the robot
+  initial = nMotorEncoder[backLeftDrive];
 
-  // Lower the lift
-  ArmMoveToPos(kArmDownPos);
+  // Keep driving backwards
+  DriveSetPower(-kFullPower);
 
-  // Drive backwards under the barrier
-  DriveMoveTicks(kStashUnderBarrier, 1.0);
-
-  // Drive forwards under the barrier to knock a large ball into the goal zone
-  DriveMoveTicks(kUnderBarrier, 1.0);
-  */
-
-  // Drive backwards away from the stash
-  DriveMoveTicks(-560, 1.0);
+  // Wait until the robot has moved away from the stash
+  while (nMotorEncoder[backLeftDrive] > initial - 100);
 
   // Lower the arm in the background
-  ArmControlSetPos(kArmDownPos);
+  ArmControlSetTarget(kArmDownPos);
 
   // Drive backwards to the starting tile
-  DriveMoveTicks(-1491 + 440, 1.0);
+  DriveMoveTicks(-1712, 1.0);
 }
-
-/*
-void AutonHangingZone(TeamColor color)
-{
-  DriveTurnToDegrees(104.0);
-}
-*/
 
 void AutonHangingZone(TeamColor color)
 {

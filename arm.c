@@ -4,8 +4,8 @@
 #include "motors.c"
 
 #define kArmUpPos   3160
-#define kArmDownPos 1500
-#define kArmAllDownPos 1430 // Define me to an actual value
+#define kArmDownPos 1460
+#define kArmAllDownPos 1451
 #define kArmBarrierPos 2300
 
 #define kArmUpPower    kFullPower
@@ -151,7 +151,7 @@ void ArmControlStep() {
 
 void ArmHoldPos() {
 	if ( ArmIsDown() ) // Don't try to hold up the arm if it's all the way down
-			ArmSetPower(0);
+			ArmSetPower(-15);
 	else
 		ArmSetPower(kArmHoldPower); // Hold up the arm so it doesn't fall
 }
