@@ -169,6 +169,16 @@ void AutonMiddleZoneStash(TeamColor color)
 
   // Drive backwards to the starting tile
   DriveMoveTicks(-1712, 1.0);
+
+  // Wait until the robot is repositioned
+
+  // Move the arm to barrier height in the background
+
+  // Drive forwards even with the second large ball
+
+  // Pivot 90 degrees to the right
+
+  // Drive forwards to knock the large ball into the goal zone
 }
 
 void AutonHangingZone(TeamColor color)
