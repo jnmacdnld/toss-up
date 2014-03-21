@@ -136,11 +136,16 @@ void AutonMiddleZoneStash(TeamColor color)
   DriveSetPower(kFullPower);
 
   // Wait until the robot has moved close to the stash
-  while (nMotorEncoder[backLeftDrive] > initial + 679);
+  while (nMotorEncoder[backLeftDrive] < initial + 679);
+
+  // Set a timeout
+  ClearTimer(T1);
 
   // Drive up to the stash
-  while (SensorValue[stashSonar] > 30)
-    DriveSetPower(kFullPower * 0.85);
+  DriveSetPower(kFullPower * 0.85);
+
+  // Keep driving until the robot reaches the stash
+  while (SensorValue[stashSonar] > 28);
 
   // Stop moving forward
   DriveSetPower(0);
@@ -157,7 +162,7 @@ void AutonMiddleZoneStash(TeamColor color)
   DriveSetPower(-kFullPower);
 
   // Wait until the robot has moved away from the stash
-  while (nMotorEncoder[backLeftDrive] > initial - 100);
+  while (nMotorEncoder[backLeftDrive] > initial - 50);
 
   // Lower the arm in the background
   ArmControlSetTarget(kArmDownPos);
@@ -296,6 +301,8 @@ void AutonToggleColor()
 
 void AutonRun()
 {
+  ArmControlReset();
+
   // Print a message that says AutonRun was called
   writeDebugStreamLine("Call to AutonRun\n");
 
