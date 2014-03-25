@@ -17,7 +17,7 @@
 #define kStashUnderBarrier 0
 #define kUnderBarrier 0
 
-#define kNumAutonTurns 5
+#define kNumAutonTurns 6
 
 #define kFacingForwardsRed 0
 #define kFacingForwardsBlue 0
@@ -26,7 +26,7 @@
 #define kWallToStashRed 932 + 20
 #define kWallToStashBlue 932 - 40
 
-typedef enum { kInsideBigBall, kHangingLargeBall, kPivotForwards, kPivotInside, kPivotStash } Turn;
+typedef enum { kInsideBigBall, kHangingLargeBall, kPivotForwards, kPivotInside, kPivotStash, kStashInsideLargeBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
 
@@ -43,11 +43,18 @@ static Auton auton = { kMiddleZone, kBlue };
 void AutonHangingZoneStash(TeamColor color);
 void AutonTurn(Turn turn, TeamColor color, float percent = 0.7);
 
+void AutonSetZone(Zone zone);
+void AutonSetColor(TeamColor color);
+
 void AutonInit()
 {
   // Middle Zone autonomous
   auton.turns[kInsideBigBall][kRed] = 231;
   auton.turns[kInsideBigBall][kBlue] = -184;
+
+  // Middle Zone stash autonomous
+  auton.turns[kStashInsideLargeBall][kRed] = -428;
+  auton.turns[kStashInsideLargeBall][kBlue] = 391;
 
   // Hanging Zone autonomous
   auton.turns[kHangingLargeBall][kBlue] = -290;
@@ -62,6 +69,10 @@ void AutonInit()
 
   auton.turns[kPivotStash][kBlue] = 444 - 10;
   auton.turns[kPivotStash][kRed] = -404 + 30;
+
+  // Set default auton
+  AutonSetZone(kMiddleZone);
+  AutonSetColor(kBlue);
 }
 
 int AutonGetTurnTicks(Turn turn, TeamColor color)
@@ -138,14 +149,14 @@ void AutonMiddleZoneStash(TeamColor color)
   // Wait until the robot has moved close to the stash
   while (nMotorEncoder[backLeftDrive] < initial + 679);
 
-  // Set a timeout
-  ClearTimer(T1);
-
   // Drive up to the stash
   DriveSetPower(kFullPower * 0.85);
 
-  // Keep driving until the robot reaches the stash
-  while (SensorValue[stashSonar] > 28);
+  // Set the timeout to reach the stash
+  ClearTimer(T1);
+
+  // Keep driving until the robot reaches the stash or one second has passed
+  while (SensorValue[stashSonar] > 30 && time1[T1] < 1000);
 
   // Stop moving forward
   DriveSetPower(0);
@@ -170,15 +181,32 @@ void AutonMiddleZoneStash(TeamColor color)
   // Drive backwards to the starting tile
   DriveMoveTicks(-1712, 1.0);
 
-  // Wait until the robot is repositioned
+  // Wait until the repositioning button is pressed
+  while (!SensorValue[touch]);
+  writeDebugStreamLine("Repositioning button pressed");
+
+  // Wait until the button is released, indicating the robot has been repositioned
+  while (SensorValue[touch]);
+  writeDebugStreamLine("Repositioning button released");
 
   // Move the arm to barrier height in the background
+  ArmControlSetTarget(kArmBarrierPos);
 
   // Drive forwards even with the second large ball
+  DriveMoveTicks(963, 1.0);
 
-  // Pivot 90 degrees to the right
+  // Pivot to face the large ball
+  AutonTurn(kStashInsideLargeBall, color, 0.85);
 
   // Drive forwards to knock the large ball into the goal zone
+  DriveMoveTicks(600, 1.0);
+
+  // Drive backwards away from the barrier
+  DriveMoveTicks(-300, 1.0);
+
+  // Lower the arm
+  while (true)
+    ArmControlSetTarget(kArmDownPos);
 }
 
 void AutonHangingZone(TeamColor color)
@@ -318,6 +346,12 @@ void AutonRun()
 
   // Get the team color
   TeamColor color = AutonGetColor();
+
+  // Print the color of the autonomous
+  if (color == kRed)
+    writeDebugStreamLine("Autonomous color is red");
+  else
+    writeDebugStreamLine("Autonomous color is blue");
 
   // Run the appropriate autonomous routine
   if ( AutonGetZone() == kHangingZone )

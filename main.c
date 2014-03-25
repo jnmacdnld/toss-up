@@ -1,10 +1,9 @@
-  #pragma config(I2C_Usage, I2C1, i2cSensors)
+#pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,    armPot,         sensorNone)
 #pragma config(Sensor, in2,    gyro,           sensorGyro)
 #pragma config(Sensor, in3,    leftFrontLine,  sensorLineFollower)
 #pragma config(Sensor, dgtl1,  stashSonar,     sensorSONAR_cm)
-#pragma config(Sensor, dgtl3,  ColorJumper,    sensorDigitalIn)
-#pragma config(Sensor, dgtl4,  ZoneJumper,     sensorDigitalIn)
+#pragma config(Sensor, dgtl3,  touch,          sensorTouch)
 #pragma config(Sensor, I2C_1,  backRightDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  backLeftDriveEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port1,           middleLeftDrive, tmotorVex393HighSpeed, openLoop)
@@ -31,7 +30,6 @@
 #include "motor_luts.c"
 #include "auton.c"
 #include "lcd.c"
-#include "jumpers.c"
 #include "Recorder.c"
 #include "ArmControl.c"
 
@@ -56,15 +54,19 @@ void pre_auton()
 task autonomous()
 {
   ArmControlReset();
+  DriveUnreflectRight();
 
   StartTask(MotorsUpdate);
   StartTask(ArmControl);
+  StartTask(Lcd);
 
   AutonRun();
 }
 
 task usercontrol()
 {
+  DriveUnreflectRight();
+
   StartTask(UserControl);
   StartTask(MotorsUpdate);
   StartTask(Recorder);
