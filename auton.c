@@ -156,7 +156,7 @@ void AutonMiddleZoneStash(TeamColor color)
   ClearTimer(T1);
 
   // Keep driving until the robot reaches the stash or one second has passed
-  while (SensorValue[stashSonar] > 30 && time1[T1] < 1000);
+  while (SensorValue[stashSonar] > 30 && time1[T1] < 750);
 
   // Stop moving forward
   DriveSetPower(0);
