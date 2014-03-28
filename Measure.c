@@ -3,7 +3,7 @@
 task Measure()
 {
 	// Define variables to store the state of the measure button
-  bool current_state = vexRT[Btn8R];
+  bool current_state = MEASURE_BUTTON;
   bool last_state = false;
 
   // Define variables for the measuring itself
