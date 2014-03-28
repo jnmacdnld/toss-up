@@ -308,12 +308,12 @@ void AutonSetZone(Zone zone) {
 }
 
 void AutonSetColor(TeamColor color) {
-  Auton.color = color;
+  auton.color = color;
 }
 
 TeamColor AutonGetColor()
 {
-  return Auton.color;
+  return auton.color;
 }
 
 Zone AutonGetZone()

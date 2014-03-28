@@ -1,6 +1,6 @@
 #define MEASURE_BUTTON vexRT[Btn8R]
 
-task Mesasurment()
+task Measure()
 {
 	// Define variables to store the state of the measure button
   bool current_state = vexRT[Btn8R];

@@ -30,7 +30,7 @@
 #include "ArmControl.c"
 #include "Auton.c"
 #include "Lcd.c"
-#include "Measurement.c"
+#include "Measure.c"
 #include "Motors.c"
 #include "MotorLuts.c"
 #include "UserControl.c"
@@ -72,7 +72,7 @@ task usercontrol()
 
   StartTask(UserControl);
   StartTask(MotorsUpdate);
-  StartTask(Measurement);
+  StartTask(Measure);
 
   while (true)
     wait1Msec(1000);
