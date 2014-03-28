@@ -59,6 +59,7 @@ task autonomous()
   ArmControlReset();
   DriveUnreflectRight();
 
+  StartTask(Debug);
   StartTask(MotorsUpdate);
   StartTask(ArmControl);
   StartTask(Lcd);
@@ -68,8 +69,10 @@ task autonomous()
 
 task usercontrol()
 {
+  ArmControlReset();
   DriveUnreflectRight();
 
+  StartTask(Debug);
   StartTask(UserControl);
   StartTask(MotorsUpdate);
   StartTask(Measure);
