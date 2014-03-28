@@ -1,11 +1,11 @@
 #ifndef DRIVE
 #define DRIVE
 
-#include "motors.c"
+#include "Motors.c"
 #include "GyroLib.c"
 #include "PidLib.c"
 
-// #include "user_control.c"
+// #include "UserControl.c"
 
 #define kHighSpeedImeTicksPerInch 31.19
 #define kHighSpeedImeTicksPerRev 392.0

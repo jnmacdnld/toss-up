@@ -1,12 +1,12 @@
 #ifndef USER_CONTROL_C
 #define USER_CONTROL_C
 
-#include "drive.c"
-#include "intake.c"
-#include "arm.c"
-#include "arcade_drive.c"
+#include "Drive.c"
+#include "Intake.c"
+#include "Arm.c"
+#include "ArcadeDrive.c"
 #include "GyroLib.c"
-#include "tank_drive.c"
+#include "TankDrive.c"
 
 int armPotVal;
 int _backLeftDriveEncoder;

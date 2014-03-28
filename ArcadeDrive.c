@@ -3,8 +3,8 @@
 
 #define kMaxTurn 127.0
 
-#include "drive.c"
-#include "joystick.c"
+#include "Drive.c"
+#include "Joystick.c"
 
 bool arcade_drive_can_pivot;
 

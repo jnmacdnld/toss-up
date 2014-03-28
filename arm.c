@@ -1,7 +1,7 @@
 #ifndef ARM_C
 #define ARM_C
 
-#include "motors.c"
+#include "Motors.c"
 
 #define kArmUpPos   3160
 #define kArmDownPos 1460

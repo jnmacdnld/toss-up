@@ -1,8 +1,8 @@
 #ifndef INTAKE_C
 #define INTAKE_C
 
-#include "motors.c"
-#include "arm.c"
+#include "Motors.c"
+#include "Arm.c"
 
 #define kIntakeOutSlowPower -50
 #define kIntakeOutFastPower -127

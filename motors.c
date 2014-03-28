@@ -1,7 +1,7 @@
 #ifndef MOTOR_C
 #define MOTOR_C
 
-#include "motor_luts.c"
+#include "MotorLuts.c"
 
 #define kFullPower 127
 #define kHalfPower kFullPower / 2

@@ -1,7 +1,7 @@
 #ifndef ARM_CONTROL
 #define ARM_CONTROL
 
-#include "arm.c"
+#include "Arm.c"
 
 // Task to move   the arm to the requested position
 task ArmControl()

@@ -1,9 +1,9 @@
 #ifndef AUTON
 #define AUTON
 
-#include "arm.c"
-#include "intake.c"
-#include "drive.c"
+#include "Arm.c"
+#include "Intake.c"
+#include "Drive.c"
 
 #define kStartToBarrierTicks 671
 #define kBarrierToStartTicks -369
@@ -308,12 +308,12 @@ void AutonSetZone(Zone zone) {
 }
 
 void AutonSetColor(TeamColor color) {
-  auton.color = color;
+  Auton.color = color;
 }
 
 TeamColor AutonGetColor()
 {
-  return auton.color;
+  return Auton.color;
 }
 
 Zone AutonGetZone()

@@ -1,8 +1,8 @@
 #ifndef TANK_DRIVE
 #define TANK_DRIVE
 
-#include "joystick.c"
-#include "drive.c"
+#include "Joystick.c"
+#include "Drive.c"
 
 void TankDriveUpdate()
 {

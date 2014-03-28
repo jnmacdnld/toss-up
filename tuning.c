@@ -1,7 +1,7 @@
 #ifndef TUNING_C
 #define TUNING_C
 
-#include "motors.c"
+#include "Motors.c"
 
 #define kSamplePeriod 1000
 #define kNumDriveMotorsPerSide 3

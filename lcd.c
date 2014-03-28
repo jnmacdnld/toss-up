@@ -1,7 +1,7 @@
 #ifndef LCD
 #define LCD
 
-#include "auton.c"
+#include "Auton.c"
 
 #define kNonePressed 0
 #define kLeftPressed 1
