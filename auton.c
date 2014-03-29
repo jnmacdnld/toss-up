@@ -53,7 +53,7 @@ void AutonInit()
   auton.turns[kInsideBigBall][kBlue] = -184;
 
   // Middle Zone stash autonomous
-  auton.turns[kStashInsideLargeBall][kRed] = -428;
+  auton.turns[kStashInsideLargeBall][kRed] = -300;
   auton.turns[kStashInsideLargeBall][kBlue] = 391;
 
   // Hanging Zone autonomous
