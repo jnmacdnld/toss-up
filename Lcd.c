@@ -9,7 +9,7 @@
 
 void LcdUpdateAuton();
 
-task Lcd()
+task LcdAuton()
 {
   short current_state = nLCDButtons;
   short last_state = kNonePressed;

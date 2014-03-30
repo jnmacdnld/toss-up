@@ -36,7 +36,6 @@
 #include "LiftControl.c"
 #include "Debug.c"
 
-
 // Include third-party libraries
 #include "GyroLib.c"
 
@@ -45,6 +44,7 @@ void pre_auton()
   // Stop all running tasks when the mode is switched
   bStopTasksBetweenModes = true;
 
+  // Initialize the modules that require it
   MotorLutsInit();
   MotorsInit();
   DriveInit();
@@ -53,7 +53,8 @@ void pre_auton()
   // DriveInitGyro();
   GyroInit(gyro);
 
-  StartTask(Lcd);
+  // Let the autonomous be selected using the LCD
+  StartTask(LcdAuton);
 }
 
 task autonomous()
