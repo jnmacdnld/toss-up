@@ -1,7 +1,7 @@
 #ifndef AUTON
 #define AUTON
 
-#include "Lift.c"
+#include "LiftControl.c"
 #include "Intake.c"
 #include "Drive.c"
 

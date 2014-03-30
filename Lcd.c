@@ -9,6 +9,7 @@
 #define kRightPressed 4
 
 void LcdUpdateAuton();
+void LcdClear();
 
 task LcdSetAuton()
 {
@@ -63,6 +64,12 @@ void LcdUpdateAuton()
     displayLCDCenteredString(1, "Blue     Hanging");
   else
     displayLCDCenteredString(1, "Error      Error");
+}
+
+void LcdClear()
+{
+  clearLCDLine(0);
+  clearLCDLine(1);
 }
 
 #endif /* LCD */
