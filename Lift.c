@@ -1,5 +1,5 @@
-#ifndef LIFT_C
-#define LIFT_C
+#ifndef LIFT
+#define LIFT
 
 #include "Motors.c"
 

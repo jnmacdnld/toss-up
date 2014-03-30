@@ -36,6 +36,7 @@
 //    ----------------
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include "Lcd.c"
 
 void allMotorsOff();
 void allTasksStop();
@@ -43,7 +44,6 @@ void pre_auton();
 task autonomous();
 task usercontrol();
 
-int nTimeXX = 0;
 bool bStopTasksBetweenModes = true;
 
 static void displayStatusAndTime();
@@ -53,100 +53,93 @@ task main()
   // Turn on the LCD backlight
   bLCDBacklight = true;
   
-  // Master CPU will not let competition start until powered on for at least 2-seconds
+  // Clear the LCD
   clearLCDLine(0);
   clearLCDLine(1);
-  displayLCDPos(0, 0);
-  displayNextLCDString("Startup");
+
+  // Display a startup message
+  displayLCDCenteredString(0, "Starting up...");
+
+  // Don't start the robot for two seconds, as the original code did
   wait1Msec(2000);
 
-
+  // Call the pre_auton funtion
   pre_auton();
 
-  //wait1Msec(500);
-
-
+  // Main loop
   while (true)
   {
+    // If the robot is disabled, allow the auton to be set using the LCD
+    if (bIfiRobotDisabled)
+      StartTask(LcdSetAuton);
 
-    // clearLCDLine(0);
-    // clearLCDLine(1);
-    // displayLCDPos(0, 0);
-
+    // If the robot is disabled, do nothing until it is enabled
     while (bIfiRobotDisabled)
-    {
-      // displayLCDPos(0, 0);
-      // displayNextLCDString("Disabled");
-      nTimeXX = 0;
-      while (true)
-      {
-        // displayStatusAndTime();
-        if (!bIfiRobotDisabled)
-          break;
-        wait1Msec(25);
+      wait1Msec(25);
 
-        // displayStatusAndTime();
-        if (!bIfiRobotDisabled)
-          break;
-        wait1Msec(25);
-
-        // displayStatusAndTime();
-        if (!bIfiRobotDisabled)
-          break;
-        wait1Msec(25);
-
-        // displayStatusAndTime();
-        if (!bIfiRobotDisabled)
-          break;
-        wait1Msec(25);
-        ++nTimeXX;
-      }
-    }
-
-    nTimeXX = 0;
-    // clearLCDLine(0);
-    // clearLCDLine(1);
-    // displayLCDPos(0, 0);
+    // Handle autonomos mode
     if (bIfiAutonomousMode)
     {
-      // displayNextLCDString("Autonomous");
+      // Clear the LCD
+      clearLCDLine(0);
+      clearLCDLine(1);
+
+      // Display the current autonomous routine
+      LcdUpdateAuton();
+
+      // Start the autonomous task
       StartTask(autonomous);
 
-      // Waiting for autonomous phase to end
+      // Loop to be run while autonomous is running and the robot is enabled
       while (bIfiAutonomousMode && !bIfiRobotDisabled)
       {
+        // If the VEXNET disconnects, power off all of the motors
         if (!bVEXNETActive)
-        {
-          if (nVexRCReceiveState == vrNoXmiters) // the transmitters are powered off!!
+          if (nVexRCReceiveState == vrNoXmiters)
             allMotorsOff();
-        }
-        wait1Msec(25);               // Waiting for autonomous phase to end
+
+        // Don't hog CPU
+        wait1Msec(25);
       }
+
+      // After autonomous has expired, power off all of the motors
       allMotorsOff();
+
+      // Stop all tasks if the user has set tasks to end between modes
       if(bStopTasksBetweenModes)
-      {
         allTasksStop();
-      }
     }
 
     else
     {
-      // displayNextLCDString("User Control");
+      // Clear the LCD
+      clearLCDLine(0);
+      clearLCDLine(1);
+
+      // Display User Control to reflect the current mode
+      displayLCDCenteredString(0, "User Control");
+
+      // Start the user control task
       StartTask(usercontrol);
 
       // Here we repeat loop waiting for user control to end and (optionally) start
       // of a new competition run
       while (!bIfiAutonomousMode && !bIfiRobotDisabled)
       {
-        if (nVexRCReceiveState == vrNoXmiters) // the transmitters are powered off!!
+        // If the VEXNET disconnects, turn off the motors
+        if (nVexRCReceiveState == vrNoXmiters)
           allMotorsOff();
+
+        // Don't hog CPU
         wait1Msec(25);
       }
+
+      // If the mode is switched from user control, turn of all motors
       allMotorsOff();
+
+      // Stop all tasks if the user has set tasks to end between modes
       if(bStopTasksBetweenModes)
-      {
         allTasksStop();
-      }
     }
   }
 }
@@ -192,26 +185,6 @@ void allTasksStop()
   StopTask(19);
 #endif
 }
-
-static void displayStatusAndTime()
-{
-  displayLCDPos(1, 0);
-  if (bIfiRobotDisabled)
-    displayNextLCDString("Disable ");
-  else
-  {
-    if (bIfiAutonomousMode)
-      displayNextLCDString("Auton  ");
-    else
-      displayNextLCDString("Driver ");
-  }
-  displayNextLCDNumber(nTimeXX / 600, 2);
-  displayNextLCDChar(':');
-  displayNextLCDNumber((nTimeXX / 10) % 60, -2);
-  displayNextLCDChar('.');
-  displayNextLCDNumber(nTimeXX % 10, 1);
-}
-
 
 static void UserControlCodePlaceholderForTesting()
 {

@@ -59,14 +59,18 @@ void pre_auton()
 
 task autonomous()
 {
+  // Reset lift control in case it was previously active
   LiftControlReset();
+
+  // Unreflect the right drive in case it is reflected
   DriveUnreflectRight();
 
+  // Start all the required tasks
   StartTask(Debug);
   StartTask(MotorsUpdate);
   StartTask(LiftControl);
-  StartTask(Lcd);
 
+  // Run the selected autonomous routine
   AutonRun();
 }
 

@@ -3,6 +3,7 @@
 
 #include "Auton.c"
 
+// Define constants for the state of the LCD buttons
 #define kNonePressed 0
 #define kLeftPressed 1
 #define kRightPressed 4
@@ -11,6 +12,7 @@ void LcdUpdateAuton();
 
 task LcdSetAuton()
 {
+  // Define variables to store the current and last state of the LCD buttons
   short current_state = nLCDButtons;
   short last_state = kNonePressed;
 
