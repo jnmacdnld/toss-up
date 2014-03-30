@@ -27,13 +27,15 @@
 #include "competition_includes.c"
 
 // Include modules
-#include "ArmControl.c"
+#include "UserControl.c"
+#include "Motors.c"
+#include "MotorLuts.c"
 #include "Auton.c"
 #include "Lcd.c"
 #include "Measure.c"
-#include "Motors.c"
-#include "MotorLuts.c"
-#include "UserControl.c"
+#include "ArmControl.c"
+#include "Debug.c"
+
 
 // Include third-party libraries
 #include "GyroLib.c"

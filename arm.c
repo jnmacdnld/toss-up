@@ -3,8 +3,8 @@
 
 #include "Motors.c"
 
-#define kArmUpPos   3160
-#define kArmDownPos 1460
+#define kArmUpPos      3160
+#define kArmDownPos    1460
 #define kArmAllDownPos 1451
 #define kArmBarrierPos 2300
 
@@ -12,83 +12,13 @@
 #define kArmDownPower  -kFullPower / 2
 #define kArmHoldPower  25 // Meant for two rubber bands (double looped) on both sides of the arm
 
-#define armPos         SensorValue[armPot]
-
-#define armDownPressed    vexRT[Btn6D]
-#define armUpPressed      vexRT[Btn6U]
-#define armUpPresetPressed vexRT[Btn8U]
-#define armDownPresetPressed vexRT[Btn8D]
-
-#define armDownFullPowerPressed vexRT[Btn7D]
-#define armUpFullPowerPressed vexRT[Btn7U]
-
+#define ARM_POT            SensorValue[armPot]
 #define kPotTicksPerDegree 16.05882
 
-float armKp = ( (127.0 - kArmHoldPower) / 45.0) * (250.0 / 4095.0);
-
-void ArmSetKp(float begin_slowing_at_deg) {
-	armKp = ( (127.0 - kArmHoldPower) / begin_slowing_at_deg) * (250.0 / 4095.0);
-}
-
-int armControlTarget = -1;
-int armControlPower = 0;
-bool armControlActive = false;
-bool armControlReachedTarget = false;
-
 void ArmSetPower(int value);
-
 bool ArmIsDown();
 bool ArmIsUp();
-
-void ArmControlSetTarget(int target);
-void ArmControlStep();
-void ArmControlReset();
-
 void ArmHoldPos();
-void ArmUpdate();
-
-void ArmControlStepDownPreset();
-
-void ArmUpdate() {
-	if (armUpPresetPressed)
-		ArmControlSetTarget(kArmUpPos);
-	else if (armDownPresetPressed)
-		ArmControlSetTarget(kArmDownPos);
-
-	if ( armDownFullPowerPressed )
-	{
-		ArmSetPower(-kFullPower);
-	}
-	else if ( armUpFullPowerPressed )
-	{
-		ArmSetPower( kFullPower );
-	}
-	else if ( armUpPressed && !ArmIsUp() )
-	{
-		short error = kArmUpPos - armPos;
-		int power = error * armKp;
-
-		if (abs(power) > kFullPower)
-			power = kFullPower;
-
-		ArmSetPower(power + kArmHoldPower + 10);
-
-		armControlActive = false;
-	}
-	else if ( armDownPressed && !ArmIsDown() )
-	{
-		ArmSetPower(kArmDownPower);
-		armControlActive = false;
-	}
-	else if (armControlActive)
-	{
-		ArmControlStep();
-	}
-	else
-	{
-		ArmHoldPos();
-	}
-}
 
 void ArmSetPower(int value) {
 	MotorsSet(leftArm, value);
@@ -96,94 +26,19 @@ void ArmSetPower(int value) {
 }
 
 bool ArmIsDown() {
-	return (armPos <= kArmDownPos);
+	return (ARM_POT <= kArmDownPos);
 }
 
 bool ArmIsUp() {
-	return (armPos >= kArmUpPos);
+	return (ARM_POT >= kArmUpPos);
 }
 
-void ArmControlSetTarget(int target) {
-	if (target == kArmBarrierPos)
-		// ArmSetKp(25.0);
-	else
-		ArmSetKp(45.0);
-
-	if (armPos < target)
-		armControlPower = kArmUpPower;
-	else
-		armControlPower = kArmDownPower;
-
-	armControlTarget = target;
-	armControlActive = true;
-
-	armControlReachedTarget = false;
-}
-
-void ArmControlStep() {
-
-	if (!armControlActive)
-		return;
-
-	// Handle the down preset separately
-	if (armControlTarget == kArmDownPos) {
-		ArmControlStepDownPreset();
-		return;
-	}
-
-	short error = armControlTarget - armPos;
-
-	if ( abs(error) > (kPotTicksPerDegree * 15) ) {
-		int power = error * armKp;
-
-		if (abs(power) > armControlPower)
-			power = sgn(power) * abs(armControlPower);
-
-		if (armControlTarget == kArmUpPos)
-			power += 10;
-
-		ArmSetPower(power + kArmHoldPower);
-	} else {
-		armControlReachedTarget = true;
-		ArmHoldPos();
-	}
-}
 
 void ArmHoldPos() {
 	if ( ArmIsDown() ) // Don't try to hold up the arm if it's all the way down
 			ArmSetPower(-15);
 	else
 		ArmSetPower(kArmHoldPower); // Hold up the arm so it doesn't fall
-}
-
-void ArmControlStepDownPreset() {
-	if ( ArmIsDown() )
-	{
-		ArmHoldPos();
-		armControlReachedTarget = true;
-	}
-	else
-	{
-		ArmSetPower(kArmDownPower);
-	}
-}
-
-void ArmMoveToPos(int pos) {
-	writeDebugStreamLine("Call to ArmMoveToPos\n");
-
-	ArmControlSetTarget(pos);
-
-  while (!armControlReachedTarget)
-  	ArmControlStep();
-
-  ArmHoldPos();
-}
-
-void ArmControlReset() {
-  armControlTarget = -1;
-  armControlPower = 0;
-  armControlActive = false;
-  armControlReachedTarget = false;
 }
 
 void ArmInit() {

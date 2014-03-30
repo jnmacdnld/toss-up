@@ -93,7 +93,7 @@ void AutonMiddleZone(TeamColor color)
   IntakeSetPower(0);
 
   // Move the arm to the barrier height
-  ArmMoveToPos(kArmBarrierPos);
+  ArmControlMoveToPosSync(kArmBarrierPos);
 
   // Knock the outside big ball into the goal zone and push the preload in
   DriveMoveTicks(kStartToBarrierTicks);
@@ -138,7 +138,7 @@ void AutonMiddleZoneStash(TeamColor color)
   IntakeSetPower(0);
 
   // Raise the lift in the background
-  ArmControlSetTarget(kArmUpPos);
+  ArmControlMoveToPosAsync(kArmUpPos);
 
   // Store the initial position of the robot
   initial = nMotorEncoder[backLeftDrive];
@@ -176,7 +176,7 @@ void AutonMiddleZoneStash(TeamColor color)
   while (nMotorEncoder[backLeftDrive] > initial - 50);
 
   // Lower the arm in the background
-  ArmControlSetTarget(kArmDownPos);
+  ArmControlMoveToPosAsync(kArmDownPos);
 
   // Drive backwards to the starting tile
   DriveMoveTicks(-1712, 1.0);
@@ -190,7 +190,7 @@ void AutonMiddleZoneStash(TeamColor color)
   writeDebugStreamLine("Repositioning button released");
 
   // Move the arm to barrier height in the background
-  ArmControlSetTarget(kArmBarrierPos);
+  ArmControlMoveToPosAsync(kArmBarrierPos);
 
   // Drive forwards even with the second large ball
   DriveMoveTicks(963, 1.0);
@@ -206,7 +206,7 @@ void AutonMiddleZoneStash(TeamColor color)
 
   // Lower the arm
   while (true)
-    ArmControlSetTarget(kArmDownPos);
+    ArmControlMoveToPosAsync(kArmDownPos);
 }
 
 void AutonHangingZone(TeamColor color)
@@ -268,7 +268,7 @@ void AutonHangingZoneStash(TeamColor color)
   AutonTurn(kPivotInside, color, 0.85);
 
   // Raise the arm in the background
-  ArmControlSetTarget(kArmUpPos);
+  ArmControlMoveToPosAsync(kArmUpPos);
 
   // Back into the wall to even out the robot
   DriveSetPower(-kFullPower * 0.85);

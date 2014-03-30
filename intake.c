@@ -32,7 +32,7 @@ void IntakeUpdate() {
 	else if (intakeInPressed)
 		IntakeSetPower(kIntakeInPower);
 	else if (intakeOutPressed) {
-		if (armPos > kArmUpPos - 300 )
+		if (ARM_POT > kArmUpPos - 300 )
 			IntakeSetPower(kIntakeOutSlowPower);
 		else
 			IntakeSetPower(kIntakeOutFastPower);
