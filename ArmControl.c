@@ -5,8 +5,11 @@
 
 void ArmControlMoveToPosAsync(int target);
 void ArmControlStep();
-void ArmControlReset();
 void ArmControlStepDownPreset();
+
+void ArmControlReset();
+void ArmControlDisable();
+void ArmControlEnable();
 
 int armControlTarget = -1;
 int armControlPower = 0;
@@ -109,11 +112,22 @@ void ArmControlStepDownPreset() {
   }
 }
 
-void ArmControlReset() {
+void ArmControlReset()
+{
   armControlTarget = -1;
   armControlPower = 0;
   armControlActive = false;
   armControlReachedTarget = false;
+}
+
+void ArmControlDisable()
+{
+	armControlActive = false;
+}
+
+void ArmControlEnable()
+{
+	armControlActive = true;
 }
 
 #endif
