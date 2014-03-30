@@ -13,7 +13,7 @@
 #define kLiftHoldPower  25 // Meant for two rubber bands (double looped) on both sides of the lift
 
 #define LIFT_POT            SensorValue[liftPot]
-#define kPotTicksPerDegree 16.05882
+#define kPotTicksPerDegree  16.05882
 
 void LiftSetPower(int value);
 bool LiftIsDown();

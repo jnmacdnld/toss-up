@@ -53,8 +53,8 @@ void pre_auton()
   // DriveInitGyro();
   GyroInit(gyro);
 
-  // Let the autonomous be selected using the LCD
-  StartTask(LcdAuton);
+  // Let the autonomous be set using the LCD
+  StartTask(LcdSetAuton);
 }
 
 task autonomous()
