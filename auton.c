@@ -1,7 +1,7 @@
 #ifndef AUTON
 #define AUTON
 
-#include "Arm.c"
+#include "Lift.c"
 #include "Intake.c"
 #include "Drive.c"
 
@@ -92,8 +92,8 @@ void AutonMiddleZone(TeamColor color)
   wait1Msec(250);
   IntakeSetPower(0);
 
-  // Move the arm to the barrier height
-  ArmControlMoveToPosSync(kArmBarrierPos);
+  // Move the lift to the barrier height
+  LiftControlMoveToPosSync(kLiftBarrierPos);
 
   // Knock the outside big ball into the goal zone and push the preload in
   DriveMoveTicks(kStartToBarrierTicks);
@@ -138,7 +138,7 @@ void AutonMiddleZoneStash(TeamColor color)
   IntakeSetPower(0);
 
   // Raise the lift in the background
-  ArmControlMoveToPosAsync(kArmUpPos);
+  LiftControlMoveToPosAsync(kLiftUpPos);
 
   // Store the initial position of the robot
   initial = nMotorEncoder[backLeftDrive];
@@ -175,8 +175,8 @@ void AutonMiddleZoneStash(TeamColor color)
   // Wait until the robot has moved away from the stash
   while (nMotorEncoder[backLeftDrive] > initial - 50);
 
-  // Lower the arm in the background
-  ArmControlMoveToPosAsync(kArmDownPos);
+  // Lower the lift in the background
+  LiftControlMoveToPosAsync(kLiftDownPos);
 
   // Drive backwards to the starting tile
   DriveMoveTicks(-1712, 1.0);
@@ -189,8 +189,8 @@ void AutonMiddleZoneStash(TeamColor color)
   while (SensorValue[touch]);
   writeDebugStreamLine("Repositioning button released");
 
-  // Move the arm to barrier height in the background
-  ArmControlMoveToPosAsync(kArmBarrierPos);
+  // Move the lift to barrier height in the background
+  LiftControlMoveToPosAsync(kLiftBarrierPos);
 
   // Drive forwards even with the second large ball
   DriveMoveTicks(963, 1.0);
@@ -204,9 +204,9 @@ void AutonMiddleZoneStash(TeamColor color)
   // Drive backwards away from the barrier
   DriveMoveTicks(-300, 1.0);
 
-  // Lower the arm
+  // Lower the lift
   while (true)
-    ArmControlMoveToPosAsync(kArmDownPos);
+    LiftControlMoveToPosAsync(kLiftDownPos);
 }
 
 void AutonHangingZone(TeamColor color)
@@ -238,8 +238,8 @@ void AutonHangingZoneStash(TeamColor color)
   // to keep buckies from falling out
   IntakeSetPower(kIntakeInPower);
 
-  // Keep the arm down
-  ArmSetPower(-15);
+  // Keep the lift down
+  LiftSetPower(-15);
 
   // Drive forward to pick up the two buckies
   DriveMoveTicks(kStartToWall, 0.7);
@@ -267,8 +267,8 @@ void AutonHangingZoneStash(TeamColor color)
   // Pivot to face paralell to the stash
   AutonTurn(kPivotInside, color, 0.85);
 
-  // Raise the arm in the background
-  ArmControlMoveToPosAsync(kArmUpPos);
+  // Raise the lift in the background
+  LiftControlMoveToPosAsync(kLiftUpPos);
 
   // Back into the wall to even out the robot
   DriveSetPower(-kFullPower * 0.85);
@@ -339,7 +339,7 @@ void AutonToggleColor()
 
 void AutonRun()
 {
-  ArmControlReset();
+  LiftControlReset();
 
   // Print a message that says AutonRun was called
   writeDebugStreamLine("Call to AutonRun\n");
