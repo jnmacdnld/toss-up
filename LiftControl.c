@@ -28,7 +28,11 @@ task LiftControl()
 		{
 			// If the requested position has been reached, hold the lift in place,
 			// if not, move toward that position
-			if (liftControlReachedTarget)
+
+      // Handle moving to the down position separately
+			if (liftControlTarget == kLiftDownPos)
+        LiftControlStepDownPreset();
+      else if (liftControlReachedTarget)
 				LiftHoldPos();
 			else
 				LiftControlStep();
