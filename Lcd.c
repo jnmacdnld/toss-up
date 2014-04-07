@@ -8,6 +8,14 @@
 #define kLeftPressed 1
 #define kRightPressed 4
 
+// Define a struct to hold data about a screen
+/*typedef struct {
+  string title;
+  string[5] choices;
+  short[5] target_screens;
+  short current_choice;
+} Screen;*/
+
 void LcdUpdateAuton();
 void LcdClear();
 
@@ -16,6 +24,13 @@ task LcdSetAuton()
   // Define variables to store the current and last state of the LCD buttons
   short current_state = nLCDButtons;
   short last_state = kNonePressed;
+
+  // Define variables to store the screens and currently displayed screen
+  /*Screen[] screens;
+  short current_screen;*/
+
+  // Initialize the screens array
+  /*LcdInitScreens();*/
 
   while (true)
   {
@@ -70,6 +85,11 @@ void LcdClear()
 {
   clearLCDLine(0);
   clearLCDLine(1);
+}
+
+void LcdInitScreens()
+{
+  
 }
 
 #endif /* LCD */
