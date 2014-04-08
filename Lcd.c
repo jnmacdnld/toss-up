@@ -7,17 +7,26 @@
 #define kNonePressed 0
 #define kLeftPressed 1
 #define kRightPressed 4
+#define kCenterPressed 2
+
+// Define constatnts for the screens that will appear on the Lcd
+#define kNumScreens 4
 
 // Define a struct to hold data about a screen
-/*typedef struct {
+typedef struct {
   string title;
-  string[5] choices;
-  short[5] target_screens;
+  string choices[5];
+  short choice_targets[5];
   short current_choice;
-} Screen;*/
+} Screen;
 
+// Declare the fucntions that will be defined
 void LcdUpdateAuton();
 void LcdClear();
+void LcdInitScreens();
+void LcdGoNext();
+void LcdGoPrev();
+void LcdSelect();
 
 task LcdSetAuton()
 {
@@ -26,11 +35,11 @@ task LcdSetAuton()
   short last_state = kNonePressed;
 
   // Define variables to store the screens and currently displayed screen
-  /*Screen[] screens;
-  short current_screen;*/
+  Screen screens[kNumScreens];
+  short current_screen;
 
   // Initialize the screens array
-  /*LcdInitScreens();*/
+  LcdInitScreens();
 
   while (true)
   {
@@ -42,10 +51,13 @@ task LcdSetAuton()
     if (current_state == kNonePressed)
     {
       if (last_state == kLeftPressed)
-        AutonToggleColor();
+        LcdGoPrev();
 
       if (last_state == kRightPressed)
-        AutonToggleZone();
+        LcdGoNext();
+
+      if (last_state == kCenterPressed)
+        LcdSelect();
     }
 
     // Update last_state for the next iteration
@@ -89,7 +101,24 @@ void LcdClear()
 
 void LcdInitScreens()
 {
-  
+  screens[0].title = "Select Color";
+  screens[0].choices = {"Red", "Blue", "", "", ""};
+  screens[0].choice_targets = {1, 1, -1, -1, -1};
+
+  screens[1].title = "Select Zone";
+  screens[1].choices = {"Middle", "Hanging", "", "", ""};
+  screens[1].choice_targets = {2, 2, -1, -1, -1};
+
+  screens[2].title = "Select Routine";
+  screens[2].choices = {"Push", "Block & Push", "", "", ""};
+  screens[2].choice_targets = {4, 4, 4, 4, 4};
+
+  screens[3].title = "Select Routine";
+  screens[3].choices = {"Stash", "Stash & Block", "Stash Three", "", ""};
+  screens[3].choice_targets = {4, 4, 4, 4, 4};
+
+  screens[4].choices = {"Change", "", "", "", ""};
+  screens[4].choice_targets = {0, -1, -1, -1, -1};
 }
 
 #endif /* LCD */
