@@ -59,7 +59,7 @@ void pre_auton()
 
 task autonomous()
 {
-  // Reset lift control in case it was previously active
+  // Reset lift control in case it is currently trying to move the arm
   LiftControlReset();
 
   // Unreflect the right drive in case it is reflected

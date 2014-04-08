@@ -42,7 +42,7 @@ task main()
     // Clear the LCD
     LcdClear();
 
-    // Handle autonomos mode
+    // Handle autonomous mode
     if (bIfiAutonomousMode)
     {
       // Clear the LCD
@@ -79,7 +79,7 @@ task main()
       // Clear the LCD
       LcdClear();
 
-      // Display User Control to reflect the current mode
+      // Display Driver Control to reflect the current mode
       displayLCDCenteredString(0, "Driver Control");
 
       // Start the user control task
