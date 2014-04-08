@@ -48,9 +48,6 @@ task main()
       // Clear the LCD
       LcdClear();
 
-      // Display the current autonomous routine
-      LcdUpdateAuton();
-
       // Start the autonomous task
       StartTask(autonomous);
 
