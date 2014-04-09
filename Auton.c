@@ -33,8 +33,8 @@
 #define kStashAndBlock 1
 #define kStashThree 2
 
-#define kNumMiddleRoutines 1
-#define kNumHangingRoutines 1
+#define kNumMiddleRoutines 3
+#define kNumHangingRoutines 2
 
 typedef enum { kInsideBigBall, kHangingLargeBall, kPivotForwards, kPivotInside, kPivotStash, kStashInsideLargeBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
@@ -56,6 +56,8 @@ void AutonTurn(Turn turn, TeamColor color, float percent = 0.7);
 
 void AutonSetZone(Zone zone);
 void AutonSetColor(TeamColor color);
+
+void AutonStepRoutine();
 
 void AutonInit()
 {
@@ -356,6 +358,27 @@ void AutonSetRoutine(short routine)
 short AutonGetRoutine()
 {
   return auton.routine;
+}
+
+void AutonStepRoutine()
+{
+  writeDebugStreamLine("Call to AutonStepRoutine");
+
+  short routine_id = AutonGetRoutine();
+  short num_routines;
+
+  // Set num_routines to the number of routines avaliable for the selected zone
+  if ( AutonGetZone() == kMiddleZone )
+    num_routines = kNumMiddleRoutines;
+  else
+    num_routines = kNumHangingRoutines;
+
+  // If the last routine is selected, select the first routine, otherwise,
+  // select the next routine
+  if ( routine_id == num_routines - 1)
+    AutonSetRoutine(0);
+  else
+    AutonSetRoutine(routine_id + 1);
 }
 
 void AutonRun()

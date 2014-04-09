@@ -12,76 +12,77 @@
 #define kNumChoices 5
 
 // Define a struct to hold data about a screen
-typedef struct {
+/*typedef struct {
   string title;
   string choices[kNumChoices];
   short choice_targets[kNumChoices];
-} Screen;
+} Screen;*/
 
 // Declare the fucntions that will be defined
 void LcdUpdateScreen();
 void LcdClear();
-void LcdInitScreens();
+/*void LcdInitScreens();
 void LcdGoNext();
 void LcdGoPrev();
 void LcdSelect();
 bool LcdCanGoNext();
-bool LcdCanGoPrev();
+bool LcdCanGoPrev();*/
+void LcdGetAutonString(string &auton_string);
 
 // Define and initialize the Screen structs
-static Screen color_select =
+/*static Screen color_select =
 {
   "Select Color",
   {"Red", "Blue", "", "", ""},
-  {1, 1, -1, -1, -1},
+  {1, 1, -1, -1, -1}
 };
 
 static Screen zone_select =
 {
   "Select Zone",
   {"Middle", "Hanging", "", "", ""},
-  {2, 2, -1, -1, -1},
+  {2, 2, -1, -1, -1}
 };
 
 static Screen middle_routine_select =
 {
   "Select Routine",
   {"Push", "Block & Push", "", "", ""},
-  {4, 4, 4, 4, 4},
+  {4, 4, 4, 4, 4}
 };
 
 static Screen hanging_routine_select =
 {
   "Select Routine",
   {"Stash", "Stash & Block", "Stash Three", "", ""},
-  {4, 4, 4, 4, 4},
+  {4, 4, 4, 4, 4}
 };
 
 static Screen routine_selected =
 {
   "",
   {"Change", "", "", "", ""},
-  {0, -1, -1, -1, -1},
+  {0, -1, -1, -1, -1}
 };
 
 // Initialize variables to hold data about the Lcd
-static Screen screens[kNumScreens] = 
+static Screen screens[kNumScreens] =
 {
   color_select, zone_select, middle_routine_select, hanging_routine_select,
   routine_selected
 };
 
 static short current_screen = 0;
-static short current_choice = 0;
+static short current_choice = 0;*/
 
-#define kMiddleRoutineScreenId 2
+/*#define kMiddleRoutineScreenId 2
 #define kHangingRoutineScreenId 3
-#define kRoutineSelectedScreenId 4
+#define kRoutineSelectedScreenId 4*/
 
 string middle_routine_names[kNumChoices] = {"Stash", "Stash & Block", "Stash Three", "", ""};
 string hanging_routine_names[kNumChoices] = {"Push", "Block & Push", "", "", ""};
 
-string middle_routine_abbs[kNumChoices] = {"Stash", "S & B", "S 3", "", ""};
-string hanging_routine_abbs[kNumChoices] = {"Push ", "B & P", "", "", ""};"
+string middle_routine_abbs[kNumChoices] = {"Stash", "S & B", "S 3  ", "", ""};
+string hanging_routine_abbs[kNumChoices] = {"Push ", "B & P", "", "", ""};
 
 #endif
