@@ -120,8 +120,12 @@ void LcdSelect()
         AutonSetZone(kHangingZone);
       break;
     case 2:
+      AutonSetRoutine(current_choice);
+      screens[kRoutineSelectedScreenId].title = LcdGetAutonString();
       break;
     case 3:
+      AutonSetRoutine(current_choice);
+      screens[kRoutineSelectedScreenId].title = LcdGetAutonString();
       break;
     case 4:
       break;
@@ -131,6 +135,43 @@ void LcdSelect()
 
   // Change the screen to the target screen of the current choice of the current screen
   current_screen = screens[current_screen].choice_targets[current_choice];
+}
+
+void LcdInitScreens()
+{
+  // Fill the middle zone routine select screen choices
+  for (short i = 0; i < kNumMiddleRoutines; i++)
+    screens[kMiddleRoutineScreenId].choices[i] = middle_routine_names[i];
+  
+  // Fill the hanging zone routine select screen choices
+  for (short i = 0; i < kNumHangingRoutines; i++)
+    screens[kHangingRoutineScreenId].choices[i] = middle_routine_names[i];
+}
+
+void LcdGetAutonString()
+{
+  string color;
+  string zone;
+  string routine;
+  
+  if (AutonGetColor() == kRed)
+    color = "Red ";
+  else
+    color = "Blue";
+    
+  if (AutonGetZone() == kMiddleZone)
+  {
+    zone = "Mid  ";
+    routine = middle_routine_abbs[AutonGetRoutine()];
+  }
+  else
+  {
+    zone = "Hang ";
+    routine = hanging_routine_abbs[AutonGetRoutine()];
+  }  
+  
+  
+  return color + " " + zone + " " + routine;
 }
 
 void LcdClear()
