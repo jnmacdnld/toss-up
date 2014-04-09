@@ -26,6 +26,16 @@
 #define kWallToStashRed 932 + 20
 #define kWallToStashBlue 932 - 40
 
+#define kPush 0
+#define kBlockAndPush 1
+
+#define kStash 0
+#define kStashAndBlock 1
+#define kStashThree 2
+
+#define kNumMiddleRoutines 1
+#define kNumHangingRoutines 1
+
 typedef enum { kInsideBigBall, kHangingLargeBall, kPivotForwards, kPivotInside, kPivotStash, kStashInsideLargeBall } Turn;
 typedef enum { kRed, kBlue } TeamColor;
 typedef enum { kHangingZone, kMiddleZone } Zone;
@@ -34,6 +44,7 @@ typedef struct
 {
   Zone zone;
   TeamColor color;
+  short routine;
 
   short turns[kNumAutonTurns][2];
 } Auton;
@@ -337,6 +348,16 @@ void AutonToggleColor()
     AutonSetColor(kRed);
 }
 
+void AutonSetRoutine(short routine)
+{
+  auton.routine = routine;
+}
+
+short AutonGetRoutine()
+{
+  return auton.routine;
+}
+
 void AutonRun()
 {
   LiftControlReset();
@@ -355,9 +376,11 @@ void AutonRun()
 
   // Run the appropriate autonomous routine
   if ( AutonGetZone() == kHangingZone )
-    AutonHangingZone(color);
+    if ( AutonGetRoutine() == kPush)
+      AutonHangingZone(color);
   else
-    AutonMiddleZoneStash(color);
+    if ( AutonGetRoutine() == kStash)
+      AutonMiddleZoneStash(color);
 }
 
 #endif /* AUTON */
