@@ -47,7 +47,7 @@ void LcdUpdateScreen()
   displayLCDCenteredString(0, screens[current_screen].title);
 
   // Update the current choice on the display
-  displayLCDCenteredString(0, screens[current_screen].choices[current_choice] );
+  displayLCDCenteredString(1, screens[current_screen].choices[current_choice] );
 
   // Update whether there is a previous choice
   if ( LcdCanGoPrev() )
