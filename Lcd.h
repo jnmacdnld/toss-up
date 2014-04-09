@@ -74,4 +74,14 @@ static Screen screens[kNumScreens] =
 static short current_screen = 0;
 static short current_choice = 0;
 
+#define kMiddleRoutineScreenId 2
+#define kHangingRoutineScreenId 3
+#define kRoutineSelectedScreenId 4
+
+string middle_routine_names[kNumChoices] = {"Stash", "Stash & Block", "Stash Three", "", ""};
+string hanging_routine_names[kNumChoices] = {"Push", "Block & Push", "", "", ""};
+
+string middle_routine_abbs[kNumChoices] = {"Stash", "S & B", "S 3", "", ""};
+string hanging_routine_abbs[kNumChoices] = {"Push ", "B & P", "", "", ""};"
+
 #endif
