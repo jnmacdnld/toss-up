@@ -82,7 +82,7 @@ static short current_choice = 0;*/
 string middle_routine_names[kNumChoices] = {"Stash", "Stash & Block", "Stash Three", "", ""};
 string hanging_routine_names[kNumChoices] = {"Push", "Block & Push", "", "", ""};
 
-string middle_routine_abbs[kNumChoices] = {"Stash", "S & B", "S 3  ", "", ""};
+string middle_routine_abbs[kNumChoices] = {"Stash", "S & B", "S 3  ", "Block", ""};
 string hanging_routine_abbs[kNumChoices] = {"Push ", "B & P", "", "", ""};
 
 #endif

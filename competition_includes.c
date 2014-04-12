@@ -28,9 +28,14 @@ task main()
   // Main loop
   while (true)
   {
-    // If the robot is disabled, allow the auton to be set using the LCD
     if (bIfiRobotDisabled)
+    {
+      // Allow the auton to be set using the LCD when disabled
       StartTask(LcdSetAuton);
+
+      // Stop all motors when disabled
+      allMotorsOff();
+    }
 
     // If the robot is disabled, do nothing until it is enabled
     while (bIfiRobotDisabled)

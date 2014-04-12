@@ -20,6 +20,8 @@ void DriveSetPower(int power);
 void DriveMoveTicks(int ticks, float percent = 0.7);
 void DriveTurnTicks(int ticks, float percent = 0.7);
 
+void DriveSetDeltaSettingLimits(short min_delta_setting, short max_delta_setting);
+
 bool driveMirrorTurning = false;
 
 pidController* driveMovePid;
@@ -62,8 +64,6 @@ void DriveInit() {
 
   driveTurnToPid = PidControllerInit(1.0, 0.0, 0.0, in1);
   driveTurnToPid->error_threshold = 50;
-
-  // Don't allow too much positive acceleration to tip over the robot
 }
 
 void DriveMoveTicks(int ticks, float percent) {
@@ -94,18 +94,17 @@ void DriveMoveInches(float inches) {
   DriveMoveTicks(ticks);
 }
 
-void DriveTurnToDegrees(float degrees) {
-  if (driveMirrorTurning)
-    degrees *= -1;
-
-  int sgn_first_error = sgn( degrees - GyroGetAngle() );
-
-  while ( sgn_first_error * GyroGetAngle() < degrees * sgn_first_error )
+/*void DriveTurnGyro(short gyro_val)
+{
+  // Clockwise is negative, counter-clockwise is positive
+  while ( abs(driveTurnToPid->error) > 0 )
   {
-    DriveSetLeft(kFullPower * 0.7 * sgn_first_error);
-    DriveSetRight(-kFullPower * 0.7 * sgn_first_error);
+    
+
+    DriveSetLeft(-1 * power);
+    DriveSetRight(power);
   }
-}
+}*/
 
 void DriveReflectRight() {
   bMotorReflected[backRightDrive] = false;
